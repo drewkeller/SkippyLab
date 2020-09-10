@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rxui:ReactiveContentPage
+    x:Class="Scoopy.Views.ScopePage"
+    x:TypeArguments="vm:ScopeVM"
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
+    xmlns:local="clr-namespace:Scoopy;assembly=Scoopy"
+    xmlns:vm="clr-namespace:Scoopy.ViewModels;assembly=Scoopy"
+    >
+
+    <ContentPage.Content>
+        
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+            <Button x:Name="btnScreenshot" Text="Screenshot" />
+            <Image x:Name="imgScreen" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
+        
+    </ContentPage.Content>
+</rxui:ReactiveContentPage>

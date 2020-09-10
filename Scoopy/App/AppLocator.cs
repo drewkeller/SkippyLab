@@ -1,0 +1,28 @@
+﻿using Scoopy.Models;
+using Scoopy.ViewModels;
+using Splat;
+
+namespace Scoopy
+{
+    public class AppLocator
+    {
+
+        public static ScopeVM ScopeVM => Locator.Current.GetService<ScopeVM>();
+
+        public static ConnectVM ConnectVM => Locator.Current.GetService<ConnectVM>();
+
+        public static TelnetService TelnetService => Locator.Current.GetService<TelnetService>();
+
+        public static Settings Settings => Locator.Current.GetService<Settings>();
+
+        static public void Init()
+        {
+            // singletons (RegisterConstant)
+            Locator.CurrentMutable.RegisterConstant(new Settings()); // need settings before others
+            Locator.CurrentMutable.RegisterConstant(new TelnetService());
+            Locator.CurrentMutable.RegisterConstant(new ScopeVM());
+            Locator.CurrentMutable.RegisterConstant(new ConnectVM());
+        }
+
+    }
+}
