@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
+﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Scoopy
 {
@@ -15,15 +13,26 @@ namespace Scoopy
         Volts, Watts, Amps, Unknown
     }
 
-    public class ScopeChannel
+    public class ScopeChannel : ReactiveObject
     {
-
+        public int ChannelNumber { get; set; }
+        
         public string Name { get; set; }
-        public bool IsActive { get; set; }
-        public bool Inverted { get; set; }
-        public Coupling Coupling { get; set; }
 
-        public double Offset { get; set; }
+        [Reactive] public bool IsActive { get; set; }
+
+        [Reactive] public bool Inverted { get; set; }
+
+        [Reactive] public Coupling Coupling { get; set; }
+
+        /// <summary>
+        /// The offset Value is related to the current vertical scale and probe ratio.
+        /// f( 1X, scale >= 500) = -100 to +100
+        /// f( 1X, scale <  500) = -2 to +2
+        /// f(10X, scale >= 5) = -1000 to 1000
+        /// f(10X, scale <  5) = -20 to 20
+        /// </summary>
+        [Reactive] public double Offset { get; set; }
 
         public double Range { get; set; }
 

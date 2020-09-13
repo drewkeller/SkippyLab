@@ -9,7 +9,7 @@ namespace Scoopy.Models
     public class Settings: ReactiveObject
     {
 
-        [Reactive] public string HostName { get; set; } = "192.168.1.105";
+        [Reactive] public string HostName { get; set; } = "192.168.1.104";
 
         [Reactive] public int Port { get; set; } = 5555;
 

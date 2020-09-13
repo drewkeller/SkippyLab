@@ -1,13 +1,20 @@
-﻿using ReactiveUI;
+﻿using Nito.AsyncEx;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scoopy
 {
     public class TelnetService : ReactiveObject, IDisposable
     {
+        private readonly AsyncLock BusyObject = new AsyncLock();
+
+        public bool IsBusy { get; set; }
+
         public string Hostname { get; set; }
 
         public int Port { get; set; }
@@ -22,7 +29,9 @@ namespace Scoopy
 
         [Reactive] public bool Connected { get; set; }
 
-        public TelnetService() { }
+        public TelnetService()
+        {
+        }
 
         #region Dispose
 
@@ -32,7 +41,6 @@ namespace Scoopy
             {
                 if (disposing)
                 {
-                    //Stream.Dispose();
                 }
 
                 disposedValue = true;
@@ -54,40 +62,58 @@ namespace Scoopy
             Hostname = hostname;
             Port = port;
 
-            Connected = true;
-            return "Forcing mock connection";
+            //Connected = true;
+            //return "Forcing mock connection";
 
-            using (var client = new TelnetClient(hostname, port, Timeout))
+            using (await BusyObject.LockAsync())
             {
-                if (await client.Connect())
+                IsBusy = true;
+                using (var client = new TelnetClient(hostname, port, Timeout))
                 {
-                    await client.WriteLineAsync(":*IDN?");
-                    var s = await client.ReadStringAsync();
-                    Connected = true;
-                    return s;
+                    if (await client.Connect())
+                    {
+                        await client.WriteLineAsync(":*IDN?");
+                        var s = await client.ReadStringAsync();
+                        Connected = true;
+                        return s;
+                    }
+                    Connected = false;
+                    IsBusy = false;
+                    return string.Empty;
                 }
             }
-            Connected = false;
-            return string.Empty;
         }
 
         public async Task<string> SendCommandAsync(string command, bool getResponse)
         {
-            using (var client = new TelnetClient(Hostname, Port, Timeout))
+            using (await BusyObject.LockAsync())
             {
-                if (!await client.Connect())
+                IsBusy = true;
+                using (var client = new TelnetClient(Hostname, Port, Timeout))
                 {
-                    return null;
+                    if (!await client.Connect())
+                    {
+                        return null;
+                    }
+                    await client.WriteLineAsync(command);
+                    IsBusy = false;
+                    return getResponse ? await client.ReadStringAsync() : "";
                 }
-                await client.WriteLineAsync(command);
-                return getResponse ? await client.ReadStringAsync() : "";
             }
         }
 
         public async Task<byte[]> GetScreenshot()
         {
+            // skip if busy
+            if (IsBusy)
+            {
+                return null;
+            }
+
+            using (await BusyObject.LockAsync())
             using (var client = new TelnetClient(Hostname, Port, Timeout))
             {
+                IsBusy = true;
                 if (!await client.Connect())
                 {
                     return null;
@@ -107,12 +133,27 @@ namespace Scoopy
                         if (int.TryParse(dataLengthString, out var dataLength))
                         {
                             var data = await client.ReadBytesAsync(dataLength);
+                            Debug.WriteLine("Got Screenshot");
+                            IsBusy = false;
                             return data;
                         }
+                        else
+                        {
+                            Debug.WriteLine("Screenshot response data length not recognized");
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Screenshot response missing header length");
                     }
                 }
+                else
+                {
+                    Debug.WriteLine("Screenshot response missing header character");
+                }
+                IsBusy = false;
+                return null;
             }
-            return null;
         }
 
     }

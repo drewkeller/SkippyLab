@@ -1,13 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView
+<rxui:ReactiveContentView
+    x:Class="Scoopy.Views.ScopeChannelView"
+    x:TypeArguments="vm:ScopeChannelVM"
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
     xmlns:ufg="clr-namespace:UniformGrid;assembly=Scoopy"
     xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
     xmlns:enums="clr-namespace:Scoopy.Enums;assembly=Scoopy"
     xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
     xmlns:controls="clr-namespace:Scoopy.Controls;assembly=Scoopy"
-    x:Class="Scoopy.Views.ScopeChannelView">
+    xmlns:vm="clr-namespace:Scoopy.ViewModels;assembly=Scoopy"
+    >
 
     <ContentView.Resources>
         <ResourceDictionary>
@@ -38,7 +42,7 @@
                     <edit:EditableLabel x:Name="txtLabel" HorizontalOptions="FillAndExpand" />
                 </StackLayout>
 
-                <xamlly:Switch x:Name="btnOnOff" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
+                <xamlly:Switch x:Name="chkActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
 
                 <ufg:UniformGrid Rows="1">
                     <controls:TogglesBar x:Name="barCoupling" />
@@ -92,6 +96,11 @@
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
+                    <Label Text="Inverted"/>
+                    <Switch x:Name="chkInverted"/>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
                     <controls:TogglesBar x:Name="barUnits" />
                     <!-- xamlly:ToggleButton Text="Volts" SelectedColor="White" UnselectedColor="DarkGray"/>
                 <xamlly:ToggleButton Text="Watts"/>
@@ -109,4 +118,4 @@
         </Frame>
 
     </ContentView.Content>
-</ContentView>
+</rxui:ReactiveContentView>

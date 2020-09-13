@@ -37,7 +37,8 @@ namespace Scoopy.Views
             base.OnAppearing();
             for (int i = 1; i <= 4; i++)
             {
-                var channelPanel = new ScopeChannelView(i);
+                var channelVM = new ScopeChannelVM(i);
+                var channelPanel = new ScopeChannelView(channelVM);
                 pnlChannels.Children.Add(channelPanel);
             }
         }
