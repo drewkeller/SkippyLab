@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.1.0.452" />
+    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.11" />
     <PackageReference Include="Fody" Version="6.2.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj" />
+    <ProjectReference Include="..\..\Xamlly\Xamlly\Xamlly.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Views\ScopePage.xaml.cs">
       <DependentUpon>ScopePage.xaml</DependentUpon>
     </Compile>
@@ -31,6 +37,9 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Views\ConnectView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ScopeChannelView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ScopePage.xaml">

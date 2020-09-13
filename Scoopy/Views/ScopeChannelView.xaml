@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ufg="clr-namespace:UniformGrid;assembly=Scoopy"
+    xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
+    xmlns:enums="clr-namespace:Scoopy.Enums;assembly=Scoopy"
+    xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
+    xmlns:controls="clr-namespace:Scoopy.Controls;assembly=Scoopy"
+    x:Class="Scoopy.Views.ScopeChannelView">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style TargetType="xamlly:TogglesBar">
+                <Setter Property="SelectedColor" Value="White"/>
+                <Setter Property="UnselectedColor" Value="Gray"/>
+            </Style>
+            <Style TargetType="controls:TogglesBar">
+                <Setter Property="SelectedColor" Value="White"/>
+                <Setter Property="UnselectedColor" Value="Gray"/>
+            </Style>
+            <Style TargetType="xamlly:Switch">
+                <Setter Property="ButtonWidth" Value="50"/>
+                <Setter Property="OnColor" Value="White"/>
+                <Setter Property="OffColor" Value="Gray"/>
+                <Setter Property="BackgroundColor" Value="DarkGray"/>
+                <Setter Property="TextColor" Value="Black"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    
+    <ContentView.Content>
+
+        <Frame BorderColor="AliceBlue">
+            <StackLayout Orientation="Vertical">
+
+                <StackLayout Orientation="Horizontal">
+                    <edit:EditableLabel x:Name="txtLabel" HorizontalOptions="FillAndExpand" />
+                </StackLayout>
+
+                <xamlly:Switch x:Name="btnOnOff" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
+
+                <ufg:UniformGrid Rows="1">
+                    <controls:TogglesBar x:Name="barCoupling" />
+                    <!-- Button x:Name="btnDC" Text="DC"/>
+                <Button x:Name="btnGND" Text="GND"/ -->
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Offset"/>
+                    <edit:EditableLabel x:Name="txtOffset" HorizontalOptions="CenterAndExpand" />
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Range" />
+                    <edit:EditableLabel x:Name="txtRange" HorizontalOptions="CenterAndExpand" />
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Scale"/>
+                    <edit:EditableLabel x:Name="txtScale" HorizontalOptions="CenterAndExpand"/>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <!-- wrapping the picker prevents it from expanding the space used each time it is opened -->
+                    <Label Text="Ratio"/>
+                    <Picker x:Name="cboRatio" HorizontalOptions="CenterAndExpand">
+                        <Picker.Items>
+                            <x:String>.01:1</x:String>
+                            <x:String>.02:1</x:String>
+                            <x:String>.05:1</x:String>
+                            <x:String>.10:1</x:String>
+                            <x:String>.20:1</x:String>
+                            <x:String>.50:1</x:String>
+                            <x:String>1:1</x:String>
+                            <x:String>2:1</x:String>
+                            <x:String>5:1</x:String>
+                            <x:String>10:1</x:String>
+                            <x:String>20:1</x:String>
+                            <x:String>50:1</x:String>
+                            <x:String>100:1</x:String>
+                            <x:String>200:1</x:String>
+                            <x:String>500:1</x:String>
+                            <x:String>1000:1</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="TCal"/>
+                    <edit:EditableLabel x:Name="txtTCal" HorizontalOptions="CenterAndExpand"/>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <controls:TogglesBar x:Name="barUnits" />
+                    <!-- xamlly:ToggleButton Text="Volts" SelectedColor="White" UnselectedColor="DarkGray"/>
+                <xamlly:ToggleButton Text="Watts"/>
+                <xamlly:ToggleButton Text="Amps"/>
+                <xamlly:ToggleButton Text="???"/ -->
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <controls:TogglesBar x:Name="barFine"/>
+                </ufg:UniformGrid>
+
+
+
+            </StackLayout>
+        </Frame>
+
+    </ContentView.Content>
+</ContentView>

@@ -10,11 +10,25 @@
     >
 
     <ContentPage.Content>
-        
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-            <Button x:Name="btnScreenshot" Text="Screenshot" />
-            <Image x:Name="imgScreen" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-        </StackLayout>
-        
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackLayout Grid.Column="0" WidthRequest="800">
+                <Image x:Name="imgScreen" BackgroundColor="Pink"
+                       HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" 
+                       Aspect="AspectFit" HeightRequest="480" />
+                <StackLayout x:Name="pnlChannels" Orientation="Horizontal"/>
+            </StackLayout>
+            
+            <StackLayout Grid.Column="1" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                <Button x:Name="btnScreenshot" Text="Screenshot" HorizontalOptions="FillAndExpand" WidthRequest="200" />
+            </StackLayout>
+
+        </Grid>
+
     </ContentPage.Content>
 </rxui:ReactiveContentPage>

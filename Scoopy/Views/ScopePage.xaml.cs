@@ -9,6 +9,7 @@ namespace Scoopy.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ScopePage : ReactiveContentPage<ScopeVM>
     {
+
         public ScopePage() { }
 
         public ScopePage(ScopeVM vm)
@@ -29,6 +30,16 @@ namespace Scoopy.Views
                     .DisposeWith(disposable);
             });
 
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            for (int i = 1; i <= 4; i++)
+            {
+                var channelPanel = new ScopeChannelView(i);
+                pnlChannels.Children.Add(channelPanel);
+            }
         }
 
     }
