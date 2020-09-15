@@ -6,6 +6,7 @@ using Scoopy.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reactive;
 using System.Reactive.Disposables;
 
 using Xamarin.Forms;
@@ -75,15 +76,18 @@ namespace Scoopy.Views
                     x => x.Range,
                     x => x.uiRange.Text)
                     .DisposeWith(disposable);
-
                 this.Bind(ViewModel,
-                    x => x.TCal,
-                    x => x.uiTCal.Text)
+                    x => x.RangeUnits,
+                    x => x.uiRangeUnits.Text)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.Scale,
                     x => x.uiScale.Text)
+                    .DisposeWith(disposable);
+                this.Bind(ViewModel,
+                    x => x.ScaleUnits,
+                    x => x.uiScaleUnits.Text)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
@@ -106,6 +110,17 @@ namespace Scoopy.Views
                     x => x.uiIsVernier.IsToggled)
                     .DisposeWith(disposable);
 
+#if TCAL
+                this.Bind(ViewModel,
+                    x => x.TCal,
+                    x => x.uiTCal.Text)
+                    .DisposeWith(disposable);
+                this.Bind(ViewModel,
+                    x => x.TCalUnits,
+                    x => x.uiTCalUnits.Text)
+                    .DisposeWith(disposable);
+#endif
+
                 this.Bind(ViewModel,
                     x => x.Units,
                     x => x.uiUnits.SelectedItems,
@@ -117,13 +132,24 @@ namespace Scoopy.Views
                 this.Bind(ViewModel, x => x.GetOffsetSucceeded, x => x.uiOffset.IsEnabled);
                 this.Bind(ViewModel, x => x.GetCouplingSucceeded, x => x.uiCoupling.IsEnabled);
                 this.Bind(ViewModel, x => x.GetRangeSucceeded, x => x.uiRange.IsEnabled);
+#if TCAL
                 this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCal.IsEnabled);
+#endif
                 this.Bind(ViewModel, x => x.GetScaleSucceeded, x => x.uiScale.IsEnabled);
                 this.Bind(ViewModel, x => x.GetProbeSucceeded, x => x.uiProbeRatio.IsEnabled);
                 this.Bind(ViewModel, x => x.GetIsBandwidthLimitedSucceeded, x => x.uiIsBandwidthLimited.IsEnabled);
                 this.Bind(ViewModel, x => x.GetIsInvertedSucceeded, x => x.uiIsInverted.IsEnabled);
                 this.Bind(ViewModel, x => x.GetIsVernierSucceeded, x => x.uiIsVernier.IsEnabled);
                 this.Bind(ViewModel, x => x.GetUnitsSucceeded, x => x.uiUnits.IsEnabled);
+
+                // width of units columns should all be the same
+                this.WhenAnyValue(x => x.uiScaleUnits.Width)
+                    .Subscribe(x =>
+                    {
+                        var width = uiScaleUnits.Width;
+                        uiOffsetUnits.WidthRequest = width;
+                        uiRangeUnits.WidthRequest = width;
+                    });
 
                 //await viewModel.SendVernierQueryAsync();
                 //await viewModel.SendIsBandwidthLimitedQueryAsync();
@@ -135,17 +161,6 @@ namespace Scoopy.Views
             });
 
         }
-
-        private void BarFine_SelectedItemsChanged(object sender, Controls.TogglesBarSelectionChangedEventArgs e)
-        {
-            { }
-        }
-
-        //private IReactiveBinding<ScopeChannelView, ScopeChannelVM, (object? view, bool isViewModel)> Bind
-        //    (object viewModelProperty, object viewProperty)
-        //    {
-        //        this.Bind(ViewModel, x = )
-        //    }
 
     }
 }

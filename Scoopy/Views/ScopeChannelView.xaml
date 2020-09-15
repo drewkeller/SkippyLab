@@ -51,19 +51,25 @@
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Offset"/>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                    <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" />
-                    <Label x:Name="uiOffsetUnits" HorizontalOptions="End"/>
+                        <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" />
+                        <Label x:Name="uiOffsetUnits" HorizontalOptions="End"/>
                     </StackLayout>
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Range" />
-                    <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand" />
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand" />
+                        <Label x:Name="uiRangeUnits" HorizontalOptions="End"/>
+                    </StackLayout>
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Scale"/>
-                    <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
+                        <Label x:Name="uiScaleUnits" HorizontalOptions="End"/>
+                    </StackLayout>
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
@@ -87,10 +93,15 @@
                     <Switch x:Name="uiIsVernier" HorizontalOptions="Center" />
                 </ufg:UniformGrid>
                 
+                <!-- disable for now 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="TCal"/>
-                    <edit:EditableLabel x:Name="uiTCal" HorizontalOptions="CenterAndExpand"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <edit:EditableLabel x:Name="uiTCal" HorizontalOptions="CenterAndExpand"/>
+                        <Label x:Name="uiTCalUnits" HorizontalOptions="End"/>
+                    </StackLayout>
                 </ufg:UniformGrid>
+                -->
 
                 <ufg:UniformGrid Rows="1">
                     <controls:TogglesBar x:Name="uiUnits" DisplayMemberPath="Value" />
