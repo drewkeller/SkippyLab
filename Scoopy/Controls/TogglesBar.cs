@@ -1,10 +1,15 @@
-﻿using System;
+﻿/// <summary>
+/// Based on the TogglesBar in the Xamlly.Controls project.
+/// This adds property changed notification for <see cref="TogglesBar.SelectedItems"/> 
+/// so two-way binding works properly.
+/// </summary>
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Xamarin.Forms.Internals;
 using Xamarin.Forms;
-using System.Net.NetworkInformation;
+using Xamarin.Forms.Internals;
 
 namespace Scoopy.Controls
 {
@@ -17,8 +22,8 @@ namespace Scoopy.Controls
 
     public class TogglesBar : ContentView
     {
-        ScrollView scrollContainer;
-        StackLayout stackContainer;
+        readonly ScrollView scrollContainer;
+        readonly StackLayout stackContainer;
         public event EventHandler<TogglesBarSelectionChangedEventArgs> SelectedItemsChanged;
 
         public TogglesBar()
@@ -53,7 +58,7 @@ namespace Scoopy.Controls
         }
 
         public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(object), typeof(TogglesBar),
-  defaultBindingMode: BindingMode.TwoWay);
+  defaultBindingMode: BindingMode.TwoWay, propertyChanged:SelectedItemsPropertyChanged);
         public object SelectedItems
         {
             get { return GetValue(SelectedItemsProperty); }
@@ -144,6 +149,72 @@ namespace Scoopy.Controls
                 ((TogglesBar)bindable).Render();
         }
 
+        private static void SelectedItemsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (newValue == null) return;
+
+            var control = bindable as TogglesBar;
+            control.RenderSelectedItems();
+        }
+
+        /// <summary>
+        /// Update which button(s) are selected (don't need to reacreate all of them)
+        /// </summary>
+        private void RenderSelectedItems()
+        {
+            if (ItemsSource == null || ItemsSource.Count() == 0)
+                return;
+
+            try
+            {
+                // determine which items should appear selected
+                var textsToSelect = new List<string>();
+                foreach (var item in ItemsSource)
+                {
+                    var displayText = DisplayMemberPath == null ? item.ToString() : item.GetType().GetProperty(DisplayMemberPath).GetValue(item, null).ToString();
+                    if (ShouldSelectItem(item, displayText))
+                    {
+                        textsToSelect.Add(displayText);
+                    }
+                }
+
+                // get all of the toggle buttons and apply IsSelected based on matching their Text
+                var allToggleButtons = stackContainer.Children.Where(x => x is Xamlly.XamllyControls.ToggleButton);
+                allToggleButtons?.ForEach(x =>
+                {
+                    var btn = x as Xamlly.XamllyControls.ToggleButton;
+                    btn.IsSelected = textsToSelect.Contains(btn.Text);
+                });
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private bool ShouldSelectItem(object item, string displayText)
+        {
+            if (!_initialRenderCompleted)
+            {
+                _initialRenderCompleted = true;
+                if (!string.IsNullOrEmpty(InitialValuePath))
+                {
+                    var value = item.GetType().GetProperty(InitialValuePath).GetValue(item, null);
+                    return value.ToString().Equals(InitialValue);
+                }
+                else if (InitialIndex >= 0)
+                    return ItemsSource.IndexOf(item) == InitialIndex;
+                else if (InitialValue != null)
+                    return item == InitialValue;
+            }
+
+            if (IsMultiSelect)
+                return (SelectedItems as IEnumerable<object>).Contains(displayText);
+            else
+                return SelectedItems?.ToString() == displayText;
+        }
+
         private void Render()
         {
             try
@@ -151,9 +222,10 @@ namespace Scoopy.Controls
                 if (ItemsSource == null || ItemsSource.Count() == 0)
                     return;
 
+                object selectedItems = new ObservableCollection<object>();
+
                 stackContainer.Children.Clear();
-                if (IsMultiSelect)
-                    SelectedItems = new ObservableCollection<object>();
+
                 foreach (var item in ItemsSource)
                 {
                     var displayText = DisplayMemberPath == null ? item.ToString() : item.GetType().GetProperty(DisplayMemberPath).GetValue(item, null).ToString();
@@ -165,31 +237,17 @@ namespace Scoopy.Controls
                         SelectedColor = SelectedColor,
                         UnselectedColor = UnselectedColor,
                     };
-                    if (!string.IsNullOrEmpty(InitialValuePath))
-                    {
-                        var value = item.GetType().GetProperty(InitialValuePath).GetValue(item, null);
-                        if (value.ToString().Equals(InitialValue))
-                            btn.IsSelected = true;
 
-                    }
-                    else if (InitialIndex >= 0)
-                    {
-                        if (ItemsSource.IndexOf(item) == InitialIndex)
-                            btn.IsSelected = true;
-                    }
-                    else if (InitialValue != null)
-                    {
-                        if (item == InitialValue)
-                            btn.IsSelected = true;
-                    }
+                    btn.IsSelected = ShouldSelectItem(item, displayText);
+                    
                     btn.SelectionChanged += (s, e) =>
                     {
                         if (IsMultiSelect)
                         {
                             if (btn.IsSelected)
-                                (SelectedItems as ObservableCollection<object>).Add(item);
+                                (selectedItems as ObservableCollection<object>).Add(item);
                             else
-                                (SelectedItems as ObservableCollection<object>).Remove(item);
+                                (selectedItems as ObservableCollection<object>).Remove(item);
                         }
                         else
                         {
@@ -198,18 +256,19 @@ namespace Scoopy.Controls
                             btn.IsSelected = true;
                             SelectedItems = item;
                         }
+
                         if (!IsMultiSelect && btn.IsSelected)
                             SelectedItemsChanged?.Invoke(this, new TogglesBarSelectionChangedEventArgs
                             {
-                                SelectedItems = SelectedItems,
+                                SelectedItems = selectedItems,
                                 SelectedIndices = ItemsSource.IndexOf(item)
                             });
                         else if (IsMultiSelect)
                         {
                             SelectedItemsChanged?.Invoke(this, new TogglesBarSelectionChangedEventArgs
                             {
-                                SelectedItems = SelectedItems,
-                                SelectedIndices = (SelectedItems as ObservableCollection<object>).Select(x => ItemsSource.IndexOf(x))
+                                SelectedItems = selectedItems,
+                                SelectedIndices = (selectedItems as ObservableCollection<object>).Select(x => ItemsSource.IndexOf(x))
                             });
                         }
                     };
@@ -222,5 +281,6 @@ namespace Scoopy.Controls
                 throw ex;
             }
         }
+        private bool _initialRenderCompleted;
     }
 }

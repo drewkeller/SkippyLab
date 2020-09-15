@@ -3,8 +3,31 @@
 using System;
 using Xamarin.Forms;
 
+namespace Scoopy.Controls
+{
+
+    /// <summary>
+    /// Provides a binding to <see cref="Switch.IsToggled"/> which isn't provided by the original control.
+    /// </summary>
+    public class SwitchEx : Switch
+    {
+        public new bool IsToggled { get; set; }
+        public new static readonly BindableProperty IsToggledProperty = BindableProperty.Create(
+            nameof(IsToggled), typeof(bool), typeof(SwitchEx), propertyChanged: IsToggledPropertyChanged);
+        private static void IsToggledPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchEx)bindable;
+            if (bool.TryParse(newValue.ToString(), out var result))
+            {
+                control.IsToggled = result;
+            }
+        }
+    }
+
+}
 namespace UniformGrid
 {
+
     public class UniformGrid : Grid
     {
 

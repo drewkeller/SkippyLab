@@ -45,9 +45,7 @@
                 <xamlly:Switch x:Name="chkActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="barCoupling" />
-                    <!-- Button x:Name="btnDC" Text="DC"/>
-                <Button x:Name="btnGND" Text="GND"/ -->
+                    <controls:TogglesBar x:Name="barCoupling" DisplayMemberPath="Value" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
@@ -68,26 +66,7 @@
                 <ufg:UniformGrid Rows="1">
                     <!-- wrapping the picker prevents it from expanding the space used each time it is opened -->
                     <Label Text="Ratio"/>
-                    <Picker x:Name="cboRatio" HorizontalOptions="CenterAndExpand">
-                        <Picker.Items>
-                            <x:String>.01:1</x:String>
-                            <x:String>.02:1</x:String>
-                            <x:String>.05:1</x:String>
-                            <x:String>.10:1</x:String>
-                            <x:String>.20:1</x:String>
-                            <x:String>.50:1</x:String>
-                            <x:String>1:1</x:String>
-                            <x:String>2:1</x:String>
-                            <x:String>5:1</x:String>
-                            <x:String>10:1</x:String>
-                            <x:String>20:1</x:String>
-                            <x:String>50:1</x:String>
-                            <x:String>100:1</x:String>
-                            <x:String>200:1</x:String>
-                            <x:String>500:1</x:String>
-                            <x:String>1000:1</x:String>
-                        </Picker.Items>
-                    </Picker>
+                    <Picker x:Name="cboRatio" HorizontalOptions="CenterAndExpand" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
@@ -97,11 +76,11 @@
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Inverted"/>
-                    <Switch x:Name="chkInverted"/>
+                    <Switch x:Name="chkInverted" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="barUnits" />
+                    <controls:TogglesBar x:Name="barUnits" DisplayMemberPath="Value" />
                     <!-- xamlly:ToggleButton Text="Volts" SelectedColor="White" UnselectedColor="DarkGray"/>
                 <xamlly:ToggleButton Text="Watts"/>
                 <xamlly:ToggleButton Text="Amps"/>
@@ -109,7 +88,7 @@
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="barFine"/>
+                    <controls:TogglesBar x:Name="barVernier" DisplayMemberPath="Value" />
                 </ufg:UniformGrid>
 
 

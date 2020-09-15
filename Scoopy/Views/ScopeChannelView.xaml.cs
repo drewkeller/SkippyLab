@@ -1,14 +1,12 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
+using Scoopy.Converters;
 using Scoopy.Enums;
 using Scoopy.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.Reactive.Disposables;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -32,19 +30,20 @@ namespace Scoopy.Views
             }
         }
 
-        public IEnumerable<string> CouplingOptions => Enums.StringOptions.CouplingOptions;
+        public StringOptions CouplingOptions => Enums.StringOptions.Coupling;
 
         public ScopeChannelView(ScopeChannelVM viewModel)
         {
             InitializeComponent();
-
             ViewModel = viewModel;
+            this.BindingContext = viewModel;
 
             // initialize some stuff
             txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            barCoupling.ItemsSource = Enums.StringOptions.CouplingOptions;
-            barUnits.ItemsSource = Enums.StringOptions.Units;
-            barFine.ItemsSource = Enums.StringOptions.FineCourse;
+            barCoupling.ItemsSource = StringOptions.Coupling;
+            barUnits.ItemsSource = StringOptions.Units;
+            barVernier.ItemsSource = StringOptions.Vernier;
+            cboRatio.ItemsSource = StringOptions.ProbeRatio;
 
             this.WhenActivated(async disposable =>
             {
@@ -59,30 +58,76 @@ namespace Scoopy.Views
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
+                    x => x.Coupling,
+                    x => x.barCoupling.SelectedItems,
+                    vmToViewConverterOverride: new StringOptionsToStringConverter())
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
                     x => x.IsInverted,
                     x => x.chkInverted.IsToggled)
                     .DisposeWith(disposable);
 
-                //this.Bind(ViewModel, 
-                //    x => x.)
+                this.Bind(ViewModel,
+                    x => x.Offset,
+                    x => x.txtOffset.Text)
+                    .DisposeWith(disposable);
 
-                await ViewModel.SendIsActiveQueryAsync();
+                this.Bind(ViewModel,
+                    x => x.Range,
+                    x => x.txtRange.Text)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.TCal,
+                    x => x.txtTCal.Text)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.Scale,
+                    x => x.txtScale.Text)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.Probe,
+                    x => x.cboRatio.SelectedItem)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.Units,
+                    x => x.barUnits.SelectedItems,
+                    vmToViewConverterOverride: new StringOptionsToStringConverter())
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.Vernier,
+                    x => x.barVernier.SelectedItems,
+                    vmToViewConverterOverride: new StringOptionsToStringConverter())
+                    .DisposeWith(disposable);
+
+                // disable setting things until we get the current value from the scope
+                this.Bind(ViewModel, x => x.GetIsActiveSucceeded, x => x.chkActive.IsEnabled);
+                this.Bind(ViewModel, x => x.GetIsInvertedSucceeded, x => x.chkInverted.IsEnabled);
+                this.Bind(ViewModel, x => x.GetOffsetSucceeded, x => x.txtOffset.IsEnabled);
+                this.Bind(ViewModel, x => x.GetCouplingSucceeded, x => x.barCoupling.IsEnabled);
+                this.Bind(ViewModel, x => x.GetRangeSucceeded, x => x.txtRange.IsEnabled);
+                this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.txtTCal.IsEnabled);
+                this.Bind(ViewModel, x => x.GetScaleSucceeded, x => x.txtScale.IsEnabled);
+                this.Bind(ViewModel, x => x.GetProbeSucceeded, x => x.cboRatio.IsEnabled);
+                this.Bind(ViewModel, x => x.GetUnitsSucceeded, x => x.barUnits.IsEnabled);
+                this.Bind(ViewModel, x => x.GetVernierSucceeded, x => x.barVernier.IsEnabled);
+
+                await viewModel.SendVernierQueryAsync();
                 //await ViewModel.SendGetAllQuery();
 
+                Debug.WriteLine($"barVernier: {barVernier.SelectedItems}");
             });
 
-            barCoupling.InitialValue = "DC";
+        }
 
-            barUnits.InitialValue = "Volts";
-
-            txtOffset.Text = "(offset)";
-            txtRange.Text = "(range)";
-            txtScale.Text = "(scale)";
-            txtTCal.Text = "(tcal)";
-            cboRatio.SelectedItem = "10:1";
-
-            barFine.InitialValue = "Course";
-
+        private void BarFine_SelectedItemsChanged(object sender, Controls.TogglesBarSelectionChangedEventArgs e)
+        {
+            { }
         }
 
         //private IReactiveBinding<ScopeChannelView, ScopeChannelVM, (object? view, bool isViewModel)> Bind

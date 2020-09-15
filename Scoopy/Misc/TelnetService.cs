@@ -1,10 +1,10 @@
-﻿using Nito.AsyncEx;
+﻿#define MOCK
+
+using Nito.AsyncEx;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scoopy
@@ -62,9 +62,10 @@ namespace Scoopy
             Hostname = hostname;
             Port = port;
 
-            //Connected = true;
-            //return "Forcing mock connection";
-
+#if MOCK
+            Connected = true;
+            return "Forcing mock connection";
+#else
             using (await BusyObject.LockAsync())
             {
                 IsBusy = true;
@@ -82,6 +83,7 @@ namespace Scoopy
                     return string.Empty;
                 }
             }
+#endif
         }
 
         public async Task<string> SendCommandAsync(string command, bool getResponse)
@@ -104,6 +106,9 @@ namespace Scoopy
 
         public async Task<byte[]> GetScreenshot()
         {
+#if MOCK
+            return null;
+#else
             // skip if busy
             if (IsBusy)
             {
@@ -114,6 +119,7 @@ namespace Scoopy
             using (var client = new TelnetClient(Hostname, Port, Timeout))
             {
                 IsBusy = true;
+                client.DebugEnabled = false;
                 if (!await client.Connect())
                 {
                     return null;
@@ -133,7 +139,7 @@ namespace Scoopy
                         if (int.TryParse(dataLengthString, out var dataLength))
                         {
                             var data = await client.ReadBytesAsync(dataLength);
-                            Debug.WriteLine("Got Screenshot");
+                            //Debug.WriteLine("Got Screenshot");
                             IsBusy = false;
                             return data;
                         }
@@ -151,9 +157,11 @@ namespace Scoopy
                 {
                     Debug.WriteLine("Screenshot response missing header character");
                 }
+                client.DebugEnabled = true;
                 IsBusy = false;
                 return null;
             }
+#endif
         }
 
     }

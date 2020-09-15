@@ -18,6 +18,8 @@ namespace Scoopy
 
         #region Properties
 
+        public bool DebugEnabled { get; set; } = true;
+
         public string Hostname { get; set; }
 
         public int Port { get; set; }
@@ -109,7 +111,10 @@ namespace Scoopy
         public async Task<string> ReadStringAsync()
         {
             var response = await ReadStringAsync(TcpClient.GetStream());
-            Debug.WriteLine("Response: " + response);
+            if (DebugEnabled)
+            {
+                Debug.WriteLine("Response: " + response?.TrimEnd());
+            }
             return response;
         }
 
@@ -121,7 +126,10 @@ namespace Scoopy
                 IsBusy = true;
                 var buffer = await ReadBytesAsync(TcpClient.GetStream(), length);
                 var response = Encoding.ASCII.GetString(buffer);
-                Debug.WriteLine(response);
+                if (DebugEnabled)
+                {
+                    Debug.WriteLine(response);
+                }
                 IsBusy = false;
                 return response;
             }
@@ -291,7 +299,10 @@ namespace Scoopy
             using (await BusyObject.LockAsync())
             {
                 IsBusy = true;
-                Debug.WriteLine(message);
+                if (DebugEnabled)
+                {
+                    Debug.WriteLine(message);
+                }
                 var bytes = Encoding.ASCII.GetBytes(message + "\r\n");
                 await stream.WriteAsync(bytes, 0, bytes.Length);
                 IsBusy = false;

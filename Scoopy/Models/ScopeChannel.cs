@@ -1,5 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Scoopy.Enums;
+using System.Collections.ObjectModel;
 
 namespace Scoopy
 {
@@ -21,7 +23,7 @@ namespace Scoopy
 
         [Reactive] public bool IsActive { get; set; }
 
-        [Reactive] public bool Inverted { get; set; }
+        [Reactive] public bool IsInverted { get; set; }
 
         [Reactive] public Coupling Coupling { get; set; }
 
@@ -34,11 +36,16 @@ namespace Scoopy
         /// </summary>
         [Reactive] public double Offset { get; set; }
 
-        public double Range { get; set; }
-
         public double DelayCalibrationTime { get; set; }
 
-        public int Scale { get; set; }
+        /// <summary>
+        /// Indirectly modifies the vertical scale:
+        /// Vertical Scale = Vertical Range / 8
+        /// 
+        /// </summary>
+        public double Scale { get; set; }
+
+        public double Range { get; set; }
 
         /// <summary>
         /// Discrete steps: .01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000
@@ -47,78 +54,8 @@ namespace Scoopy
 
         public ChannelUnits Units { get; set; }
 
-        public bool FineAdjust { get; set; }
+        public bool? FineAdjust { get; set; }
 
-    }
-
-    /// <summary>
-    /// Handles responses from ScpiCommands.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ScpiCommandHandler<T> 
-    { 
-
-    }
-
-
-    public class ScpiCommand
-    {
-        public string Command { get; set; }
-        public bool WaitForResponse { get; set; }
-        public string Response { get; set; }
-
-        /// <summary>
-        /// Send a command with no arguments. No response expected.
-        /// </summary>
-        public void SendCommand()
-        {
-        }
-
-        /// <summary>
-        /// Send a command, formatted by the provided arguments. 
-        /// The number of arguments provided must match the number of formatting
-        /// placeholders in the command's definition.
-        /// </summary>
-        /// <param name="args">The arguments to use for formatting the command.</param>
-        public void SendCommand(params object[] args) 
-        {
-            var formatted = string.Format(Command, args);
-        }
-
-        /// <summary>
-        /// Send a command and get a response.
-        /// </summary>
-        /// <typeparam name="T">The type of the response to get.</typeparam>
-        /// <param name="defaultValue">In case the command fails, this is the return value.</param>
-        /// <returns></returns>
-        public T SendCommand<T>(T defaultValue)
-        {
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Send a command, formatted by the provided arguments, and get a response.
-        /// </summary>
-        /// <typeparam name="T">The type of the response to get.</typeparam>
-        /// <param name="defaultValue">In case the command fails, this is the return value.</param>
-        /// <param name="args">The arguments to use for formatting the command.</param>
-        /// <returns></returns>
-        public T SendCommand<T>(T defaultValue, params object[] args) 
-        {
-            var formatted = string.Format(Command, args);
-            return defaultValue;
-        }
-
-
-
-    }
-
-    public class ScpiCommands
-    {
-        public readonly ScpiCommand SetChannelOffsetCommand = new ScpiCommand()
-        {
-            Command = ":CHAN{0}:OFF {1}",
-        };
     }
 
 }
