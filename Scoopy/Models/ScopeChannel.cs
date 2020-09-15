@@ -23,9 +23,7 @@ namespace Scoopy
 
         [Reactive] public bool IsActive { get; set; }
 
-        [Reactive] public bool IsInverted { get; set; }
-
-        [Reactive] public Coupling Coupling { get; set; }
+        [Reactive] public string Coupling { get; set; }
 
         /// <summary>
         /// The offset Value is related to the current vertical scale and probe ratio.
@@ -36,7 +34,7 @@ namespace Scoopy
         /// </summary>
         [Reactive] public double Offset { get; set; }
 
-        public double DelayCalibrationTime { get; set; }
+        public double Range { get; set; }
 
         /// <summary>
         /// Indirectly modifies the vertical scale:
@@ -45,16 +43,20 @@ namespace Scoopy
         /// </summary>
         public double Scale { get; set; }
 
-        public double Range { get; set; }
-
         /// <summary>
         /// Discrete steps: .01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000
         /// </summary>
-        public double ProbeRatio { get; set; }
+        public string Probe { get; set; }
 
-        public ChannelUnits Units { get; set; }
+        [Reactive] public bool IsInverted { get; set; }
 
-        public bool? FineAdjust { get; set; }
+        [Reactive] public bool IsBandwidthLimited { get; set; }
+
+        public bool IsVernier { get; set; }
+
+        public double TCal { get; set; }
+
+        public string Units { get; set; }
 
     }
 

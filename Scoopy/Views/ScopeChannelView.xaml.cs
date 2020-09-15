@@ -40,87 +40,98 @@ namespace Scoopy.Views
 
             // initialize some stuff
             txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            barCoupling.ItemsSource = StringOptions.Coupling;
-            barUnits.ItemsSource = StringOptions.Units;
-            barVernier.ItemsSource = StringOptions.Vernier;
-            cboRatio.ItemsSource = StringOptions.ProbeRatio;
+            uiCoupling.ItemsSource = StringOptions.Coupling;
+            uiUnits.ItemsSource = StringOptions.Units;
+            uiProbeRatio.ItemsSource = StringOptions.ProbeRatio;
 
             this.WhenActivated(async disposable =>
             {
                 this.Bind(ViewModel,
-                    x => x.ChannelName,
+                    x => x.Name,
                     x => x.txtLabel.Text)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.IsActive,
-                    x => x.chkActive.IsOn)
+                    x => x.uiIsActive.IsOn)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.Coupling,
-                    x => x.barCoupling.SelectedItems,
+                    x => x.uiCoupling.SelectedItems,
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
-                    .DisposeWith(disposable);
-
-                this.Bind(ViewModel,
-                    x => x.IsInverted,
-                    x => x.chkInverted.IsToggled)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.Offset,
-                    x => x.txtOffset.Text)
+                    x => x.uiOffset.Text)
+                    .DisposeWith(disposable);
+                this.Bind(ViewModel,
+                    x => x.OffsetUnits,
+                    x => x.uiOffsetUnits.Text)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.Range,
-                    x => x.txtRange.Text)
+                    x => x.uiRange.Text)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.TCal,
-                    x => x.txtTCal.Text)
+                    x => x.uiTCal.Text)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.Scale,
-                    x => x.txtScale.Text)
+                    x => x.uiScale.Text)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.Probe,
-                    x => x.cboRatio.SelectedItem)
+                    x => x.ProbeRatio,
+                    x => x.uiProbeRatio.SelectedItem)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.IsBandwidthLimited,
+                    x => x.uiIsBandwidthLimited.IsToggled)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.IsInverted,
+                    x => x.uiIsInverted.IsToggled)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.IsVernier,
+                    x => x.uiIsVernier.IsToggled)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
                     x => x.Units,
-                    x => x.barUnits.SelectedItems,
-                    vmToViewConverterOverride: new StringOptionsToStringConverter())
-                    .DisposeWith(disposable);
-
-                this.Bind(ViewModel,
-                    x => x.Vernier,
-                    x => x.barVernier.SelectedItems,
+                    x => x.uiUnits.SelectedItems,
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
 
                 // disable setting things until we get the current value from the scope
-                this.Bind(ViewModel, x => x.GetIsActiveSucceeded, x => x.chkActive.IsEnabled);
-                this.Bind(ViewModel, x => x.GetIsInvertedSucceeded, x => x.chkInverted.IsEnabled);
-                this.Bind(ViewModel, x => x.GetOffsetSucceeded, x => x.txtOffset.IsEnabled);
-                this.Bind(ViewModel, x => x.GetCouplingSucceeded, x => x.barCoupling.IsEnabled);
-                this.Bind(ViewModel, x => x.GetRangeSucceeded, x => x.txtRange.IsEnabled);
-                this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.txtTCal.IsEnabled);
-                this.Bind(ViewModel, x => x.GetScaleSucceeded, x => x.txtScale.IsEnabled);
-                this.Bind(ViewModel, x => x.GetProbeSucceeded, x => x.cboRatio.IsEnabled);
-                this.Bind(ViewModel, x => x.GetUnitsSucceeded, x => x.barUnits.IsEnabled);
-                this.Bind(ViewModel, x => x.GetVernierSucceeded, x => x.barVernier.IsEnabled);
+                this.Bind(ViewModel, x => x.GetIsActiveSucceeded, x => x.uiIsActive.IsEnabled);
+                this.Bind(ViewModel, x => x.GetOffsetSucceeded, x => x.uiOffset.IsEnabled);
+                this.Bind(ViewModel, x => x.GetCouplingSucceeded, x => x.uiCoupling.IsEnabled);
+                this.Bind(ViewModel, x => x.GetRangeSucceeded, x => x.uiRange.IsEnabled);
+                this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCal.IsEnabled);
+                this.Bind(ViewModel, x => x.GetScaleSucceeded, x => x.uiScale.IsEnabled);
+                this.Bind(ViewModel, x => x.GetProbeSucceeded, x => x.uiProbeRatio.IsEnabled);
+                this.Bind(ViewModel, x => x.GetIsBandwidthLimitedSucceeded, x => x.uiIsBandwidthLimited.IsEnabled);
+                this.Bind(ViewModel, x => x.GetIsInvertedSucceeded, x => x.uiIsInverted.IsEnabled);
+                this.Bind(ViewModel, x => x.GetIsVernierSucceeded, x => x.uiIsVernier.IsEnabled);
+                this.Bind(ViewModel, x => x.GetUnitsSucceeded, x => x.uiUnits.IsEnabled);
 
-                await viewModel.SendVernierQueryAsync();
+                //await viewModel.SendVernierQueryAsync();
+                //await viewModel.SendIsBandwidthLimitedQueryAsync();
+                await viewModel.SendOffsetQueryAsync();
+                await ViewModel.SendUnitsQueryAsync();
                 //await ViewModel.SendGetAllQuery();
 
-                Debug.WriteLine($"barVernier: {barVernier.SelectedItems}");
+                //Debug.WriteLine($"barVernier: {barVernier.SelectedItems}");
             });
 
         }

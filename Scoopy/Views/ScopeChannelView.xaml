@@ -42,54 +42,60 @@
                     <edit:EditableLabel x:Name="txtLabel" HorizontalOptions="FillAndExpand" />
                 </StackLayout>
 
-                <xamlly:Switch x:Name="chkActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
+                <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="barCoupling" DisplayMemberPath="Value" />
+                    <controls:TogglesBar x:Name="uiCoupling" DisplayMemberPath="Value" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Offset"/>
-                    <edit:EditableLabel x:Name="txtOffset" HorizontalOptions="CenterAndExpand" />
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" />
+                    <Label x:Name="uiOffsetUnits" HorizontalOptions="End"/>
+                    </StackLayout>
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Range" />
-                    <edit:EditableLabel x:Name="txtRange" HorizontalOptions="CenterAndExpand" />
+                    <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Scale"/>
-                    <edit:EditableLabel x:Name="txtScale" HorizontalOptions="CenterAndExpand"/>
+                    <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <!-- wrapping the picker prevents it from expanding the space used each time it is opened -->
                     <Label Text="Ratio"/>
-                    <Picker x:Name="cboRatio" HorizontalOptions="CenterAndExpand" />
-                </ufg:UniformGrid>
-
-                <ufg:UniformGrid Rows="1">
-                    <Label Text="TCal"/>
-                    <edit:EditableLabel x:Name="txtTCal" HorizontalOptions="CenterAndExpand"/>
+                    <Picker x:Name="uiProbeRatio" HorizontalOptions="CenterAndExpand" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Inverted"/>
-                    <Switch x:Name="chkInverted" />
+                    <Switch x:Name="uiIsInverted" HorizontalOptions="Center" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="barUnits" DisplayMemberPath="Value" />
-                    <!-- xamlly:ToggleButton Text="Volts" SelectedColor="White" UnselectedColor="DarkGray"/>
-                <xamlly:ToggleButton Text="Watts"/>
-                <xamlly:ToggleButton Text="Amps"/>
-                <xamlly:ToggleButton Text="???"/ -->
+                    <Label Text="BW Limit"/>
+                    <Switch x:Name="uiIsBandwidthLimited" HorizontalOptions="Center" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="barVernier" DisplayMemberPath="Value" />
+                    <Label Text="Fine Adjust"/>
+                    <Switch x:Name="uiIsVernier" HorizontalOptions="Center" />
                 </ufg:UniformGrid>
+                
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="TCal"/>
+                    <edit:EditableLabel x:Name="uiTCal" HorizontalOptions="CenterAndExpand"/>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <controls:TogglesBar x:Name="uiUnits" DisplayMemberPath="Value" />
+                </ufg:UniformGrid>
+
 
 
 
