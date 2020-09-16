@@ -11,8 +11,6 @@ namespace Scoopy
 
         public static ScopeVM ScopeVM => Locator.Current.GetService<ScopeVM>();
 
-        public static ConnectVM ConnectVM => Locator.Current.GetService<ConnectVM>();
-
         public static TelnetService TelnetService => Locator.Current.GetService<TelnetService>();
 
         public static Settings Settings => Locator.Current.GetService<Settings>();
@@ -20,6 +18,10 @@ namespace Scoopy
         static public void Init()
         {
             // register converters
+            Locator.CurrentMutable.RegisterConstant(
+                new IntToStringConverter(),
+                typeof(IBindingTypeConverter)
+            );
             Locator.CurrentMutable.RegisterConstant(
                 new DoubleToStringConverter(),
                 typeof(IBindingTypeConverter)
@@ -32,8 +34,6 @@ namespace Scoopy
             // singletons (RegisterConstant)
             Locator.CurrentMutable.RegisterConstant(new Settings()); // need settings before others
             Locator.CurrentMutable.RegisterConstant(new TelnetService());
-            Locator.CurrentMutable.RegisterConstant(new ScopeVM());
-            Locator.CurrentMutable.RegisterConstant(new ConnectVM());
         }
 
     }

@@ -25,6 +25,15 @@ namespace Scoopy.Converters
                 result = from?.ToString();
                 return true;
             }
+            if (toType == typeof(StringOption))
+            {
+                if (from is string value)
+                {
+                    var option = StringOptions.GetAnyByValue(value);
+                    return option != null;
+                }
+
+            }
             if (toType == typeof(Enum))
             {
                 // compiler doesn't recognize this...?

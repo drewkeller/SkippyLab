@@ -13,5 +13,8 @@ namespace Scoopy.Models
 
         [Reactive] public int Port { get; set; } = 5555;
 
+        [Reactive] public string ScreenshotFolder { get; set; } =
+            Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.XamForms;
+using Scoopy.Enums;
 using Scoopy.Extensions;
 using Scoopy.ViewModels;
 using System;
@@ -17,7 +18,7 @@ namespace Scoopy.Views
         public ConnectView()
         {
             InitializeComponent();
-            ViewModel = AppLocator.ConnectVM;
+            ViewModel = new ConnectVM();
 
             this.WhenActivated(disposable =>
             {

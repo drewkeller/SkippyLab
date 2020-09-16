@@ -15,21 +15,6 @@
 
     <ContentView.Resources>
         <ResourceDictionary>
-            <Style TargetType="xamlly:TogglesBar">
-                <Setter Property="SelectedColor" Value="White"/>
-                <Setter Property="UnselectedColor" Value="Gray"/>
-            </Style>
-            <Style TargetType="controls:TogglesBar">
-                <Setter Property="SelectedColor" Value="White"/>
-                <Setter Property="UnselectedColor" Value="Gray"/>
-            </Style>
-            <Style TargetType="xamlly:Switch">
-                <Setter Property="ButtonWidth" Value="50"/>
-                <Setter Property="OnColor" Value="White"/>
-                <Setter Property="OffColor" Value="Gray"/>
-                <Setter Property="BackgroundColor" Value="DarkGray"/>
-                <Setter Property="TextColor" Value="Black"/>
-            </Style>
         </ResourceDictionary>
     </ContentView.Resources>
     
@@ -43,6 +28,10 @@
                 </StackLayout>
 
                 <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
+                <StackLayout Orientation="Horizontal">
+                    <Button x:Name="SelectChannelButton" Text="Select" HorizontalOptions="End" />
+                    <Button x:Name="RefreshChannelButton" Text="Refresh" HorizontalOptions="End" />
+                </StackLayout>
 
                 <ufg:UniformGrid Rows="1">
                     <controls:TogglesBar x:Name="uiCoupling" DisplayMemberPath="Value" />
@@ -51,16 +40,16 @@
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Offset"/>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" />
-                        <Label x:Name="uiOffsetUnits" HorizontalOptions="End"/>
+                        <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" FontFamily="Consolas"/>
+                        <Label x:Name="uiOffsetUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                     </StackLayout>
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Range" />
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand" />
-                        <Label x:Name="uiRangeUnits" HorizontalOptions="End"/>
+                        <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand"/>
+                        <Label x:Name="uiRangeUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                     </StackLayout>
                 </ufg:UniformGrid>
 
@@ -68,7 +57,7 @@
                     <Label Text="Scale"/>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
-                        <Label x:Name="uiScaleUnits" HorizontalOptions="End"/>
+                        <Label x:Name="uiScaleUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                     </StackLayout>
                 </ufg:UniformGrid>
 
@@ -97,8 +86,8 @@
                 <ufg:UniformGrid Rows="1">
                     <Label Text="TCal"/>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <edit:EditableLabel x:Name="uiTCal" HorizontalOptions="CenterAndExpand"/>
-                        <Label x:Name="uiTCalUnits" HorizontalOptions="End"/>
+                        <edit:EditableLabel x:Name="uiTCal" HorizontalOptions="CenterAndExpand" Style="{StaticResource Key=DisablableLabel}" />
+                        <Label x:Name="uiTCalUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                     </StackLayout>
                 </ufg:UniformGrid>
                 -->

@@ -14,6 +14,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -25,6 +26,7 @@
             <Entry Grid.Column="1" Grid.Row="1" x:Name="txtPort" />
 
             <Button Grid.Row="2" Grid.ColumnSpan="2" x:Name="btnConnect" Text="Connect" Margin="0,10"/>
+
         </Grid>
     </ContentView.Content>
 </rxui:ReactiveContentView>

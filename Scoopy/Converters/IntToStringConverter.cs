@@ -3,30 +3,14 @@ using System;
 
 namespace Scoopy.Converters
 {
-    public class DoubleToStringConverter : IBindingTypeConverter
+    public class IntToStringConverter : IBindingTypeConverter
     {
 
         public int GetAffinityForObjects(Type fromType, Type toType)
         {
-            if (fromType == typeof(double))
-            {
-                return 100;
-            }
-            if (fromType == typeof(string))
-            {
-                return 100;
-            }
             if (fromType == typeof(int))
             {
-                return 1;
-            }
-            if (fromType == typeof(float))
-            {
-                return 1;
-            }
-            if (fromType == typeof(decimal))
-            {
-                return 1;
+                return 100;
             }
             return 0;
         }
@@ -43,9 +27,9 @@ namespace Scoopy.Converters
                 result = from?.ToString();
                 return true;
             }
-            if (toType == typeof(double))
+            if (toType == typeof(int))
             {
-                if (double.TryParse(from?.ToString(), out var val))
+                if (int.TryParse(from?.ToString(), out var val))
                 {
                     result = val;
                     return true;

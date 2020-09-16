@@ -1,6 +1,7 @@
 ﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Scoopy.Models;
 using System;
 using System.Collections.Generic;
 using System.Reactive;
@@ -12,8 +13,7 @@ namespace Scoopy.ViewModels
     public class ConnectVM : ReactiveObject
     {
 
-        public string Hostname { get => _hostname; set => this.RaiseAndSetIfChanged(ref _hostname, value); }
-        private string _hostname;
+        [Reactive] public string Hostname { get; set; }
 
         [Reactive] public int Port { get; set; }
 

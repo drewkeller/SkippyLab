@@ -10,8 +10,8 @@
     xmlns:local="clr-namespace:Scoopy"
     >
 
-    <StackLayout x:Name="pnlMain" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-        <v:ConnectView Margin="20" />
+    <StackLayout x:Name="pnlMain" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" WidthRequest="300">
+        <v:ConnectView x:Name="ConnectView" Margin="20" />
     </StackLayout>
 
 </rxui:ReactiveContentPage>

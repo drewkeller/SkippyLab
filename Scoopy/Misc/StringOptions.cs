@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Scoopy.Enums
@@ -41,6 +42,10 @@ namespace Scoopy.Enums
 
     public class StringOptions : ObservableCollection<StringOption>
     {
+        public static readonly List<StringOptions> All = new List<StringOptions> {
+            Coupling, Units, Vernier, ProbeRatio
+        };
+
         public static readonly StringOptions Coupling = new StringOptions
         {
             new StringOption("AC", "AC"), 
@@ -81,6 +86,11 @@ namespace Scoopy.Enums
             new StringOption("1000x", "1000"),
         };
 
+        public IEnumerable<string> ToValueStrings()
+        {
+            return this.Select(x => x.Value);
+        }
+
         public StringOption GetByValue(string value)
         {
             //return this.Where(x => x.Value == value).First();
@@ -90,6 +100,17 @@ namespace Scoopy.Enums
         {
             return this.Where(x => x.Parameter == parameter).FirstOrDefault();
         }
+
+        public static StringOption GetAnyByValue(string value)
+        {
+            foreach (var set in All)
+            {
+                var option = set.GetByValue(value);
+                if (option != null) return option;
+            }
+            return null;
+        }
+
     }
 
 }

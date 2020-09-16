@@ -1,10 +1,11 @@
-﻿#define MOCK
+﻿//#define MOCK
 
 using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Scoopy.Enums;
 using Scoopy.Extensions;
+using Scoopy.Models;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -12,91 +13,101 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Scoopy.ViewModels
 {
     public class ScopeChannelVM : ReactiveObject, IActivatableViewModel
     {
         ScopeChannel Model { get; set; }
+#if MOCK
         ScopeChannel MockModel { get; set; }
-
+#endif
         public ViewModelActivator Activator { get; }
 
         TelnetService Telnet => AppLocator.TelnetService;
 
-        #region Scope Properties
+        Settings Settings => AppLocator.Settings;
+
+#region Scope Properties
 
         // is there a way to read this from the scope?
         public int ChannelNumber { get; set; }
 
         [Reactive] public string Name { get; set; }
 
-        #region IsActive
+#region IsActive
         [Reactive] public bool IsActive { get; set; } = false;
         public ReactiveCommand<Unit, Unit> GetIsActiveCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsActiveCommand;
         [Reactive] public bool GetIsActiveSucceeded { get; set; }
-        #endregion
+#endregion
 
-        #region Coupling
+#region SelectChannel
+        public ICommand SelectChannel { get; internal set; }
+        public ICommand RefreshChannel { get; internal set; }
+
+#endregion
+
+#region Coupling
         [Reactive] public string Coupling { get; set; }
         public ReactiveCommand<Unit, Unit> GetCouplingCommand { get; }
         public ReactiveCommand<Unit, Unit> SetCouplingCommand;
         [Reactive] public bool GetCouplingSucceeded { get; set; }
-        #endregion
+#endregion
 
-        #region Offset
+#region Offset
         [Reactive]
         public double Offset { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetOffsetCommand { get; }
         public ReactiveCommand<Unit, Unit> SetOffsetCommand;
         [Reactive] public bool GetOffsetSucceeded { get; set; }
         [Reactive] public string OffsetUnits { get; set; }
-        #endregion
+#endregion
 
-        #region Range
+#region Range
         [Reactive] public double Range { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetRangeCommand { get; }
         public ReactiveCommand<Unit, Unit> SetRangeCommand;
         [Reactive] public bool GetRangeSucceeded { get; set; }
         [Reactive] public string RangeUnits { get; set; } = "V";
-        #endregion
+#endregion
 
-        #region Scale
+#region Scale
         [Reactive] public double Scale { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetScaleCommand { get; }
         public ReactiveCommand<Unit, Unit> SetScaleCommand;
         [Reactive] public bool GetScaleSucceeded { get; set; }
         [Reactive] public string ScaleUnits { get; set; } = "V";
-        #endregion
+#endregion
 
-        #region Probe
-        [Reactive] public string ProbeRatio { get; set; }
+#region Probe
+        [Reactive] public StringOption ProbeRatio { get; set; }
         public ReactiveCommand<Unit, Unit> GetProbeCommand { get; }
         public ReactiveCommand<Unit, Unit> SetProbeCommand;
         [Reactive] public bool GetProbeSucceeded { get; set; }
-        #endregion
+#endregion
 
-        #region IsInverted
+#region IsInverted
         [Reactive] public bool IsInverted { get; set; } = false;
         public ReactiveCommand<Unit, Unit> GetIsInvertedCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsInvertedCommand;
         [Reactive] public bool GetIsInvertedSucceeded { get; set; }
-        #endregion
+#endregion
 
-        #region IsBandwidthLimited
+#region IsBandwidthLimited
         [Reactive] public bool IsBandwidthLimited { get; set; }
         public ReactiveCommand<Unit, Unit> GetIsBandwidthLimitedCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsBandwidthLimitedCommand;
         [Reactive] public bool GetIsBandwidthLimitedSucceeded { get; set; }
-        #endregion
+#endregion
 
-        #region IsVernier
+#region IsVernier
         [Reactive] public bool IsVernier { get; set; }
         public ReactiveCommand<Unit, Unit> GetIsVernierCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsVernierCommand;
         [Reactive] public bool GetIsVernierSucceeded { get; set; }
-        #endregion
+#endregion
 
 #region TCal
 #if false
@@ -142,14 +153,13 @@ namespace Scoopy.ViewModels
             }, canSetIsActive);
 #endregion
 
+            SelectChannel = ReactiveCommand.CreateFromTask(SelectChannelExecute);
+
 #region Coupling
             var canSetCoupling = this.WhenValueChanged(x => x.GetCouplingSucceeded)
                 .Where(x => x == true);
             GetCouplingCommand = ReactiveCommand.CreateFromTask(SendCouplingQueryAsync);
-            SetCouplingCommand = ReactiveCommand.CreateFromTask(async () =>
-            {
-                await SendCouplingCommandAsync();
-            }, canSetCoupling);
+            SetCouplingCommand = ReactiveCommand.CreateFromTask(SendCouplingCommandAsync, canSetCoupling);
 #endregion
 
 #region Offset
@@ -219,7 +229,20 @@ namespace Scoopy.ViewModels
                 .Where(x => x == true);
             GetUnitsCommand = ReactiveCommand.CreateFromTask(SendUnitsQueryAsync);
             SetUnitsCommand = ReactiveCommand.CreateFromTask(SendUnitsCommandAsync, canSetUnits);
-#endregion
+            #endregion
+
+            RefreshChannel = ReactiveCommand.CreateCombined(
+                new[] {
+                    GetIsActiveCommand,
+                    GetCouplingCommand,
+                    GetOffsetCommand,
+                    GetRangeCommand,
+                    GetScaleCommand,
+                    GetProbeCommand,
+                    GetIsBandwidthLimitedCommand,
+                    GetIsInvertedCommand,
+                    GetIsVernierCommand,
+                    GetUnitsCommand});
 
             // watch our own properties and call commands that update the model
 
@@ -290,6 +313,16 @@ namespace Scoopy.ViewModels
             });
         }
 
+        /// <summary>
+        /// Sends the channel "on" command with whatever the current state is, 
+        /// in order to select it on the scope.
+        /// </summary>
+        /// <returns></returns>
+        private async Task SelectChannelExecute()
+        {
+            var parameter = IsActive ? "1" : "0";
+            await SendCommandAsync(ChannelSubcommand.DISPlay, parameter);
+        }
 
         private void HandleActivation()
         {
@@ -366,7 +399,8 @@ namespace Scoopy.ViewModels
 
         public async Task SendCouplingCommandAsync()
         {
-            await SendCommandAsync(ChannelSubcommand.COUPling, this.Coupling.ToString());
+            var option = StringOptions.Coupling.GetByValue(Coupling);
+            await SendCommandAsync(ChannelSubcommand.COUPling, option.Value);
         }
 #endregion
 
@@ -392,10 +426,13 @@ namespace Scoopy.ViewModels
 
         public async Task SendOffsetCommandAsync()
         {
+#if MOCK
+#else
             var value = this.Offset.ToString();
             await SendCommandAsync(ChannelSubcommand.OFFSet, value);
+#endif
         }
-        #endregion
+#endregion
 
 #region TCal
 #if TCAL
@@ -479,7 +516,7 @@ namespace Scoopy.ViewModels
                 if (val.StartsWith("0")) val = val.Substring(1);
                 var ratio = StringOptions.ProbeRatio.GetByValue(val + "x");
                 Model.Probe = ratio.Value;
-                this.ProbeRatio = ratio.Value;
+                this.ProbeRatio = ratio;
                 GetProbeSucceeded = true;
             }
             Log($"Probe: {this.ProbeRatio}");
@@ -488,7 +525,8 @@ namespace Scoopy.ViewModels
 
         public async Task SendProbeCommandAsync()
         {
-            var option = StringOptions.ProbeRatio.GetByValue(this.ProbeRatio);
+            //var option = StringOptions.ProbeRatio.GetByValue(this.ProbeRatio);
+            var option = ProbeRatio;
             await SendCommandAsync(ChannelSubcommand.PROBe, option.Parameter);
         }
 #endregion
@@ -545,8 +583,7 @@ namespace Scoopy.ViewModels
 
         public async Task SendIsVernierCommandAsync()
         {
-            var option = StringOptions.Vernier.GetByValue(this.Units);
-            await SendCommandAsync(ChannelSubcommand.VERNier, option.Parameter);
+            await SendCommandAsync(ChannelSubcommand.VERNier, this.IsVernier);
         }
 #endregion
 
@@ -609,8 +646,9 @@ namespace Scoopy.ViewModels
 
         private void UpdateUnits()
         {
-            var mainUnits = 
-                Units == "Volts" ? "V"
+            var mainUnits =
+                Units == null ? ""
+                : Units == "Volts" ? "V"
                 : Units == "Amps" ? "A"
                 : Units == "Watts" ? "W"
                 : "";

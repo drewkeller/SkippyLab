@@ -19,15 +19,36 @@ namespace Scoopy.Views
 
             this.WhenActivated(disposable =>
             {
-                this.Bind(ViewModel, 
-                    x => x.Screen, 
+                this.Bind(ViewModel,
+                    x => x.Screen,
                     x => x.imgScreen.Source)
                     .DisposeWith(disposable);
 
-                this.BindCommand(ViewModel,
-                    x => x.GetScreenshotCommand, 
-                    x => x.btnScreenshot)
+                this.Bind(ViewModel,
+                    x => x.AutorefreshEnabled,
+                    x => x.uiAutorefresh.IsToggled)
                     .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.ScreenRefreshRate,
+                    x => x.uiScreenRefreshRate.Text)
+                    .DisposeWith(disposable);
+
+                this.BindCommand(ViewModel,
+                    x => x.RefreshScreenCommand, 
+                    x => x.RefreshScreenButton)
+                    .DisposeWith(disposable);
+
+                this.Bind(ViewModel,
+                    x => x.ScreenshotFolder,
+                    x => x.ScreenshotFolder.Text)
+                    .DisposeWith(disposable);
+
+                this.BindCommand(ViewModel,
+                    x => x.SaveScreenshotCommand,
+                    x => x.SaveScreenshotButton)
+                    .DisposeWith(disposable);
+
             });
 
         }
@@ -35,7 +56,7 @@ namespace Scoopy.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            for (int i = 1; i <= 1; i++)
+            for (int i = 1; i <= 4; i++)
             {
                 var channelVM = new ScopeChannelVM(i);
                 var channelPanel = new ScopeChannelView(channelVM);
