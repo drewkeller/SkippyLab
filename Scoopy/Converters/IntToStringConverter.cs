@@ -12,6 +12,10 @@ namespace Scoopy.Converters
             {
                 return 100;
             }
+            if (fromType == typeof(string))
+            {
+                return 100;
+            }
             return 0;
         }
 

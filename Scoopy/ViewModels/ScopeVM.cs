@@ -34,13 +34,17 @@ namespace Scoopy.ViewModels
         // read/write property
         [Reactive] public ImageSource Screen { get; set; }
         [Reactive] private byte[] ScreenData { get; set; }
-        public string ScreenshotFolder => Settings.ScreenshotFolder;
+        [Reactive] public string ScreenshotFolder { get; set; }
 
-        [Reactive] public bool ScreenshotFolderExists { get; set; }
+        [Reactive] public bool ScreenshotFolderHasError { get; set; }
+        [Reactive] public string ScreenshotFolderError { get; set; }
 
-        [Reactive] public int ScreenRefreshRate { get; set; } = 5000;
+        [Reactive] public int ScreenRefreshRate { get; set; }
         [Reactive] private TimeSpan NextScreenshotTime { get; set; }
         [Reactive] private IObservable<long> ScreenshotTimer { get; set; }
+
+        private System.Timers.Timer ScreenRefreshTimer = new System.Timers.Timer();
+
         public IDisposable TimerSubscription { get; private set; }
         [Reactive] public bool AutorefreshEnabled { get; set; } = true;
         [Reactive] public bool HasScreenshot { get; set; }
@@ -52,11 +56,14 @@ namespace Scoopy.ViewModels
         [Reactive] private bool CopyingScreenshot { get; set; }
         [Reactive] private bool SavingScreenshot { get; set; }
         private IObservable<bool> CanExecuteSaveScreenshot =>
-            Observable.Return(ScreenshotFolderExists && HasScreenshot && !SavingScreenshot);
+            Observable.Return(ScreenshotFolderHasError && HasScreenshot && !SavingScreenshot);
 
         public ScopeVM()
         {
             Activator = new ViewModelActivator();
+
+            ScreenRefreshRate = 5000;
+            ScreenshotFolder = Settings.ScreenshotFolder;
 
             RefreshScreenCommand = ReactiveCommand
                 .CreateFromTask(ExecuteRefreshScreen, CanExecuteRefreshScreen);
@@ -77,9 +84,43 @@ namespace Scoopy.ViewModels
                 .Where(x => x.Value == true)
                 .Subscribe(x => StartTimer());
 
+            //Settings.WhenPropertyChanged(x => x.ScreenshotFolder)
+            //    .BindTo(this, x => x.ScreenshotFolder);
+
             this.WhenPropertyChanged(x => x.ScreenshotFolder)
-                .Subscribe(x => ScreenshotFolderExists =
-                    ScreenshotFolder.HasData() && Directory.Exists(ScreenshotFolder));
+                .Subscribe(x =>
+                {
+                    var testPath = @"C:\Users\drewk\Pictures";
+                    testPath = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData);
+                    //testPath = Path.GetFullPath(testPath);
+                    var test1 = io.FolderExists(testPath);
+                    var test = Directory.Exists(testPath);
+                    test = System.IO.Directory.Exists(@"C:\Users\drewk\Documents");
+                    test = File.Exists(Path.Combine(testPath, "test.txt"));
+                    if (!ScreenshotFolder.HasData())
+                    {
+                        ScreenshotFolderError = "Screenshot folder is not set";
+                        ScreenshotFolderHasError = true;
+                    } 
+                    else if (!Directory.Exists(ScreenshotFolder))
+                    { 
+                        ScreenshotFolderError = "Couldn't find screenshot folder";
+                        ScreenshotFolderHasError = true;
+                    }
+                    else
+                    {
+                        ScreenshotFolderHasError = false;
+                    }
+                });
+
+            this.WhenPropertyChanged(x => x.ScreenRefreshRate)
+                .Subscribe(x => {
+                    ScreenRefreshTimer.Stop();
+                    ScreenRefreshTimer.Interval = ScreenRefreshRate;
+                    ScreenRefreshTimer.Start();
+                });
+
+            ScreenRefreshTimer.Elapsed += ScreenRefreshTimer_Elapsed;
 
             var ts = AppLocator.TelnetService;
             ts.WhenAnyValue(x => x.Connected)
@@ -101,6 +142,12 @@ namespace Scoopy.ViewModels
             //   });
 
             //StartTimer();
+        }
+
+        private void ScreenRefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            //ExecuteRefreshScreen().NoAwait();
+            Debug.WriteLine($"{DateTime.Now}: Signaling screen refresh");
         }
 
         private void SaveScreenshotExecute()
@@ -128,7 +175,10 @@ namespace Scoopy.ViewModels
         {
             var telnet = AppLocator.TelnetService;
 
-            if (_waitingForScreenshot) return Unit.Default;
+            if (_waitingForScreenshot)
+            {
+                return Unit.Default;
+            }
             _waitingForScreenshot = true;
 
             var bytes = await telnet.GetScreenshot();
@@ -140,7 +190,7 @@ namespace Scoopy.ViewModels
             }
 
             // display screenshot
-            Debug.Write($"{DateTime.Now}: Screenshot succeeded");
+            Debug.WriteLine($"{DateTime.Now}: Screenshot succeeded");
             var img = ImageSource.FromStream(() => new MemoryStream(bytes));
             Screen = img;
             _waitingForScreenshot = false;
@@ -166,7 +216,7 @@ namespace Scoopy.ViewModels
                 {
                     if (AutorefreshEnabled)
                     {
-                        Debug.WriteLine($"{DateTime.Now}: Requesting screenshot");
+                        Debug.WriteLine($"{DateTime.Now}: Requesting screenshot (next in {ScreenRefreshRate/1000}s)");
                         RefreshScreenCommand.Execute();
                         StartTimer();
                     }
