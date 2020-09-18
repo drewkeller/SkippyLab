@@ -7,7 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Scoopy
+namespace Scoopy.Services
 {
     public class TelnetService : ReactiveObject, IDisposable
     {

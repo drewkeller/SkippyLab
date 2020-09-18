@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Scoopy.Enums;
+using Scoopy.Protocols;
 using System.Collections.ObjectModel;
 
 namespace Scoopy

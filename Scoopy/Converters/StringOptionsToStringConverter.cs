@@ -1,5 +1,5 @@
 ﻿using ReactiveUI;
-using Scoopy.Enums;
+using Scoopy.Protocols;
 using System;
 
 namespace Scoopy.Converters

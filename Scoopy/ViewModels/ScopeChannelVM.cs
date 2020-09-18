@@ -3,9 +3,10 @@
 using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Scoopy.Enums;
 using Scoopy.Extensions;
 using Scoopy.Models;
+using Scoopy.Protocols;
+using Scoopy.Services;
 using System;
 using System.Diagnostics;
 using System.Linq;

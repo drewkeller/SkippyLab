@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Scoopy.Enums
+namespace Scoopy.Protocols
 {
 
     /// <summary>

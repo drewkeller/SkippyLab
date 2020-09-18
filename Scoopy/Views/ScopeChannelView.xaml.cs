@@ -1,7 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
 using Scoopy.Converters;
-using Scoopy.Enums;
+using Scoopy.Protocols;
 using Scoopy.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace Scoopy.Views
             }
         }
 
-        public StringOptions CouplingOptions => Enums.StringOptions.Coupling;
+        public StringOptions CouplingOptions => Protocols.StringOptions.Coupling;
 
         public ScopeChannelView(ScopeChannelVM viewModel)
         {

@@ -1,4 +1,4 @@
-﻿namespace Scoopy
+﻿namespace Scoopy.Protocols
 {
     public enum ChannelSubcommand
     {

@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using Scoopy.Converters;
 using Scoopy.Models;
+using Scoopy.Services;
 using Scoopy.ViewModels;
 using Splat;
 

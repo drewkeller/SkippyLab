@@ -1,7 +1,7 @@
 ﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.XamForms;
-using Scoopy.Enums;
+using Scoopy.Protocols;
 using Scoopy.Extensions;
 using Scoopy.ViewModels;
 using System;

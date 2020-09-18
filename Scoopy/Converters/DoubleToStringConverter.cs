@@ -16,18 +16,6 @@ namespace Scoopy.Converters
             {
                 return 100;
             }
-            //if (fromType == typeof(int))
-            //{
-            //    return 1;
-            //}
-            //if (fromType == typeof(float))
-            //{
-            //    return 1;
-            //}
-            //if (fromType == typeof(decimal))
-            //{
-            //    return 1;
-            //}
             return 0;
         }
 

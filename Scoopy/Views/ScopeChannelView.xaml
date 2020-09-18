@@ -7,7 +7,7 @@
     xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
     xmlns:ufg="clr-namespace:UniformGrid;assembly=Scoopy"
     xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
-    xmlns:enums="clr-namespace:Scoopy.Enums;assembly=Scoopy"
+    xmlns:enums="clr-namespace:Scoopy.Protocols;assembly=Scoopy"
     xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
     xmlns:controls="clr-namespace:Scoopy.Controls;assembly=Scoopy"
     xmlns:vm="clr-namespace:Scoopy.ViewModels;assembly=Scoopy"
