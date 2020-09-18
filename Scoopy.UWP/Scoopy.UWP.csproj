@@ -105,6 +105,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\SwitchRenderer.cs" />
+    <Compile Include="ScreenshotStorage.cs" />
+    <Compile Include="Utilities\DirectoryFinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

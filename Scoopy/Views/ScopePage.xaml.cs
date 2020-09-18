@@ -2,7 +2,14 @@
 using ReactiveUI.XamForms;
 using Scoopy.Converters;
 using Scoopy.ViewModels;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Scoopy.Views
@@ -13,8 +20,9 @@ namespace Scoopy.Views
 
         public ScopePage()
         {
-            ViewModel = new ScopeVM();
             InitializeComponent();
+            ViewModel = new ScopeVM();
+            this.BindingContext = ViewModel;
 
             this.WhenActivated(disposable =>
             {
@@ -58,6 +66,15 @@ namespace Scoopy.Views
                 this.BindCommand(ViewModel,
                     x => x.SaveScreenshotCommand,
                     x => x.SaveScreenshotButton)
+                    .DisposeWith(disposable);
+
+                this.CopyFolderButton
+                    .Events().Clicked
+                    .Select(args => Unit.Default)
+                    .Subscribe(async (x) =>
+                    {
+                        await Clipboard.SetTextAsync(ViewModel.ScreenshotFolder);
+                    })
                     .DisposeWith(disposable);
 
             });

@@ -19,15 +19,7 @@ namespace Scoopy
         {
             // register converters
             Locator.CurrentMutable.RegisterConstant(
-                new IntToStringConverter(),
-                typeof(IBindingTypeConverter)
-            );
-            Locator.CurrentMutable.RegisterConstant(
                 new DoubleToStringConverter(),
-                typeof(IBindingTypeConverter)
-            );
-            Locator.CurrentMutable.RegisterConstant(
-                new EnumToStringConverter(),
                 typeof(IBindingTypeConverter)
             );
 

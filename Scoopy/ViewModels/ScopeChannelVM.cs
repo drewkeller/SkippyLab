@@ -36,6 +36,8 @@ namespace Scoopy.ViewModels
 
         [Reactive] public string Name { get; set; }
 
+        [Reactive] public string Color { get; set; }
+
 #region IsActive
         [Reactive] public bool IsActive { get; set; } = false;
         public ReactiveCommand<Unit, Unit> GetIsActiveCommand { get; }
@@ -45,7 +47,10 @@ namespace Scoopy.ViewModels
 
 #region SelectChannel
         public ICommand SelectChannel { get; internal set; }
-        public ICommand RefreshChannel { get; internal set; }
+
+        public ICommand GetAll { get; internal set; }
+
+        public ICommand SetAll { get; internal set; }
 
 #endregion
 
@@ -57,8 +62,7 @@ namespace Scoopy.ViewModels
 #endregion
 
 #region Offset
-        [Reactive]
-        public double Offset { get; set; } = 0.0;
+        [Reactive] public double Offset { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetOffsetCommand { get; }
         public ReactiveCommand<Unit, Unit> SetOffsetCommand;
         [Reactive] public bool GetOffsetSucceeded { get; set; }
@@ -142,6 +146,13 @@ namespace Scoopy.ViewModels
 #endif
             ChannelNumber = channelNumber;
             Name = $"CH{channelNumber}";
+            switch (channelNumber)
+            {
+                case 1: Color = "#F8FC00";break;
+                case 2: Color = "#00FCF8"; break;
+                case 3: Color = "#F800F8"; break;
+                case 4: Color = "#007CF8"; break;
+            }
 
 #region IsActive
             var canSetIsActive = this.WhenValueChanged(x => x.GetIsActiveSucceeded)
@@ -164,25 +175,28 @@ namespace Scoopy.ViewModels
 
 #region Offset
             var canSetOffset = this.WhenValueChanged(x => x.GetOffsetSucceeded)
-                .Where(x => x == true);
+                .Where(x => x == true)
+                .ThrottleMs(500);
             GetOffsetCommand = ReactiveCommand.CreateFromTask(SendOffsetQueryAsync);
             SetOffsetCommand = ReactiveCommand.CreateFromTask(SendOffsetCommandAsync, canSetOffset);
-
+            
             // Offset units, based on Units
             this.WhenValueChanged(x => x.Units)
                 .Subscribe(x => UpdateUnits());
-#endregion
+            #endregion
 
-#region Range
+            #region Range
             var canSetRange = this.WhenValueChanged(x => x.GetRangeSucceeded)
-                .Where(x => x == true);
+                .Where(x => x == true)
+                .ThrottleMs(500);
             GetRangeCommand = ReactiveCommand.CreateFromTask(SendRangeQueryAsync);
             SetRangeCommand = ReactiveCommand.CreateFromTask(SendRangeCommandAsync, canSetRange);
 #endregion
 
 #region Scale
             var canSetScale = this.WhenValueChanged(x => x.GetScaleSucceeded)
-                .Where(x => x == true);
+                .Where(x => x == true)
+                .ThrottleMs(500);
             GetScaleCommand = ReactiveCommand.CreateFromTask(SendScaleQueryAsync);
             SetScaleCommand = ReactiveCommand.CreateFromTask(SendScaleCommandAsync, canSetScale);
 #endregion
@@ -231,7 +245,8 @@ namespace Scoopy.ViewModels
             SetUnitsCommand = ReactiveCommand.CreateFromTask(SendUnitsCommandAsync, canSetUnits);
             #endregion
 
-            RefreshChannel = ReactiveCommand.CreateCombined(
+            #region Get/Set All
+            GetAll = ReactiveCommand.CreateCombined(
                 new[] {
                     GetIsActiveCommand,
                     GetCouplingCommand,
@@ -243,6 +258,20 @@ namespace Scoopy.ViewModels
                     GetIsInvertedCommand,
                     GetIsVernierCommand,
                     GetUnitsCommand});
+
+            SetAll = ReactiveCommand.CreateCombined(
+                new[] {
+                    SetIsActiveCommand,
+                    SetCouplingCommand,
+                    SetOffsetCommand,
+                    SetRangeCommand,
+                    SetScaleCommand,
+                    SetProbeCommand,
+                    SetIsBandwidthLimitedCommand,
+                    SetIsInvertedCommand,
+                    SetIsVernierCommand,
+                    SetUnitsCommand});
+            #endregion
 
             // watch our own properties and call commands that update the model
 
@@ -361,6 +390,7 @@ namespace Scoopy.ViewModels
             // the command to set it, directly after
             GetIsActiveSucceeded = false;
 #if MOCK
+            await Task.Delay(1);
             var response = "1";
 #else
             var response = await SendQueryAsync(ChannelSubcommand.DISPlay);
@@ -381,11 +411,13 @@ namespace Scoopy.ViewModels
 #region Coupling
         public async Task SendCouplingQueryAsync()
         {
-            //this.Coupling = "GND";
-            //GetCouplingSucceeded = true;
-            //return;
             GetCouplingSucceeded = false;
+#if MOCK
+            await Task.Delay(1);
+            var response = "AC";
+#else
             var response = await SendQueryAsync(ChannelSubcommand.COUPling);
+#endif
             if (response == "") return;
             var result = StringOptions.Coupling.GetByParameter(response);
             if (result != null)
@@ -409,6 +441,7 @@ namespace Scoopy.ViewModels
         {
             GetOffsetSucceeded = false;
 #if MOCK
+            await Task.Delay(1);
             var response = "0";
 #else
             var response = await SendQueryAsync(ChannelSubcommand.OFFSet);
@@ -427,14 +460,15 @@ namespace Scoopy.ViewModels
         public async Task SendOffsetCommandAsync()
         {
 #if MOCK
+            await Task.Delay(1);
 #else
             var value = this.Offset.ToString();
             await SendCommandAsync(ChannelSubcommand.OFFSet, value);
 #endif
         }
-#endregion
+        #endregion
 
-#region TCal
+        #region TCal
 #if TCAL
         public async Task SendTCalQueryAsync()
         {
@@ -456,13 +490,18 @@ namespace Scoopy.ViewModels
             await SendCommandAsync(ChannelSubcommand.TCAL, value);
         }
 #endif
-#endregion
+        #endregion
 
-#region Range
+        #region Range
         public async Task SendRangeQueryAsync()
         {
             GetRangeSucceeded = false;
+#if MOCK
+            await Task.Delay(1);
+            var response = "8";
+#else
             var response = await SendQueryAsync(ChannelSubcommand.RANGe);
+#endif
             if (response == "") return;
             if (double.TryParse(response, out double result))
             {
@@ -485,7 +524,12 @@ namespace Scoopy.ViewModels
         public async Task SendScaleQueryAsync()
         {
             GetScaleSucceeded = false;
+#if MOCK
+            await Task.Delay(1);
+            var response = "1";
+#else
             var response = await SendQueryAsync(ChannelSubcommand.SCALe);
+#endif
             if (response == "") return;
             if (double.TryParse(response, out double result))
             {
@@ -508,7 +552,12 @@ namespace Scoopy.ViewModels
         public async Task SendProbeQueryAsync()
         {
             GetProbeSucceeded = false;
+#if MOCK
+            await Task.Delay(1);
+            var response = "10";
+#else
             var response = await SendQueryAsync(ChannelSubcommand.PROBe);
+#endif
             if (response == "") return;
             if (double.TryParse(response, out double result))
             {
@@ -535,7 +584,12 @@ namespace Scoopy.ViewModels
         public async Task SendIsInvertedQueryAsync()
         {
             GetIsInvertedSucceeded = false;
+#if MOCK
+            await Task.Delay(1);
+            var response = "0";
+#else
             var response = await SendQueryAsync(ChannelSubcommand.INVert);
+#endif
             if (response == "") return;
             Model.IsInverted = response == "1";
             this.IsInverted = Model.IsInverted;
@@ -553,7 +607,12 @@ namespace Scoopy.ViewModels
         public async Task SendIsBandwidthLimitedQueryAsync()
         {
             GetIsBandwidthLimitedSucceeded = false;
+#if MOCK
+            await Task.Delay(1);
+            var response = "0";
+#else
             var response = await SendQueryAsync(ChannelSubcommand.BWLimit);
+#endif
             if (response == "") return;
             var result = response == "20M";
             //Model. = result;
@@ -573,7 +632,12 @@ namespace Scoopy.ViewModels
         public async Task SendIsVernierQueryAsync()
         {
             GetIsVernierSucceeded = false;
+#if MOCK
+            await Task.Delay(1);
+            var response = "0";
+#else
             var response = await SendQueryAsync(ChannelSubcommand.VERNier);
+#endif
             if (response == "") return;
             var result = response == "1";
             this.IsVernier = result;
@@ -592,6 +656,7 @@ namespace Scoopy.ViewModels
         {
             GetUnitsSucceeded = false;
 #if MOCK
+            await Task.Delay(1);
             var response = "VOLT";
 #else
             var response = await SendQueryAsync(ChannelSubcommand.UNITs);

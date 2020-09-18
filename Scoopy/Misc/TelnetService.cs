@@ -1,4 +1,4 @@
-﻿//#define MOCK
+﻿#define MOCK
 
 using Nito.AsyncEx;
 using ReactiveUI;
@@ -63,6 +63,7 @@ namespace Scoopy
             Port = port;
 
 #if MOCK
+            await Task.Delay(1);
             Connected = true;
             return "Forcing mock connection";
 #else
@@ -88,6 +89,12 @@ namespace Scoopy
 
         public async Task<string> SendCommandAsync(string command, bool getResponse)
         {
+#if MOCK
+            await Task.Delay(1);
+            if (getResponse)
+                throw new Exception($"Cannot determine command response when mocking (command: '{command}'");
+            else return "";
+#else
             using (await BusyObject.LockAsync())
             {
                 IsBusy = true;
@@ -99,14 +106,22 @@ namespace Scoopy
                     }
                     await client.WriteLineAsync(command);
                     IsBusy = false;
-                    return getResponse ? await client.ReadStringAsync() : "";
+                    if (getResponse)
+                    {
+                        return await client.ReadStringAsync();
+                    } else
+                    {
+                        return "";
+                    }
                 }
             }
+#endif
         }
 
         public async Task<byte[]> GetScreenshot()
         {
 #if MOCK
+            await Task.Delay(1);
             return null;
 #else
             // skip if busy

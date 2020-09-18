@@ -3,12 +3,12 @@ using System;
 
 namespace Scoopy.Converters
 {
-    public class DoubleToStringConverter : IBindingTypeConverter
+    public class StringToColorConverter: IBindingTypeConverter
     {
 
         public int GetAffinityForObjects(Type fromType, Type toType)
         {
-            if (fromType == typeof(double))
+            if (fromType == typeof(Xamarin.Forms.Color))
             {
                 return 100;
             }
@@ -16,18 +16,6 @@ namespace Scoopy.Converters
             {
                 return 100;
             }
-            //if (fromType == typeof(int))
-            //{
-            //    return 1;
-            //}
-            //if (fromType == typeof(float))
-            //{
-            //    return 1;
-            //}
-            //if (fromType == typeof(decimal))
-            //{
-            //    return 1;
-            //}
             return 0;
         }
 
@@ -40,15 +28,24 @@ namespace Scoopy.Converters
             result = null;
             if (toType == typeof(string))
             {
-                result = from?.ToString();
-                return true;
-            }
-            if (toType == typeof(double))
-            {
-                if (double.TryParse(from?.ToString(), out var val))
+                if (from is Xamarin.Forms.Color color)
                 {
-                    result = val;
+                    var str = color.ToHex();
+                    result = str;
                     return true;
+                }
+            }
+            if (toType == typeof(Xamarin.Forms.Color))
+            {
+                if (from is string str)
+                {
+                    if (str.StartsWith("#"))
+                    {
+                        var color = Xamarin.Forms.Color.FromHex(from?.ToString());
+                        result = color;
+                        return true;
+                    } 
+                    // ....
                 }
             }
             return false;

@@ -27,7 +27,7 @@ namespace Scoopy.Views
             AppLocator.TelnetService.WhenValueChanged(x => x.Connected)
                 .Where(x => x == true)
                 .ToSignal()
-                .Subscribe(x => Navigation.PushAsync(new ScopePage(new ScopeVM())));
+                .Subscribe(x => Navigation.PushAsync(new ScopePage()));
 
             this.WhenActivated(disposables =>
             {

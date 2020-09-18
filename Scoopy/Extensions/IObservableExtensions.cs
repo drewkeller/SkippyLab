@@ -11,6 +11,10 @@ namespace Scoopy.Extensions
 
         public static IObservable<Unit> ToSignal<TDontCare>(this IObservable<TDontCare> source)
             => source.Select(_ => Unit.Default);
+
+        public static IObservable<bool> ThrottleMs(this IObservable<bool> source, int milliseconds)
+            => source.Throttle(TimeSpan.FromMilliseconds(milliseconds));
+
     }
 
 }

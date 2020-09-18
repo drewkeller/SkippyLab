@@ -20,17 +20,18 @@
     
     <ContentView.Content>
 
-        <Frame BorderColor="AliceBlue">
-            <StackLayout Orientation="Vertical">
+        <Frame x:Name="Frame">
+            <StackLayout Orientation="Vertical" MinimumHeightRequest="300">
 
                 <StackLayout Orientation="Horizontal">
                     <edit:EditableLabel x:Name="txtLabel" HorizontalOptions="FillAndExpand" />
                 </StackLayout>
 
-                <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand"/>
-                <StackLayout Orientation="Horizontal">
-                    <Button x:Name="SelectChannelButton" Text="Select" HorizontalOptions="End" />
-                    <Button x:Name="RefreshChannelButton" Text="Refresh" HorizontalOptions="End" />
+                <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand" OnColor="{Binding BorderColor,Source={x:Reference Frame}}"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <Button x:Name="SelectChannelButton" Text="Select" HorizontalOptions="FillAndExpand"/>
+                    <Button x:Name="GetAllButton" Text="Get" HorizontalOptions="FillAndExpand"/>
+                    <Button x:Name="SetAllButton" Text="Set" HorizontalOptions="FillAndExpand"/>
                 </StackLayout>
 
                 <ufg:UniformGrid Rows="1">

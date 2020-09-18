@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Scoopy.UWP.Utilities;
+using Splat;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,6 +48,8 @@ namespace Scoopy.UWP
             }
 #endif
 
+            //DirectoryFinder.ListAvailableDirectories();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -58,6 +62,7 @@ namespace Scoopy.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 Xamarin.Forms.Forms.Init(e);
+                Locator.CurrentMutable.RegisterLazySingleton(() => new ScreenshotStorage(), typeof(IScreenshotStorage));
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

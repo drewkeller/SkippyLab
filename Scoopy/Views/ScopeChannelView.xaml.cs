@@ -10,7 +10,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -52,6 +51,12 @@ namespace Scoopy.Views
                 this.Bind(ViewModel,
                     x => x.Name,
                     x => x.txtLabel.Text)
+                    .DisposeWith(disposable);
+
+                this.OneWayBind(ViewModel,
+                    x => x.Color,
+                    x => x.Frame.BorderColor,
+                    vmToViewConverterOverride: new StringToColorConverter())
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
@@ -167,7 +172,7 @@ namespace Scoopy.Views
                 //await viewModel.SendOffsetQueryAsync();
                 //await ViewModel.SendUnitsQueryAsync();
                 //await ViewModel.SendGetAllQuery();
-                ViewModel.RefreshChannel.Execute(null);
+                ViewModel.GetAll.Execute(null);
 
                 //Debug.WriteLine($"barVernier: {barVernier.SelectedItems}");
 
@@ -184,10 +189,17 @@ namespace Scoopy.Views
                 .InvokeCommand(this, x => x.ViewModel.SelectChannel)
                 .DisposeWith(disposable);
 
-            RefreshChannelButton
+            GetAllButton
                 .Events().Clicked
                 .Select(args => Unit.Default)
-                .InvokeCommand(this, X => X.ViewModel.RefreshChannel);
+                .InvokeCommand(this, X => X.ViewModel.GetAll)
+                .DisposeWith(disposable);
+
+            SetAllButton
+                .Events().Clicked
+                .Select(args => Unit.Default)
+                .InvokeCommand(this, X => X.ViewModel.SetAll)
+                .DisposeWith(disposable);
         }
 
     }
