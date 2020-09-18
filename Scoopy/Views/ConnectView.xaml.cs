@@ -1,13 +1,7 @@
-﻿using DynamicData.Binding;
-using ReactiveUI;
+﻿using ReactiveUI;
 using ReactiveUI.XamForms;
-using Scoopy.Protocols;
-using Scoopy.Extensions;
 using Scoopy.ViewModels;
-using System;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Xamarin.Forms.Xaml;
 
 namespace Scoopy.Views

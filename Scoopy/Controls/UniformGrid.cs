@@ -44,7 +44,7 @@ namespace UniformGrid
         public int Columns { get; set; }
         public static readonly BindableProperty ColumnsProperty = BindableProperty.Create(
             propertyName: nameof(Columns), returnType: typeof(string), declaringType: typeof(UniformGrid),
-            defaultValue:"", defaultBindingMode: BindingMode.TwoWay, propertyChanged: ColumnsPropertyChanged);
+            defaultValue: "", defaultBindingMode: BindingMode.TwoWay, propertyChanged: ColumnsPropertyChanged);
         private static void ColumnsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (UniformGrid)bindable;
@@ -67,7 +67,7 @@ namespace UniformGrid
         public int Rows { get; set; }
         public static readonly BindableProperty RowsProperty = BindableProperty.Create(
             propertyName: nameof(Rows), returnType: typeof(string), declaringType: typeof(UniformGrid),
-            defaultValue:"", defaultBindingMode: BindingMode.TwoWay, propertyChanged: RowsPropertyChanged);
+            defaultValue: "", defaultBindingMode: BindingMode.TwoWay, propertyChanged: RowsPropertyChanged);
         private static void RowsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (UniformGrid)bindable;
@@ -114,7 +114,7 @@ namespace UniformGrid
             if (_explicitRows && Rows > 0)
             {
                 numColumns = (int)Math.Floor(this.Children.Count / (double)Rows);
-            } 
+            }
             else if (_explicitColumns && Columns > 0)
             {
                 numColumns = this.Columns;

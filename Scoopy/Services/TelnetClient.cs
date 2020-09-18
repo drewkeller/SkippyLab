@@ -2,14 +2,11 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace Scoopy
+namespace Scoopy.Services
 {
     public class TelnetClient : IDisposable
     {
@@ -32,31 +29,23 @@ namespace Scoopy
         private TimeSpan _timeout;
         private TcpClient TcpClient { get; set; }
 
-        public bool IsBusy { 
+        public bool IsBusy
+        {
             get { return _isBusy; }
             private set {
                 if (value) _isBusy = value;
-                else { 
+                else
+                {
                     Task.Delay(100);
                     _isBusy = value;
                 }
-            } 
+            }
         }
         private bool _isBusy;
 
-        private CancellationToken CancellationToken { get; set; }
+        //private CancellationToken CancellationToken { get; set; }
 
         #endregion Properties
-
-        #region Constructor
-
-        public TelnetClient(string hostname, int port, int timeout)
-        {
-            Hostname = hostname;
-            Port = port;
-        }
-
-        #endregion
 
         #region Dispose
 
@@ -276,17 +265,17 @@ namespace Scoopy
 
         #region Write
 
-        private async Task WriteAsync(NetworkStream stream, string message)
-        {
-            await WaitForNotBusy();
-            using (await BusyObject.LockAsync())
-            {
-                IsBusy = true;
-                var bytes = Encoding.ASCII.GetBytes(message);
-                await stream.WriteAsync(bytes, 0, bytes.Length);
-                IsBusy = false;
-            }
-        }
+        //private async Task WriteAsync(NetworkStream stream, string message)
+        //{
+        //    await WaitForNotBusy();
+        //    using (await BusyObject.LockAsync())
+        //    {
+        //        IsBusy = true;
+        //        var bytes = Encoding.ASCII.GetBytes(message);
+        //        await stream.WriteAsync(bytes, 0, bytes.Length);
+        //        IsBusy = false;
+        //    }
+        //}
 
         public async Task WriteLineAsync(string message)
         {

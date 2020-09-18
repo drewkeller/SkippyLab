@@ -1,11 +1,7 @@
 ﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Scoopy.Models;
-using System;
-using System.Collections.Generic;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Scoopy.ViewModels
@@ -19,7 +15,7 @@ namespace Scoopy.ViewModels
 
         [Reactive] public bool IsConnected { get; set; }
 
-        public ReactiveCommand<Unit,Unit> ConnectCommand { get; }
+        public ReactiveCommand<Unit, Unit> ConnectCommand { get; }
 
         public ConnectVM()
         {

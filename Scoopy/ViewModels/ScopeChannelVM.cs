@@ -30,7 +30,7 @@ namespace Scoopy.ViewModels
 
         Settings Settings => AppLocator.Settings;
 
-#region Scope Properties
+        #region Scope Properties
 
         // is there a way to read this from the scope?
         public int ChannelNumber { get; set; }
@@ -39,82 +39,82 @@ namespace Scoopy.ViewModels
 
         [Reactive] public string Color { get; set; }
 
-#region IsActive
+        #region IsActive
         [Reactive] public bool IsActive { get; set; } = false;
         public ReactiveCommand<Unit, Unit> GetIsActiveCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsActiveCommand;
         [Reactive] public bool GetIsActiveSucceeded { get; set; }
-#endregion
+        #endregion
 
-#region SelectChannel
+        #region SelectChannel
         public ICommand SelectChannel { get; internal set; }
 
         public ICommand GetAll { get; internal set; }
 
         public ICommand SetAll { get; internal set; }
 
-#endregion
+        #endregion
 
-#region Coupling
+        #region Coupling
         [Reactive] public string Coupling { get; set; }
         public ReactiveCommand<Unit, Unit> GetCouplingCommand { get; }
         public ReactiveCommand<Unit, Unit> SetCouplingCommand;
         [Reactive] public bool GetCouplingSucceeded { get; set; }
-#endregion
+        #endregion
 
-#region Offset
+        #region Offset
         [Reactive] public double Offset { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetOffsetCommand { get; }
         public ReactiveCommand<Unit, Unit> SetOffsetCommand;
         [Reactive] public bool GetOffsetSucceeded { get; set; }
         [Reactive] public string OffsetUnits { get; set; }
-#endregion
+        #endregion
 
-#region Range
+        #region Range
         [Reactive] public double Range { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetRangeCommand { get; }
         public ReactiveCommand<Unit, Unit> SetRangeCommand;
         [Reactive] public bool GetRangeSucceeded { get; set; }
         [Reactive] public string RangeUnits { get; set; } = "V";
-#endregion
+        #endregion
 
-#region Scale
+        #region Scale
         [Reactive] public double Scale { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetScaleCommand { get; }
         public ReactiveCommand<Unit, Unit> SetScaleCommand;
         [Reactive] public bool GetScaleSucceeded { get; set; }
         [Reactive] public string ScaleUnits { get; set; } = "V";
-#endregion
+        #endregion
 
-#region Probe
+        #region Probe
         [Reactive] public StringOption ProbeRatio { get; set; }
         public ReactiveCommand<Unit, Unit> GetProbeCommand { get; }
         public ReactiveCommand<Unit, Unit> SetProbeCommand;
         [Reactive] public bool GetProbeSucceeded { get; set; }
-#endregion
+        #endregion
 
-#region IsInverted
+        #region IsInverted
         [Reactive] public bool IsInverted { get; set; } = false;
         public ReactiveCommand<Unit, Unit> GetIsInvertedCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsInvertedCommand;
         [Reactive] public bool GetIsInvertedSucceeded { get; set; }
-#endregion
+        #endregion
 
-#region IsBandwidthLimited
+        #region IsBandwidthLimited
         [Reactive] public bool IsBandwidthLimited { get; set; }
         public ReactiveCommand<Unit, Unit> GetIsBandwidthLimitedCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsBandwidthLimitedCommand;
         [Reactive] public bool GetIsBandwidthLimitedSucceeded { get; set; }
-#endregion
+        #endregion
 
-#region IsVernier
+        #region IsVernier
         [Reactive] public bool IsVernier { get; set; }
         public ReactiveCommand<Unit, Unit> GetIsVernierCommand { get; }
         public ReactiveCommand<Unit, Unit> SetIsVernierCommand;
         [Reactive] public bool GetIsVernierSucceeded { get; set; }
-#endregion
+        #endregion
 
-#region TCal
+        #region TCal
 #if false
         [Reactive] public double TCal { get; set; } = 0.0;
         public ReactiveCommand<Unit, Unit> GetTCalCommand { get; }
@@ -122,16 +122,16 @@ namespace Scoopy.ViewModels
         [Reactive] public bool GetTCalSucceeded { get; set; }
         [Reactive] public string TCalUnits { get; set; }
 #endif
-#endregion
+        #endregion
 
-#region Units
+        #region Units
         [Reactive] public string Units { get; set; }
         public ReactiveCommand<Unit, Unit> GetUnitsCommand { get; }
         public ReactiveCommand<Unit, Unit> SetUnitsCommand;
         [Reactive] public bool GetUnitsSucceeded { get; set; }
-#endregion
+        #endregion
 
-#endregion Scope Properties
+        #endregion Scope Properties
 
 
         public ScopeChannelVM(int channelNumber)
@@ -149,13 +149,13 @@ namespace Scoopy.ViewModels
             Name = $"CH{channelNumber}";
             switch (channelNumber)
             {
-                case 1: Color = "#F8FC00";break;
+                case 1: Color = "#F8FC00"; break;
                 case 2: Color = "#00FCF8"; break;
                 case 3: Color = "#F800F8"; break;
                 case 4: Color = "#007CF8"; break;
             }
 
-#region IsActive
+            #region IsActive
             var canSetIsActive = this.WhenValueChanged(x => x.GetIsActiveSucceeded)
                 .Where(x => x == true);
             GetIsActiveCommand = ReactiveCommand.CreateFromTask(SendIsActiveQueryAsync);
@@ -163,24 +163,24 @@ namespace Scoopy.ViewModels
             {
                 await SendIsActiveCommandAsync();
             }, canSetIsActive);
-#endregion
+            #endregion
 
             SelectChannel = ReactiveCommand.CreateFromTask(SelectChannelExecute);
 
-#region Coupling
+            #region Coupling
             var canSetCoupling = this.WhenValueChanged(x => x.GetCouplingSucceeded)
                 .Where(x => x == true);
             GetCouplingCommand = ReactiveCommand.CreateFromTask(SendCouplingQueryAsync);
             SetCouplingCommand = ReactiveCommand.CreateFromTask(SendCouplingCommandAsync, canSetCoupling);
-#endregion
+            #endregion
 
-#region Offset
+            #region Offset
             var canSetOffset = this.WhenValueChanged(x => x.GetOffsetSucceeded)
                 .Where(x => x == true)
                 .ThrottleMs(500);
             GetOffsetCommand = ReactiveCommand.CreateFromTask(SendOffsetQueryAsync);
             SetOffsetCommand = ReactiveCommand.CreateFromTask(SendOffsetCommandAsync, canSetOffset);
-            
+
             // Offset units, based on Units
             this.WhenValueChanged(x => x.Units)
                 .Subscribe(x => UpdateUnits());
@@ -192,54 +192,54 @@ namespace Scoopy.ViewModels
                 .ThrottleMs(500);
             GetRangeCommand = ReactiveCommand.CreateFromTask(SendRangeQueryAsync);
             SetRangeCommand = ReactiveCommand.CreateFromTask(SendRangeCommandAsync, canSetRange);
-#endregion
+            #endregion
 
-#region Scale
+            #region Scale
             var canSetScale = this.WhenValueChanged(x => x.GetScaleSucceeded)
                 .Where(x => x == true)
                 .ThrottleMs(500);
             GetScaleCommand = ReactiveCommand.CreateFromTask(SendScaleQueryAsync);
             SetScaleCommand = ReactiveCommand.CreateFromTask(SendScaleCommandAsync, canSetScale);
-#endregion
+            #endregion
 
-#region Probe
+            #region Probe
             var canSetProbe = this.WhenValueChanged(x => x.GetProbeSucceeded)
                 .Where(x => x == true);
             GetProbeCommand = ReactiveCommand.CreateFromTask(SendProbeQueryAsync);
             SetProbeCommand = ReactiveCommand.CreateFromTask(SendProbeCommandAsync, canSetProbe);
-#endregion
+            #endregion
 
-#region IsBandwidthLimited
+            #region IsBandwidthLimited
             var canSetIsBandwidthLimited = this.WhenValueChanged(x => x.GetIsBandwidthLimitedSucceeded)
                 .Where(x => x == true);
             GetIsBandwidthLimitedCommand = ReactiveCommand.CreateFromTask(SendIsBandwidthLimitedQueryAsync);
             SetIsBandwidthLimitedCommand = ReactiveCommand.CreateFromTask(SendIsBandwidthLimitedCommandAsync, canSetIsBandwidthLimited);
-#endregion
+            #endregion
 
-#region IsInverted
+            #region IsInverted
             var canSetIsInverted = this.WhenValueChanged(x => x.GetIsInvertedSucceeded)
                 .Where(x => x == true);
             GetIsInvertedCommand = ReactiveCommand.CreateFromTask(SendIsInvertedQueryAsync);
             SetIsInvertedCommand = ReactiveCommand.CreateFromTask(SendIsInvertedCommandAsync, canSetIsInverted);
-#endregion
+            #endregion
 
-#region IsVernier
+            #region IsVernier
             var canSetIsVernier = this.WhenValueChanged(x => x.GetIsVernierSucceeded)
                 .Where(x => x == true);
             GetIsVernierCommand = ReactiveCommand.CreateFromTask(SendIsVernierQueryAsync);
             SetIsVernierCommand = ReactiveCommand.CreateFromTask(SendIsVernierCommandAsync, canSetIsVernier);
-#endregion
+            #endregion
 
-#region TCal
+            #region TCal
 #if TCAL
             var canSetTCal = this.WhenValueChanged(x => x.GetTCalSucceeded)
                 .Where(x => x == true);
             GetTCalCommand = ReactiveCommand.CreateFromTask(SendTCalQueryAsync);
             SetTCalCommand = ReactiveCommand.CreateFromTask(SendTCalCommandAsync, canSetTCal);
 #endif
-#endregion
+            #endregion
 
-#region Units
+            #region Units
             var canSetUnits = this.WhenValueChanged(x => x.GetUnitsSucceeded)
                 .Where(x => x == true);
             GetUnitsCommand = ReactiveCommand.CreateFromTask(SendUnitsQueryAsync);
@@ -281,6 +281,10 @@ namespace Scoopy.ViewModels
             this.WhenActivated(disposables =>
             {
                 this.HandleActivation();
+
+                Disposable
+                    .Create(() => this.HandleDeactivation())
+                    .DisposeWith(disposables);
 
                 this.WhenPropertyChanged(x => x.IsActive)
                     .ToSignal()
@@ -341,6 +345,7 @@ namespace Scoopy.ViewModels
                     .DisposeWith(disposables);
 
             });
+
         }
 
         /// <summary>
@@ -362,7 +367,7 @@ namespace Scoopy.ViewModels
         {
         }
 
-#region Scope commands
+        #region Scope commands
 
         public async Task SendGetAllQuery()
         {
@@ -384,7 +389,7 @@ namespace Scoopy.ViewModels
             //GetCouplingSucceeded = true;
         }
 
-#region IsActive
+        #region IsActive
         public async Task SendIsActiveQueryAsync()
         {
             // mark as not succeeded until after we update our properties to avoid also sending out
@@ -407,9 +412,9 @@ namespace Scoopy.ViewModels
         {
             await SendCommandAsync(ChannelSubcommand.DISPlay, this.IsActive == true);
         }
-#endregion
+        #endregion
 
-#region Coupling
+        #region Coupling
         public async Task SendCouplingQueryAsync()
         {
             GetCouplingSucceeded = false;
@@ -435,9 +440,9 @@ namespace Scoopy.ViewModels
             var option = StringOptions.Coupling.GetByValue(Coupling);
             await SendCommandAsync(ChannelSubcommand.COUPling, option.Value);
         }
-#endregion
+        #endregion
 
-#region Offset
+        #region Offset
         public async Task SendOffsetQueryAsync()
         {
             GetOffsetSucceeded = false;
@@ -448,7 +453,7 @@ namespace Scoopy.ViewModels
             var response = await SendQueryAsync(ChannelSubcommand.OFFSet);
 #endif
             if (response == "") return;
-            if (double.TryParse(response, out double result))
+            if (double.TryParse(response, out var result))
             {
                 Model.Offset = result;
                 this.Offset = result;
@@ -504,7 +509,7 @@ namespace Scoopy.ViewModels
             var response = await SendQueryAsync(ChannelSubcommand.RANGe);
 #endif
             if (response == "") return;
-            if (double.TryParse(response, out double result))
+            if (double.TryParse(response, out var result))
             {
                 Model.Range = result;
                 this.Range = result;
@@ -519,9 +524,9 @@ namespace Scoopy.ViewModels
             var value = this.Range.ToString();
             await SendCommandAsync(ChannelSubcommand.RANGe, value);
         }
-#endregion
+        #endregion
 
-#region Scale
+        #region Scale
         public async Task SendScaleQueryAsync()
         {
             GetScaleSucceeded = false;
@@ -532,7 +537,7 @@ namespace Scoopy.ViewModels
             var response = await SendQueryAsync(ChannelSubcommand.SCALe);
 #endif
             if (response == "") return;
-            if (double.TryParse(response, out double result))
+            if (double.TryParse(response, out var result))
             {
                 Model.Scale = result;
                 this.Scale = result;
@@ -547,9 +552,9 @@ namespace Scoopy.ViewModels
             var value = this.Scale.ToString();
             await SendCommandAsync(ChannelSubcommand.SCALe, value);
         }
-#endregion
+        #endregion
 
-#region Probe
+        #region Probe
         public async Task SendProbeQueryAsync()
         {
             GetProbeSucceeded = false;
@@ -560,7 +565,7 @@ namespace Scoopy.ViewModels
             var response = await SendQueryAsync(ChannelSubcommand.PROBe);
 #endif
             if (response == "") return;
-            if (double.TryParse(response, out double result))
+            if (double.TryParse(response, out var result))
             {
                 var val = result.ToString();
                 if (val.StartsWith("0")) val = val.Substring(1);
@@ -579,9 +584,9 @@ namespace Scoopy.ViewModels
             var option = ProbeRatio;
             await SendCommandAsync(ChannelSubcommand.PROBe, option.Parameter);
         }
-#endregion
+        #endregion
 
-#region IsInverted
+        #region IsInverted
         public async Task SendIsInvertedQueryAsync()
         {
             GetIsInvertedSucceeded = false;
@@ -602,9 +607,9 @@ namespace Scoopy.ViewModels
         {
             await SendCommandAsync(ChannelSubcommand.INVert, this.IsInverted == true);
         }
-#endregion
+        #endregion
 
-#region IsBandwidthLimit
+        #region IsBandwidthLimit
         public async Task SendIsBandwidthLimitedQueryAsync()
         {
             GetIsBandwidthLimitedSucceeded = false;
@@ -627,9 +632,9 @@ namespace Scoopy.ViewModels
             var param = this.IsBandwidthLimited; // == "Fine";
             await SendCommandAsync(ChannelSubcommand.BWLimit, param);
         }
-#endregion
+        #endregion
 
-#region IsVernier
+        #region IsVernier
         public async Task SendIsVernierQueryAsync()
         {
             GetIsVernierSucceeded = false;
@@ -650,9 +655,9 @@ namespace Scoopy.ViewModels
         {
             await SendCommandAsync(ChannelSubcommand.VERNier, this.IsVernier);
         }
-#endregion
+        #endregion
 
-#region Units
+        #region Units
         public async Task SendUnitsQueryAsync()
         {
             GetUnitsSucceeded = false;
@@ -678,11 +683,11 @@ namespace Scoopy.ViewModels
             var option = StringOptions.Units.GetByValue(this.Units);
             await SendCommandAsync(ChannelSubcommand.UNITs, option.Parameter);
         }
-#endregion
+        #endregion
 
-#endregion // Scope commands
+        #endregion // Scope commands
 
-#region Command helpers
+        #region Command helpers
         public async Task<string> SendQueryAsync(ChannelSubcommand subCommand)
         {
             var command = $":CHAN{ChannelNumber}:{subCommand}?";
@@ -708,7 +713,7 @@ namespace Scoopy.ViewModels
             Debug.WriteLine($"CH{this.ChannelNumber} {message}");
         }
 
-#endregion // command helpers
+        #endregion // command helpers
 
         private void UpdateUnits()
         {

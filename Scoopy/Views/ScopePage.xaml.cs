@@ -3,7 +3,6 @@ using ReactiveUI.XamForms;
 using Scoopy.Converters;
 using Scoopy.ViewModels;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -44,7 +43,7 @@ namespace Scoopy.Views
                     .DisposeWith(disposable);
 
                 this.BindCommand(ViewModel,
-                    x => x.RefreshScreenCommand, 
+                    x => x.RefreshScreenCommand,
                     x => x.RefreshScreenButton)
                     .DisposeWith(disposable);
 

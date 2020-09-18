@@ -1,7 +1,5 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Scoopy.Protocols;
-using System.Collections.ObjectModel;
 
 namespace Scoopy
 {
@@ -18,7 +16,7 @@ namespace Scoopy
     public class ScopeChannel : ReactiveObject
     {
         public int ChannelNumber { get; set; }
-        
+
         public string Name { get; set; }
 
         [Reactive] public bool IsActive { get; set; }

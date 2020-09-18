@@ -20,7 +20,8 @@ namespace Scoopy.UWP.Utilities
                 if (Directory.Exists(dir.Path))
                 {
                     System.Diagnostics.Debug.WriteLine($"OK: {dir.Path}");
-                } else
+                }
+                else
                 {
                     System.Diagnostics.Debug.WriteLine($"  : {dir.Path}");
                 }

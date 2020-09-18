@@ -58,7 +58,7 @@ namespace Scoopy.Controls
         }
 
         public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(object), typeof(TogglesBar),
-  defaultBindingMode: BindingMode.TwoWay, propertyChanged:SelectedItemsPropertyChanged);
+  defaultBindingMode: BindingMode.TwoWay, propertyChanged: SelectedItemsPropertyChanged);
         public object SelectedItems
         {
             get { return GetValue(SelectedItemsProperty); }
@@ -239,7 +239,7 @@ namespace Scoopy.Controls
                     };
 
                     btn.IsSelected = ShouldSelectItem(item, displayText);
-                    
+
                     btn.SelectionChanged += (s, e) =>
                     {
                         if (IsMultiSelect)

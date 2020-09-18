@@ -5,7 +5,6 @@ using Scoopy.Protocols;
 using Scoopy.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -69,7 +68,8 @@ namespace Scoopy.Views
                     x => x.uiCoupling.SelectedItems,
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
-                uiCoupling.SelectedItemsChanged += (s,e) => {
+                uiCoupling.SelectedItemsChanged += (s, e) =>
+                {
                     var selection = uiCoupling.SelectedItems;
                 };
 
@@ -136,7 +136,8 @@ namespace Scoopy.Views
                     x => x.uiUnits.SelectedItems,
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
-                uiUnits.SelectedItemsChanged += (s, e) => {
+                uiUnits.SelectedItemsChanged += (s, e) =>
+                {
                     var selection = uiUnits.SelectedItems;
                 };
 

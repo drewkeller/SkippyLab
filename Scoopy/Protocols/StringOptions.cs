@@ -30,7 +30,7 @@ namespace Scoopy.Protocols
         public StringOption(string value, string parameter)
         {
             Value = value;
-            Parameter = parameter; 
+            Parameter = parameter;
         }
 
         public override string ToString()
@@ -48,20 +48,20 @@ namespace Scoopy.Protocols
 
         public static readonly StringOptions Coupling = new StringOptions
         {
-            new StringOption("AC", "AC"), 
+            new StringOption("AC", "AC"),
             new StringOption("DC", "DC"),
             new StringOption("GND", "GND")
         };
         public static readonly StringOptions Units = new StringOptions
         {
-            new StringOption("Volts", "VOLT"), 
+            new StringOption("Volts", "VOLT"),
             new StringOption("Watts", "WATT"),
             new StringOption("Amps", "AMP"),
             new StringOption("?", "UNKN")
         };
         public static readonly StringOptions Vernier = new StringOptions
         {
-            new StringOption("Coarse", "0"), 
+            new StringOption("Coarse", "0"),
             new StringOption("Fine", "1"),
         };
 

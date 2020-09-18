@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Scoopy.Extensions
+﻿namespace Scoopy.Extensions
 {
     public static class StringExtensions
     {
@@ -12,7 +8,8 @@ namespace Scoopy.Extensions
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
-        public static bool HasData(this string @this) {
+        public static bool HasData(this string @this)
+        {
             return !string.IsNullOrEmpty(@this);
         }
 

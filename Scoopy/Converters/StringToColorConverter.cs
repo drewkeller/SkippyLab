@@ -3,7 +3,7 @@ using System;
 
 namespace Scoopy.Converters
 {
-    public class StringToColorConverter: IBindingTypeConverter
+    public class StringToColorConverter : IBindingTypeConverter
     {
 
         public int GetAffinityForObjects(Type fromType, Type toType)
@@ -44,7 +44,7 @@ namespace Scoopy.Converters
                         var color = Xamarin.Forms.Color.FromHex(from?.ToString());
                         result = color;
                         return true;
-                    } 
+                    }
                     // ....
                 }
             }

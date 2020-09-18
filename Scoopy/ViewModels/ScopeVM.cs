@@ -6,15 +6,11 @@ using Scoopy.Extensions;
 using Scoopy.Models;
 using Splat;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Scoopy.ViewModels
@@ -44,7 +40,7 @@ namespace Scoopy.ViewModels
         [Reactive] private TimeSpan NextScreenshotTime { get; set; }
         [Reactive] private IObservable<long> ScreenshotTimer { get; set; }
 
-        private System.Timers.Timer ScreenRefreshTimer = new System.Timers.Timer();
+        private readonly System.Timers.Timer ScreenRefreshTimer = new System.Timers.Timer();
 
         public IDisposable TimerSubscription { get; private set; }
         [Reactive] public bool AutorefreshEnabled { get; set; } = true;
@@ -56,8 +52,6 @@ namespace Scoopy.ViewModels
         public ReactiveCommand<Unit, Unit> SaveScreenshotCommand { get; }
         [Reactive] private bool CopyingScreenshot { get; set; }
         [Reactive] private bool SavingScreenshot { get; set; }
-        private IObservable<bool> CanExecuteSaveScreenshot =>
-            Observable.Return(HasScreenshot && !SavingScreenshot);
 
         public ScopeVM()
         {
@@ -92,7 +86,8 @@ namespace Scoopy.ViewModels
                 .Subscribe(x => StartTimer());
 
             this.WhenPropertyChanged(x => x.ScreenRefreshRate)
-                .Subscribe(x => {
+                .Subscribe(x =>
+                {
                     ScreenRefreshTimer.Stop();
                     ScreenRefreshTimer.Interval = ScreenRefreshRate;
                     ScreenRefreshTimer.Start();
