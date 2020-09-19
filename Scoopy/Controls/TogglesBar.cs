@@ -204,9 +204,13 @@ namespace Scoopy.Controls
                     return value.ToString().Equals(InitialValue);
                 }
                 else if (InitialIndex >= 0)
+                {
                     return ItemsSource.IndexOf(item) == InitialIndex;
+                }
                 else if (InitialValue != null)
+                {
                     return item == InitialValue;
+                }
             }
 
             if (IsMultiSelect)
@@ -228,7 +232,15 @@ namespace Scoopy.Controls
 
                 foreach (var item in ItemsSource)
                 {
-                    var displayText = DisplayMemberPath == null ? item.ToString() : item.GetType().GetProperty(DisplayMemberPath).GetValue(item, null).ToString();
+                    var displayText = item.ToString();
+                    if (DisplayMemberPath != null) {
+                        var property = item.GetType().GetProperty(DisplayMemberPath);
+                        if (property == null)
+                        {
+                            throw new InvalidOperationException($"The property selected by DisplayMemberPath ({DisplayMemberPath}) did not resolve.");
+                        }
+                        displayText = property.GetValue(item, null).ToString();
+                    }
                     var btn = new Xamlly.XamllyControls.ToggleButton
                     {
                         Text = displayText,
@@ -258,11 +270,13 @@ namespace Scoopy.Controls
                         }
 
                         if (!IsMultiSelect && btn.IsSelected)
+                        {
                             SelectedItemsChanged?.Invoke(this, new TogglesBarSelectionChangedEventArgs
                             {
                                 SelectedItems = selectedItems,
                                 SelectedIndices = ItemsSource.IndexOf(item)
                             });
+                        }
                         else if (IsMultiSelect)
                         {
                             SelectedItemsChanged?.Invoke(this, new TogglesBarSelectionChangedEventArgs

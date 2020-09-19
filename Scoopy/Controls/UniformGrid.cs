@@ -12,7 +12,7 @@ namespace Scoopy.Controls
     public class SwitchEx : Switch
     {
         public new bool IsToggled { get; set; }
-        public new static readonly BindableProperty IsToggledProperty = BindableProperty.Create(
+        public static readonly new BindableProperty IsToggledProperty = BindableProperty.Create(
             nameof(IsToggled), typeof(bool), typeof(SwitchEx), propertyChanged: IsToggledPropertyChanged);
         private static void IsToggledPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -105,9 +105,9 @@ namespace UniformGrid
 
         private void RefreshLayout()
         {
-            int row = 0;
-            int column = 0;
-            int numColumns = this.Children.Count;
+            var row = 0;
+            var column = 0;
+            var numColumns = this.Children.Count;
 
             // Calculate number of columns based on explicit value of Rows or Columns
             // or make a "square" based on the number of children.
@@ -125,7 +125,7 @@ namespace UniformGrid
             }
 
             // Set row and column for each child
-            for (int i = 0; i < this.Children.Count; i++)
+            for (var i = 0; i < this.Children.Count; i++)
             {
                 Grid.SetColumn(this.Children[i], column);
                 Grid.SetRow(this.Children[i], row);
