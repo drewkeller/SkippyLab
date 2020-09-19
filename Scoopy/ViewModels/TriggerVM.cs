@@ -22,6 +22,8 @@ namespace Scoopy.ViewModels
 
         public ViewModelActivator Activator { get; }
 
+        public TriggerProtocol Protocol { get; set; }
+
         public ICommand GetAll { get; internal set; }
 
         public ICommand SetAll { get; internal set; }
@@ -39,11 +41,12 @@ namespace Scoopy.ViewModels
         public TriggerVM()
         {
             Activator = new ViewModelActivator();
+            Protocol = new TriggerProtocol(null);
 
-            Mode = new ScopeCommand<string>(this, TriggerCommands.Mode, "EDGE");
-            Source = new ScopeCommand<string>(this, TriggerEdgeCommands.Source, "CHAN1");
-            Slope = new ScopeCommand<string>(this, TriggerEdgeCommands.Slope, "POS");
-            Level = new ScopeCommand<double>(this, TriggerEdgeCommands.Level, "0");
+            Mode = new ScopeCommand<string>(this, Protocol.Mode, "EDGE");
+            Source = new ScopeCommand<string>(this, Protocol.Edge.Source, "CHAN1");
+            Slope = new ScopeCommand<string>(this, Protocol.Edge.Slope, "POS");
+            Level = new ScopeCommand<double>(this, Protocol.Edge.Level, "0");
 
             GetAll = ReactiveCommand.CreateCombined(new[]
             {
@@ -96,13 +99,15 @@ namespace Scoopy.ViewModels
             {
                 value = $"{Value}";
             }
-            await ViewModel.SendCommandAsync(ProtocolCommand.Term, value);
+            var path = ProtocolCommand.FormatPath();
+            await AppLocator.TelnetService.SendCommandAsync($"{path} {value}", false);
         }
 
         public async Task SendQueryAsync()
         {
             GetSucceeded = false;
-            var command = $":TRIG:{ProtocolCommand.Term}?";
+            var path = ProtocolCommand.FormatPath();
+            var command = $"{path}?";
 #if MOCK
    await Task.Delay(1);
    var result = DefaultResponse;

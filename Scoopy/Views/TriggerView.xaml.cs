@@ -26,11 +26,13 @@ namespace Scoopy.Views
 
             this.BindingContext = ViewModel;
 
+            var protocol = ViewModel.Protocol;
+
             // initialize some stuff
             //txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            Mode.ItemsSource = StringOptions.GetStringValues(TriggerCommands.Mode.Options);
-            Source.ItemsSource = StringOptions.GetStringValues(TriggerEdgeCommands.Source.Options);
-            Slope.ItemsSource = StringOptions.GetStringValues(TriggerEdgeCommands.Slope.Options);
+            Mode.ItemsSource = StringOptions.GetStringValues(protocol.Mode.Options);
+            Source.ItemsSource = StringOptions.GetStringValues(protocol.Edge.Source.Options);
+            Slope.ItemsSource = StringOptions.GetStringValues(protocol.Edge.Slope.Options);
 
             this.WhenActivated(disposable =>
             {

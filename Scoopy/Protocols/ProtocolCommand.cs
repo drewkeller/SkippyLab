@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Scoopy.Protocols
 {
 
     public interface IProtocolCommand
     {
+        IProtocolCommand Parent { get; set; }
+
         /// <summary>
         /// The user friendly name of the command.
         /// </summary>
@@ -21,6 +24,16 @@ namespace Scoopy.Protocols
         string Description { get; set; }
 
         /// <summary>
+        /// The path formatter (this term and the parameter).
+        /// </summary>
+        string Path { get; set; }
+
+        /// <summary>
+        /// Gets the parameter for formatting this part of the protocol path.
+        /// </summary>
+        object PathParameter { get; set; }
+
+        /// <summary>
         /// The type of parameter in the command or response.
         /// </summary>
         Type ParameterType { get; set; }
@@ -34,6 +47,9 @@ namespace Scoopy.Protocols
         /// If this is a command, a list of acceptable values or range of values.
         /// </summary>
         IOptions Options { get; set; }
+
+        string FormatPath();
+
     }
 
     /// <summary>
@@ -41,6 +57,9 @@ namespace Scoopy.Protocols
     /// </summary>
     public class ProtocolCommand : IProtocolCommand
     {
+        [JsonIgnore]
+        public IProtocolCommand Parent { get; set; }
+
         /// <summary>
         /// The user friendly name of the command.
         /// </summary>
@@ -57,6 +76,19 @@ namespace Scoopy.Protocols
         public virtual string Description { get; set; }
 
         /// <summary>
+        /// If a parameter is needed, this is the formatter for both
+        /// the <see cref="Term"/> and <see cref="PathParameter"/>.
+        /// Otherwise, the path automatically includes the <see cref="Term"/>.
+        /// This does not normally need to be changed.
+        /// </summary>
+        public virtual string Path { get; set; }
+
+        /// <summary>
+        /// Gets the parameter for formatting this part of the protocol path.
+        /// </summary>
+        public object PathParameter { get; set; }
+
+        /// <summary>
         /// The type of parameter in the command or response.
         /// </summary>
         public virtual Type ParameterType { get; set; }
@@ -70,6 +102,31 @@ namespace Scoopy.Protocols
         /// If this is a command, a list of acceptable values or range of values.
         /// </summary>
         public virtual IOptions Options { get; set; }
+
+        public ProtocolCommand(IProtocolCommand parent)
+        {
+            Parent = parent;
+        }
+
+        public ProtocolCommand(IProtocolCommand parent, object pathParameter)
+        {
+            Parent = parent;
+            PathParameter = pathParameter;
+        }
+
+        public virtual string FormatPath()
+        {
+            var parentFormat = Parent == null ? "" : Parent.FormatPath();
+            if (PathParameter == null)
+            {
+                return $"{parentFormat}:{Term}";
+            }
+            else
+            {
+                return string.Format($"{parentFormat}:{Path}", PathParameter);
+            }
+        }
+
     }
 
 

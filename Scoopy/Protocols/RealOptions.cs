@@ -47,6 +47,18 @@ namespace Scoopy.Protocols
         }
 
         #endregion Implement ICollection
+
+        public RealOptions() { }
+
+        /// <summary>
+        /// Creates a <see cref="RealOption"/> with a single range.
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public RealOptions(double min, double max)
+        {
+            this.Add(new RealOption(min, max));
+        }
     }
 
 }
