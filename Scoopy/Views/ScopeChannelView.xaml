@@ -35,7 +35,7 @@
                 </StackLayout>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="uiCoupling" DisplayMemberPath="Value" />
+                    <controls:TogglesBar x:Name="uiCoupling" DisplayMemberPath="Name" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
@@ -94,7 +94,7 @@
                 -->
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="uiUnits" DisplayMemberPath="Value" />
+                    <controls:TogglesBar x:Name="uiUnits" DisplayMemberPath="Name" />
                 </ufg:UniformGrid>
 
 

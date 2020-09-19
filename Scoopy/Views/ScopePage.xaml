@@ -8,6 +8,7 @@
     xmlns:ufg="clr-namespace:UniformGrid;assembly=Scoopy"
     xmlns:local="clr-namespace:Scoopy;assembly=Scoopy"
     xmlns:vm="clr-namespace:Scoopy.ViewModels;assembly=Scoopy"
+    xmlns:view="clr-namespace:Scoopy.Views;assembly=Scoopy"
     >
 
     <ContentPage.Content>
@@ -42,6 +43,9 @@
                     <Button x:Name="CopyFolderButton" Text="Copy" />
                     <Label x:Name="uiScreenshotFolderError" Text="Screenshot folder not found" IsVisible="False" TextColor="Red"/>
                     <Button x:Name="SaveScreenshotButton" Text="Save Screenshot" HorizontalOptions="FillAndExpand" WidthRequest="200" />
+
+                    <view:TriggerView/>
+                    
                 </StackLayout>
             </StackLayout>
 

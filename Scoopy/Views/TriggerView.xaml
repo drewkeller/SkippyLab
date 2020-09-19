@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rxui:ReactiveContentView
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
+    xmlns:ufg="clr-namespace:UniformGrid;assembly=Scoopy"
+    xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
+    xmlns:enums="clr-namespace:Scoopy.Protocols;assembly=Scoopy"
+    xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
+    xmlns:controls="clr-namespace:Scoopy.Controls;assembly=Scoopy"
+    xmlns:vm="clr-namespace:Scoopy.ViewModels;assembly=Scoopy"
+    x:Class="Scoopy.Views.TriggerView" x:TypeArguments="vm:TriggerVM"
+    >
+    <ContentView.Content>
+        <Frame BorderColor="White">
+            <ScrollView VerticalScrollBarVisibility="Default">
+                <StackLayout Orientation="Vertical">
+                    <Label Text="Trigger"/>
+
+                    <ufg:UniformGrid Rows="1">
+                        <Button x:Name="Clear" Text="Clear" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="Run" Text="Run" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="Stop" Text="Stop" HorizontalOptions="FillAndExpand"/>
+                    </ufg:UniformGrid>
+                    <ufg:UniformGrid Rows="1">
+                        <Button x:Name="Single" Text="Single" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="Force" Text="Force" HorizontalOptions="FillAndExpand"/>
+                    </ufg:UniformGrid>
+
+                    <ufg:UniformGrid Rows="1">
+                        <Label Text="Status"/>
+                        <Label x:Name="Status"/>
+                    </ufg:UniformGrid>
+
+                    <ufg:UniformGrid Rows="1">
+                        <Label Text="Mode" VerticalOptions="Center"/>
+                        <Picker x:Name="Mode" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </ufg:UniformGrid>
+
+                    <ufg:UniformGrid Rows="1">
+                        <Label Text="Source" VerticalOptions="Center"/>
+                        <Picker x:Name="Source" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </ufg:UniformGrid>
+                    <ufg:UniformGrid Rows="1">
+                        <controls:TogglesBar x:Name="Slope" HorizontalOptions="CenterAndExpand"/>
+                    </ufg:UniformGrid>
+                    <ufg:UniformGrid Rows="1">
+                        <Label Text="Level"/>
+                        <edit:EditableLabel x:Name="Level" HorizontalOptions="CenterAndExpand"/>
+                    </ufg:UniformGrid>
+
+
+
+                </StackLayout>
+            </ScrollView>
+        </Frame>
+    </ContentView.Content>
+</rxui:ReactiveContentView>

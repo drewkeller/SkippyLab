@@ -428,8 +428,8 @@ namespace Scoopy.ViewModels
             var result = StringOptions.Coupling.GetByParameter(response);
             if (result != null)
             {
-                Model.Coupling = result.Value;
-                this.Coupling = result.Value;
+                Model.Coupling = result.Name;
+                this.Coupling = result.Name;
                 GetCouplingSucceeded = true;
             }
             Log($"Coupling: {response}");
@@ -438,7 +438,7 @@ namespace Scoopy.ViewModels
         public async Task SendCouplingCommandAsync()
         {
             var option = StringOptions.Coupling.GetByValue(Coupling);
-            await SendCommandAsync(ChannelSubcommand.COUPling, option.Value);
+            await SendCommandAsync(ChannelSubcommand.COUPling, option.Name);
         }
         #endregion
 
@@ -570,7 +570,7 @@ namespace Scoopy.ViewModels
                 var val = result.ToString();
                 if (val.StartsWith("0")) val = val.Substring(1);
                 var ratio = StringOptions.ProbeRatio.GetByValue(val + "x");
-                Model.Probe = ratio.Value;
+                Model.Probe = ratio.Name;
                 this.ProbeRatio = ratio;
                 GetProbeSucceeded = true;
             }
@@ -582,7 +582,7 @@ namespace Scoopy.ViewModels
         {
             //var option = StringOptions.ProbeRatio.GetByValue(this.ProbeRatio);
             var option = ProbeRatio;
-            await SendCommandAsync(ChannelSubcommand.PROBe, option.Parameter);
+            await SendCommandAsync(ChannelSubcommand.PROBe, option.Term);
         }
         #endregion
 
@@ -671,8 +671,8 @@ namespace Scoopy.ViewModels
             var result = StringOptions.Units.GetByParameter(response);
             if (result != null)
             {
-                Model.Units = result.Value;
-                this.Units = result.Value;
+                Model.Units = result.Name;
+                this.Units = result.Name;
                 GetUnitsSucceeded = true;
             }
             Log($"Units: {response}");
@@ -681,7 +681,7 @@ namespace Scoopy.ViewModels
         public async Task SendUnitsCommandAsync()
         {
             var option = StringOptions.Units.GetByValue(this.Units);
-            await SendCommandAsync(ChannelSubcommand.UNITs, option.Parameter);
+            await SendCommandAsync(ChannelSubcommand.UNITs, option.Term);
         }
         #endregion
 

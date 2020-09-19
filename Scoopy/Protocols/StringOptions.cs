@@ -4,46 +4,51 @@ using System.Linq;
 
 namespace Scoopy.Protocols
 {
-
     /// <summary>
     /// Provides information for displaying a value and sending the value via SCPI.
     /// </summary>
-    public class StringOption
+    public class StringOption : IOption
     {
         /// <summary>
         /// The text to use when getting or sending the value via SCPI.
         /// </summary>
-        public string Parameter { get; set; }
+        public string Term { get; set; }
 
         /// <summary>
         /// The human-readable value
         /// </summary>
-        public string Value { get; set; }
+        public string Name { get; set; }
 
         public StringOption() { }
 
         /// <summary>
         /// Create a string option
         /// </summary>
-        /// <param name="parameter"></param>
-        /// <param name="value"></param>
-        public StringOption(string value, string parameter)
+        /// <param name="term"></param>
+        /// <param name="name"></param>
+        public StringOption(string name, string term)
         {
-            Value = value;
-            Parameter = parameter;
+            Name = name;
+            Term = term;
         }
 
         public override string ToString()
         {
             //return $"{ID}: {Value}";
-            return $"{Value}";
+            return $"{Name}";
         }
     }
 
-    public class StringOptions : ObservableCollection<StringOption>
+    public class StringOptions : ObservableCollection<StringOption>, IOptions
     {
         public static readonly List<StringOptions> All = new List<StringOptions> {
             Coupling, Units, Vernier, ProbeRatio
+        };
+
+        public static readonly StringOptions Boolean = new StringOptions
+        {
+            new StringOption("ON", "1"),
+            new StringOption("OFF", "0")
         };
 
         public static readonly StringOptions Coupling = new StringOptions
@@ -88,17 +93,28 @@ namespace Scoopy.Protocols
 
         public IEnumerable<string> ToValueStrings()
         {
-            return this.Select(x => x.Value);
+            return this.Cast<StringOption>().Select(x => x.Name);
+        }
+        public static List<string> GetStringValues(IOptions options)
+        {
+            var stringOption = options as StringOptions;
+            return options.Select(x => x.Name).ToList();
+        }
+
+        public static StringOption GetByTerm(IOptions options, string term)
+        {
+            var stringOptions = options as StringOptions;
+            return stringOptions.Cast<StringOption>().Where(x => x.Term == term).FirstOrDefault();
         }
 
         public StringOption GetByValue(string value)
         {
             //return this.Where(x => x.Value == value).First();
-            return this.Where(x => x.Value == value).FirstOrDefault();
+            return this.Cast<StringOption>().Where(x => x.Name == value).FirstOrDefault();
         }
         public StringOption GetByParameter(string parameter)
         {
-            return this.Where(x => x.Parameter == parameter).FirstOrDefault();
+            return this.Cast<StringOption>().Where(x => x.Term == parameter).FirstOrDefault();
         }
 
         public static StringOption GetAnyByValue(string value)
@@ -110,6 +126,37 @@ namespace Scoopy.Protocols
             }
             return null;
         }
+
+        #region Implement ICollection<IOption>
+
+        public bool IsReadOnly => false;
+
+        public void Add(IOption item)
+        {
+            base.Add(item as StringOption);
+        }
+
+        public bool Contains(IOption item)
+        {
+            return base.Contains(item as StringOption);
+        }
+
+        public void CopyTo(IOption[] array, int arrayIndex)
+        {
+            base.CopyTo(array as StringOption[], arrayIndex);
+        }
+
+        public bool Remove(IOption item)
+        {
+            return base.Remove(item as StringOption);
+        }
+
+        IEnumerator<IOption> IEnumerable<IOption>.GetEnumerator()
+        {
+            return base.GetEnumerator();
+        }
+
+        #endregion Implement ICollection
 
     }
 
