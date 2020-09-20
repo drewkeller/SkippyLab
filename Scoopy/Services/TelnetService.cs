@@ -1,14 +1,17 @@
-﻿#define MOCK
+﻿//#define MOCK
 
+using Nito.AsyncEx;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Scoopy.Services
 {
     public class TelnetService : ReactiveObject, IDisposable
     {
+        private readonly AsyncLock BusyObject = new AsyncLock();
 
         public bool IsBusy { get; set; }
 

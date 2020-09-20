@@ -33,7 +33,10 @@ namespace Scoopy.Services
         {
             get { return _isBusy; }
             private set {
-                if (value) _isBusy = value;
+                if (value)
+                {
+                    _isBusy = value;
+                }
                 else
                 {
                     Task.Delay(100);
@@ -46,6 +49,17 @@ namespace Scoopy.Services
         //private CancellationToken CancellationToken { get; set; }
 
         #endregion Properties
+
+        #region Constructor
+
+        public TelnetClient(string hostname, int port, int timeout)
+        {
+            Hostname = hostname;
+            Port = port;
+            Timeout = timeout;
+        }
+
+        #endregion
 
         #region Dispose
 
@@ -133,8 +147,8 @@ namespace Scoopy.Services
             {
                 IsBusy = true;
                 string str = null;
-                byte[] buffer = new byte[1024];
-                using (MemoryStream ms = new MemoryStream())
+                var buffer = new byte[1024];
+                using (var ms = new MemoryStream())
                 {
                     // read into the buffer from the network stream
                     var readTask = stream.ReadAsync(buffer, 0, buffer.Length);
@@ -223,11 +237,11 @@ namespace Scoopy.Services
         {
             if (!stream.CanRead || length == 0) return new byte[0];
 
-            byte[] buffer = new byte[length];
-            using (MemoryStream ms = new MemoryStream())
+            var buffer = new byte[length];
+            using (var ms = new MemoryStream())
             {
                 var numBytesRead = 0;
-                int totalBytesRead = 0;
+                var totalBytesRead = 0;
                 do
                 {
                     numBytesRead = await ReadAsync(stream, buffer, 0, length - totalBytesRead);
