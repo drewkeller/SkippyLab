@@ -6,7 +6,11 @@ namespace Scoopy.Protocols
 
     public class ProtocolCommandSet
     {
-        public IProtocolCommandList Commands => new TriggerProtocol(null).Subcommands;
+        public IProtocolCommandList Commands => new ProtocolCommandList {
+            new RootProtocol(),
+            new TriggerProtocol(null),
+            new TimebaseProtocol(null),
+        };
 
         #region Serialization/Deserialization  hmmm maybe this would be useful?
 

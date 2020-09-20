@@ -83,7 +83,7 @@ namespace Scoopy.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            for (int i = 1; i <= 4; i++)
+            for (var i = 1; i <= 4; i++)
             {
                 var channelVM = new ScopeChannelVM(i);
                 var channelPanel = new ScopeChannelView(channelVM);

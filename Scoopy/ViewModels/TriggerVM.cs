@@ -1,28 +1,24 @@
-﻿#define MOCK
-
-using Acr.UserDialogs.Infrastructure;
-using DynamicData.Binding;
-using ReactiveUI;
+﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Scoopy.Protocols;
-using System;
 using System.Collections.Generic;
-using System.Reactive;
+using System.Diagnostics;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Scoopy.ViewModels
 {
 
-    public class TriggerVM : ReactiveObject, IActivatableViewModel
+    public class TriggerVM : ReactiveObject, IActivatableViewModel, IProtocolVM
     {
 
         public ViewModelActivator Activator { get; }
 
+        public RootProtocol RootProtocol { get; set; }
+
         public TriggerProtocol Protocol { get; set; }
+        IProtocolCommand IProtocolVM.Protocol => Protocol as IProtocolCommand;
 
         public ICommand GetAll { get; internal set; }
 
@@ -31,10 +27,24 @@ namespace Scoopy.ViewModels
 
         #region Properties
 
+        private List<IScopeCommand> AllScopeCommands { get; set; }
+
+        public ScopeCommand<string> AutoScale { get; set; }
+        public ScopeCommand<string> Clear { get; set; }
+        public ScopeCommand<string> Run { get; set; }
+        public ScopeCommand<string> Stop { get; set; }
+        public ScopeCommand<string> SingleTrigger { get; set; }
+        public ScopeCommand<string> ForceTrigger { get; set; }
+
         public ScopeCommand<string> Mode { get; set; }
-        public ScopeCommand<string> Source { get; set; }
-        public ScopeCommand<string> Slope { get; set; }
-        public ScopeCommand<double> Level { get; set; }
+
+        #region Edge mode properties
+        public extern bool IsEdgeMode { [ObservableAsProperty]get; }
+        public ScopeCommand<string> EdgeSource { get; set; }
+        public ScopeCommand<string> EdgeSlope { get; set; }
+        public ScopeCommand<double> EdgeLevel { get; set; }
+        #endregion Edge mode properties
+
         #endregion Properties
 
 
@@ -42,112 +52,75 @@ namespace Scoopy.ViewModels
         {
             Activator = new ViewModelActivator();
             Protocol = new TriggerProtocol(null);
+            RootProtocol = new RootProtocol();
+
+            AutoScale = new ScopeCommand<string>(this, RootProtocol.AutoScale);
+            Clear = new ScopeCommand<string>(this, RootProtocol.Clear);
+            Run = new ScopeCommand<string>(this, RootProtocol.Run);
+            Stop = new ScopeCommand<string>(this, RootProtocol.Stop);
+            SingleTrigger = new ScopeCommand<string>(this, RootProtocol.Single);
+            ForceTrigger = new ScopeCommand<string>(this, RootProtocol.Force);
 
             Mode = new ScopeCommand<string>(this, Protocol.Mode, "EDGE");
-            Source = new ScopeCommand<string>(this, Protocol.Edge.Source, "CHAN1");
-            Slope = new ScopeCommand<string>(this, Protocol.Edge.Slope, "POS");
-            Level = new ScopeCommand<double>(this, Protocol.Edge.Level, "0");
+            EdgeSource = new ScopeCommand<string>(this, Protocol.Edge.Source, "CHAN1");
+            EdgeSlope = new ScopeCommand<string>(this, Protocol.Edge.Slope, "POS");
+            EdgeLevel = new ScopeCommand<double>(this, Protocol.Edge.Level, "0");
 
+            AllScopeCommands = new List<IScopeCommand>()
+            {
+                Mode, EdgeSource, EdgeSlope, EdgeLevel,
+            };
+
+            var GetAllMessage = ReactiveCommand.Create(() =>
+                Debug.WriteLine("------- Retrieving all TRIGGER values from device ---------"));
             GetAll = ReactiveCommand.CreateCombined(new[]
             {
+                GetAllMessage,
                 Mode.GetCommand,
-                Source.GetCommand,
-                Slope.GetCommand,
-                Level.GetCommand,
+                EdgeSource.GetCommand,
+                EdgeSlope.GetCommand,
+                EdgeLevel.GetCommand,
             });
-        }
 
-        public async Task SendCommandAsync(string subCommand, string value)
-        {
-            await AppLocator.TelnetService.SendCommandAsync($"TRIG:{subCommand} {value}", false);
-        }
-
-    }
-
-    public class ScopeCommand<T> : ReactiveObject
-    {
-        TriggerVM ViewModel { get; set; }
-        IProtocolCommand ProtocolCommand {get;set;}
-        [Reactive] public T Value { get; set; }
-        public ReactiveCommand<Unit, Unit> GetCommand { get; }
-        public ReactiveCommand<Unit, Unit> SetCommand { get; }
-        [Reactive] public bool GetSucceeded { get; set; }
-        private string DefaultResponse { get; set; }
-
-        public ScopeCommand(TriggerVM viewModel, IProtocolCommand protocolCommand, string defaultResponse)
-        {
-            ViewModel = viewModel;
-            ProtocolCommand = protocolCommand;
-            DefaultResponse = defaultResponse;
-            var canSetIsActive = this.WhenValueChanged(x => x.GetSucceeded)
-                .Where(x => x == true);
-            GetCommand = ReactiveCommand.CreateFromTask(SendQueryAsync);
-            SetCommand = ReactiveCommand.CreateFromTask(async () =>
+            var SetAllMessage = ReactiveCommand.Create(() =>
+                Debug.WriteLine("------- Setting all TRIGGER values on device ---------"));
+            SetAll = ReactiveCommand.CreateCombined(new[]
             {
-                await SendCommandAsync();
-            }, canSetIsActive);
-        }
+                SetAllMessage,
+                Mode.SetCommand,
+                EdgeSource.SetCommand,
+                EdgeSlope.SetCommand,
+                EdgeLevel.SetCommand,
+            });
 
-        public async Task SendCommandAsync()
-        {
-            var value = "";
-            if (Value is bool b)
-            {
-                value = b ? "1" : "0";
-            } 
-            else
-            {
-                value = $"{Value}";
-            }
-            var path = ProtocolCommand.FormatPath();
-            await AppLocator.TelnetService.SendCommandAsync($"{path} {value}", false);
-        }
 
-        public async Task SendQueryAsync()
-        {
-            GetSucceeded = false;
-            var path = ProtocolCommand.FormatPath();
-            var command = $"{path}?";
-#if MOCK
-   await Task.Delay(1);
-   var result = DefaultResponse;
-#else
-            var response = await AppLocator.TelnetService.SendCommandAsync(command, true);
-            // remove line terminator
-            var result = response?.TrimEnd();
-#endif
-            if (result == "") return;
+            this.WhenActivated(disposables =>
+            {
+                this.HandleActivation();
 
-            var propInfo = _propInfo ?? this.GetType().GetProperty(nameof(Value));
-            if (_propInfo == null) _propInfo = propInfo;
-            var type = typeof(T);
-            if (type == typeof(string) || type == typeof(StringOption))
-            {
-                var value = StringOptions.GetByTerm(ProtocolCommand.Options, result);
-                propInfo.SetValue(this, $"{value}");
-            }
-            else if (type == typeof(bool))
-            {
-                propInfo.SetValue(this, result == "1");
-            }
-            else if (type == typeof(int) || type == typeof(IntegerOption))
-            {
-                if (int.TryParse(result, out var val))
+                Disposable
+                    .Create(() => this.HandleDeactivation())
+                    .DisposeWith(disposables);
+
+                foreach (var scopeCommand in AllScopeCommands)
                 {
-                    propInfo.SetValue(this, val);
+                    scopeCommand.WhenActivated(disposables);
                 }
-            }
-            else if (type == typeof(double) || type == typeof(RealOption))
-            {
-                if (double.TryParse(result, out var val))
-                {
-                    propInfo.SetValue(this, val);
-                }
-            }
-            GetSucceeded = true;
-            System.Diagnostics.Debug.WriteLine($"{ProtocolCommand.Name}: {Value}");
+
+                this.WhenAnyValue(x => x.Mode.Value, (x) => x == "Edge")
+                    .ToPropertyEx(this, x => x.IsEdgeMode);
+            });
+
         }
-        private PropertyInfo _propInfo;
+
+        private void HandleActivation()
+        {
+        }
+
+        private void HandleDeactivation()
+        {
+        }
+
 
     }
 

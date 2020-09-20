@@ -81,23 +81,22 @@ namespace Scoopy.Protocols
             {
                 Name = "Mode",
                 Term = "MODE",
-                Path = ":TRIG:MODE",
                 Options = new StringOptions()
                 {
-                    new StringOption("EDGE", "EDGE"),
-                    new StringOption("PULSe", "PULS"),
-                    new StringOption("RUNT", "RUNT"),
-                    new StringOption("WIND", "WIND"),
-                    new StringOption("NEDG", "NEDG"),
-                    new StringOption("SLOPe", "SLOP"),
-                    new StringOption("VIDeo", "VID"),
-                    new StringOption("PATTern", "PATT"),
-                    new StringOption("DELay", "DEL"),
-                    new StringOption("TIMeout", "TIM"),
-                    new StringOption("DURation", "DUR"),
-                    new StringOption("SHOLd", "SHOL"),
+                    ModeStringOptions.Edge,
+                    ModeStringOptions.Pulse,
+                    new StringOption("Runt", "RUNT"),
+                    new StringOption("Window", "WIND"),
+                    new StringOption("Nth Edge", "NEDG"),
+                    new StringOption("Slope", "SLOP"),
+                    new StringOption("Video", "VID"),
+                    new StringOption("Pattern", "PATT"),
+                    new StringOption("Delay", "DEL"),
+                    new StringOption("Timeout", "TIM"),
+                    new StringOption("Duration", "DUR"),
+                    new StringOption("Setup/Hold", "SHOL"),
                     new StringOption("RS232", "RS232"),
-                    new StringOption("IIC", "IIC"),     // I2C ??
+                    new StringOption("I2C", "IIC"),     // I2C ??
                     new StringOption("SPI", "SPI"),
                 }
             };
@@ -208,6 +207,13 @@ namespace Scoopy.Protocols
 
 
         }
+
+        public class ModeStringOptions : StringOptions
+        {
+            public static readonly StringOption Edge = new StringOption("Edge", "EDGE");
+            public static readonly StringOption Pulse = new StringOption("Pulse", "PULS");
+        }
+
     }
 
     #region Reused commands
@@ -285,6 +291,7 @@ namespace Scoopy.Protocols
 
         public TriggerSourceCommand(IProtocolCommand parent) : base(parent) 
         { }
+
     }
 
     public class TriggerSlopeCommand : ProtocolCommand
@@ -293,9 +300,9 @@ namespace Scoopy.Protocols
         public override string Term => "SLOP";
         public override IOptions Options => new StringOptions
         {
-            new StringOption("POSitive", "POS"),
-            new StringOption("NEGative", "NEG"),
-            new StringOption("R/F Edge", "RFALI"),
+            new StringOption("Rising", "POS"),
+            new StringOption("Falling", "NEG"),
+            new StringOption("Both", "RFAL"),
         };
         public TriggerSlopeCommand(IProtocolCommand parent) : base(parent)
         {
@@ -378,7 +385,6 @@ namespace Scoopy.Protocols
             Source = new TriggerSourceCommand(this)
             {
                 Description = "The trigger source in edge trigger",
-                Path = ":TRIG:EDG:SRC"
             };
             Slope = new TriggerSlopeCommand(this);
             Level = new TriggerLevelCommand(this);

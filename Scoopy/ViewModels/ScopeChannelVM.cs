@@ -1,4 +1,4 @@
-﻿#define MOCK
+﻿//#define MOCK
 
 using DynamicData.Binding;
 using ReactiveUI;
@@ -159,10 +159,7 @@ namespace Scoopy.ViewModels
             var canSetIsActive = this.WhenValueChanged(x => x.GetIsActiveSucceeded)
                 .Where(x => x == true);
             GetIsActiveCommand = ReactiveCommand.CreateFromTask(SendIsActiveQueryAsync);
-            SetIsActiveCommand = ReactiveCommand.CreateFromTask(async () =>
-            {
-                await SendIsActiveCommandAsync();
-            }, canSetIsActive);
+            SetIsActiveCommand = ReactiveCommand.CreateFromTask(SendIsActiveCommandAsync, canSetIsActive);
             #endregion
 
             SelectChannel = ReactiveCommand.CreateFromTask(SelectChannelExecute);
@@ -247,31 +244,37 @@ namespace Scoopy.ViewModels
             #endregion
 
             #region Get/Set All
-            GetAll = ReactiveCommand.CreateCombined(
-                new[] {
-                    GetIsActiveCommand,
-                    GetCouplingCommand,
-                    GetOffsetCommand,
-                    GetRangeCommand,
-                    GetScaleCommand,
-                    GetProbeCommand,
-                    GetIsBandwidthLimitedCommand,
-                    GetIsInvertedCommand,
-                    GetIsVernierCommand,
-                    GetUnitsCommand});
+            var GetAllMessage = ReactiveCommand.Create(() =>
+                Debug.WriteLine($"------- Retrieving all CHANNEL{ChannelNumber} values from device ---------"));
+            GetAll = ReactiveCommand.CreateCombined(new[] {
+                GetAllMessage,
+                GetIsActiveCommand,
+                GetCouplingCommand,
+                GetOffsetCommand,
+                GetRangeCommand,
+                GetScaleCommand,
+                GetProbeCommand,
+                GetIsBandwidthLimitedCommand,
+                GetIsInvertedCommand,
+                GetIsVernierCommand,
+                GetUnitsCommand,
+            });
 
-            SetAll = ReactiveCommand.CreateCombined(
-                new[] {
-                    SetIsActiveCommand,
-                    SetCouplingCommand,
-                    SetOffsetCommand,
-                    SetRangeCommand,
-                    SetScaleCommand,
-                    SetProbeCommand,
-                    SetIsBandwidthLimitedCommand,
-                    SetIsInvertedCommand,
-                    SetIsVernierCommand,
-                    SetUnitsCommand});
+            var SetAllMessage = ReactiveCommand.Create(() =>
+                Debug.WriteLine($"------- Setting all CHANNEL{ChannelNumber} values on device ---------"));
+            SetAll = ReactiveCommand.CreateCombined(new[] {
+                SetAllMessage,
+                SetIsActiveCommand,
+                SetCouplingCommand,
+                SetOffsetCommand,
+                SetRangeCommand,
+                SetScaleCommand,
+                SetProbeCommand,
+                SetIsBandwidthLimitedCommand,
+                SetIsInvertedCommand,
+                SetIsVernierCommand,
+                SetUnitsCommand,
+            });
             #endregion
 
             // watch our own properties and call commands that update the model

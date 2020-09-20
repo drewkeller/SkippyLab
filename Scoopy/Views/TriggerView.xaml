@@ -15,16 +15,21 @@
         <Frame BorderColor="White">
             <ScrollView VerticalScrollBarVisibility="Default">
                 <StackLayout Orientation="Vertical">
-                    <Label Text="Trigger"/>
+                    <Label Text="Trigger" FontAttributes="Bold"/>
 
                     <ufg:UniformGrid Rows="1">
-                        <Button x:Name="Clear" Text="Clear" HorizontalOptions="FillAndExpand"/>
-                        <Button x:Name="Run" Text="Run" HorizontalOptions="FillAndExpand"/>
-                        <Button x:Name="Stop" Text="Stop" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="ClearButton" Text="Clear" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="RunButton" Text="Run" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="StopButton" Text="Stop" HorizontalOptions="FillAndExpand"/>
                     </ufg:UniformGrid>
                     <ufg:UniformGrid Rows="1">
-                        <Button x:Name="Single" Text="Single" HorizontalOptions="FillAndExpand"/>
-                        <Button x:Name="Force" Text="Force" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="SingleTriggerButton" Text="Single" HorizontalOptions="FillAndExpand"/>
+                        <Button x:Name="ForceTriggerButton" Text="Force" HorizontalOptions="FillAndExpand"/>
+                    </ufg:UniformGrid>
+
+                    <ufg:UniformGrid Rows="1">
+                        <Button x:Name="GetAllButton" Text="Get"/>
+                        <Button x:Name="SetAll" Text="Set"/>
                     </ufg:UniformGrid>
 
                     <ufg:UniformGrid Rows="1">
@@ -37,17 +42,19 @@
                         <Picker x:Name="Mode" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                     </ufg:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
-                        <Label Text="Source" VerticalOptions="Center"/>
-                        <Picker x:Name="Source" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                    </ufg:UniformGrid>
-                    <ufg:UniformGrid Rows="1">
-                        <controls:TogglesBar x:Name="Slope" HorizontalOptions="CenterAndExpand"/>
-                    </ufg:UniformGrid>
-                    <ufg:UniformGrid Rows="1">
-                        <Label Text="Level"/>
-                        <edit:EditableLabel x:Name="Level" HorizontalOptions="CenterAndExpand"/>
-                    </ufg:UniformGrid>
+                    <StackLayout x:Name="EdgeModePanel">
+                        <ufg:UniformGrid Rows="1">
+                            <Label Text="Source" VerticalOptions="Center"/>
+                            <Picker x:Name="EdgeSource" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                        </ufg:UniformGrid>
+                        <ufg:UniformGrid Rows="1">
+                            <controls:TogglesBar x:Name="EdgeSlope" HorizontalOptions="CenterAndExpand"/>
+                        </ufg:UniformGrid>
+                        <ufg:UniformGrid Rows="1">
+                            <Label Text="Level"/>
+                            <edit:EditableLabel x:Name="EdgeLevel" HorizontalOptions="CenterAndExpand"/>
+                        </ufg:UniformGrid>
+                    </StackLayout>
 
 
 

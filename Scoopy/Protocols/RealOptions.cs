@@ -15,7 +15,7 @@ namespace Scoopy.Protocols
         }
     }
 
-    public class RealOptions : Collection<RealOption>, IOptions, IEnumerable<IOption>
+    public class RealOptions : Collection<RealOption>, IOptions
     {
         #region Implement ICollection<IOption>
 

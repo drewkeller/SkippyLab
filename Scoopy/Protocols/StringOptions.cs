@@ -112,6 +112,12 @@ namespace Scoopy.Protocols
             //return this.Where(x => x.Value == value).First();
             return this.Cast<StringOption>().Where(x => x.Name == value).FirstOrDefault();
         }
+        public string GetTermForValue(string value)
+        {
+            var option = GetByValue(value);
+            return option.Term;
+        }
+
         public StringOption GetByParameter(string parameter)
         {
             return this.Cast<StringOption>().Where(x => x.Term == parameter).FirstOrDefault();

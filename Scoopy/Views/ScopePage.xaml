@@ -13,7 +13,7 @@
 
     <ContentPage.Content>
 
-        <Grid>
+        <Grid Margin="1"> <!-- some margin for better drawing of frames -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -45,6 +45,8 @@
                     <Button x:Name="SaveScreenshotButton" Text="Save Screenshot" HorizontalOptions="FillAndExpand" WidthRequest="200" />
 
                     <view:TriggerView/>
+                    
+                    <view:TimebaseView/>
                     
                 </StackLayout>
             </StackLayout>

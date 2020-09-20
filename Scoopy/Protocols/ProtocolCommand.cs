@@ -25,6 +25,10 @@ namespace Scoopy.Protocols
 
         /// <summary>
         /// The path formatter (this term and the parameter).
+        /// DO include the prepending ":".
+        /// Example: To create the non-existing MAIN level 
+        ///          in the OFFSet command, use the following path.
+        ///          :MAIN:OFFS
         /// </summary>
         string Path { get; set; }
 
@@ -48,6 +52,9 @@ namespace Scoopy.Protocols
         /// </summary>
         IOptions Options { get; set; }
 
+        bool IsQueryable { get; set; }
+        bool IsSettable { get; set; }
+
         string FormatPath();
 
     }
@@ -57,6 +64,9 @@ namespace Scoopy.Protocols
     /// </summary>
     public class ProtocolCommand : IProtocolCommand
     {
+
+        #region Properties
+
         [JsonIgnore]
         public IProtocolCommand Parent { get; set; }
 
@@ -103,9 +113,24 @@ namespace Scoopy.Protocols
         /// </summary>
         public virtual IOptions Options { get; set; }
 
+        public virtual bool IsQueryable { get; set; } = true;
+
+        public virtual bool IsSettable { get; set; } = true;
+
+#endregion Properties
+
+        #region Constructors
+
         public ProtocolCommand(IProtocolCommand parent)
         {
             Parent = parent;
+        }
+
+        public ProtocolCommand(IProtocolCommand parent, string name, string term)
+        {
+            Parent = parent;
+            Name = name;
+            Term = term;
         }
 
         public ProtocolCommand(IProtocolCommand parent, object pathParameter)
@@ -114,20 +139,42 @@ namespace Scoopy.Protocols
             PathParameter = pathParameter;
         }
 
+        #endregion Constructors
+
+        #region Methods
+
         public virtual string FormatPath()
         {
             var parentFormat = Parent == null ? "" : Parent.FormatPath();
-            if (PathParameter == null)
+            if (Path == null)
             {
                 return $"{parentFormat}:{Term}";
             }
+            else if (PathParameter == null)
+            {
+                return $"{parentFormat}{Path}";
+            }
             else
             {
-                return string.Format($"{parentFormat}:{Path}", PathParameter);
+                return string.Format($"{parentFormat}{Path}", PathParameter);
             }
         }
 
+        #endregion Methods
+
     }
 
+    /// <summary>
+    /// This command only sends a command to the scope. 
+    /// There is no value involved and no response expected.
+    /// </summary>
+    public class ProtocolSimpleCommand : ProtocolCommand
+    {
+        public override bool IsQueryable => false;
 
+        public override bool IsSettable => false;
+
+        public ProtocolSimpleCommand(IProtocolCommand parent, string name, string term)
+            : base(null, name, term) { }
+    }
 }
