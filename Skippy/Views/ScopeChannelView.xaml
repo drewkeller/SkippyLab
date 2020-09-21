@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rxui:ReactiveContentView
+    x:Class="Skippy.Views.ScopeChannelView"
+    x:TypeArguments="vm:ScopeChannelVM"
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
+    xmlns:ufg="clr-namespace:UniformGrid;assembly=Skippy"
+    xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
+    xmlns:enums="clr-namespace:Skippy.Protocols;assembly=Skippy"
+    xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
+    xmlns:controls="clr-namespace:Skippy.Controls;assembly=Skippy"
+    xmlns:vm="clr-namespace:Skippy.ViewModels;assembly=Skippy"
+    >
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    
+    <ContentView.Content>
+
+        <Frame x:Name="Frame">
+            <StackLayout Orientation="Vertical" MinimumHeightRequest="300">
+
+                <StackLayout Orientation="Horizontal">
+                    <edit:EditableLabel x:Name="txtLabel" HorizontalOptions="FillAndExpand" />
+                </StackLayout>
+
+                <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand" OnColor="{Binding BorderColor,Source={x:Reference Frame}}"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <Button x:Name="SelectChannelButton" Text="Select" HorizontalOptions="FillAndExpand"/>
+                    <Button x:Name="GetAllButton" Text="Get" HorizontalOptions="FillAndExpand"/>
+                    <Button x:Name="SetAllButton" Text="Set" HorizontalOptions="FillAndExpand"/>
+                </StackLayout>
+
+                <ufg:UniformGrid Rows="1">
+                    <controls:TogglesBar x:Name="uiCoupling" />
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Offset"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" FontFamily="Consolas"/>
+                        <Label x:Name="uiOffsetUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
+                    </StackLayout>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Range" />
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <!--<Entry x:Name="uiRange" HorizontalOptions="CenterAndExpand" BackgroundColor="DarkGreen" />-->
+                        <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand"/>
+                        <Label x:Name="uiRangeUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
+                    </StackLayout>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Scale"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
+                        <Label x:Name="uiScaleUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
+                    </StackLayout>
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <!-- wrapping the picker prevents it from expanding the space used each time it is opened -->
+                    <Label Text="Ratio"/>
+                    <Picker x:Name="uiProbeRatio" HorizontalOptions="CenterAndExpand" />
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Inverted"/>
+                    <Switch x:Name="uiIsInverted" HorizontalOptions="Center" />
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="BW Limit"/>
+                    <Switch x:Name="uiIsBandwidthLimited" HorizontalOptions="Center" />
+                </ufg:UniformGrid>
+
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="Fine Adjust"/>
+                    <Switch x:Name="uiIsVernier" HorizontalOptions="Center" />
+                </ufg:UniformGrid>
+                
+                <!-- disable for now 
+                <ufg:UniformGrid Rows="1">
+                    <Label Text="TCal"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <edit:EditableLabel x:Name="uiTCal" HorizontalOptions="CenterAndExpand" Style="{StaticResource Key=DisablableLabel}" />
+                        <Label x:Name="uiTCalUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
+                    </StackLayout>
+                </ufg:UniformGrid>
+                -->
+
+                <ufg:UniformGrid Rows="1">
+                    <controls:TogglesBar x:Name="uiUnits" />
+                </ufg:UniformGrid>
+
+
+
+
+            </StackLayout>
+        </Frame>
+
+    </ContentView.Content>
+</rxui:ReactiveContentView>

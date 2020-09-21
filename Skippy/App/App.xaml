@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
+             xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
+             xmlns:controls="clr-namespace:Skippy.Controls;assembly=Skippy"
+             x:Class="Skippy.App">
+    
+    <Application.Resources>
+        
+        <Style TargetType="xamlly:TogglesBar">
+            <Setter Property="SelectedColor" Value="White"/>
+            <Setter Property="UnselectedColor" Value="Gray"/>
+        </Style>
+        <Style TargetType="controls:TogglesBar">
+            <Setter Property="SelectedColor" Value="White"/>
+            <Setter Property="UnselectedColor" Value="Gray"/>
+        </Style>
+        
+        <Style TargetType="xamlly:Switch">
+            <Setter Property="ButtonWidth" Value="50"/>
+            <Setter Property="OnColor" Value="White"/>
+            <Setter Property="OffColor" Value="Gray"/>
+            <Setter Property="BackgroundColor" Value="DarkGray"/>
+            <Setter Property="TextColor" Value="Black"/>
+        </Style>
+
+        <Style TargetType="edit:EditableLabel">
+            <Style.Triggers>
+                <Trigger TargetType="edit:EditableLabel" Property="IsEnabled" Value="True">
+                    <Setter Property="TextColor" Value="White"/>
+                </Trigger>
+                <Trigger TargetType="edit:EditableLabel" Property="IsEnabled" Value="False">
+                    <Setter Property="TextColor" Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Label" x:Key="DisablableLabel">
+            <Style.Triggers>
+                <Trigger TargetType="Label" Property="IsEnabled" Value="True">
+                    <Setter Property="TextColor" Value="White"/>
+                </Trigger>
+                <Trigger TargetType="Label" Property="IsEnabled" Value="False">
+                    <Setter Property="TextColor" Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="StackLayout">
+            <Style.Triggers>
+                <Trigger TargetType="StackLayout" Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value=".5"/>
+                </Trigger>
+                <Trigger TargetType="StackLayout" Property="IsEnabled" Value="True">
+                    <Setter Property="Opacity" Value="1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+    </Application.Resources>
+</Application>
