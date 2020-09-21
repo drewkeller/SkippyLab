@@ -1,0 +1,6 @@
+[submodule "EditLabel"]
+	path = EditLabel
+	url = https://github.com/drewkeller/EditLabel.git
+[submodule "Xamlly"]
+	path = Xamlly
+	url = https://github.com/drewkeller/Xamlly.git

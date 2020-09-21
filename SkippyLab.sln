@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skippy.iOS", "Skippy.iOS\Sk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skippy", "Skippy\Skippy.csproj", "{C02FDEA6-32F4-4FDA-B1D7-BFC6C71C5B93}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamlly", "..\Xamlly\Xamlly\Xamlly.csproj", "{281BBE8B-5711-405F-A4AC-DEAD5BCC10BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamlly", "Xamlly\Xamlly\Xamlly.csproj", "{281BBE8B-5711-405F-A4AC-DEAD5BCC10BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditableLabel", "..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj", "{97AE86CF-6C55-43BD-B9C5-60ACD13D7BC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditableLabel", "EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj", "{97AE86CF-6C55-43BD-B9C5-60ACD13D7BC3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BBB1573-6ECF-4B71-B566-D987A185F00A}"
 EndProject

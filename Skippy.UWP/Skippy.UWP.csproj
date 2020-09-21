@@ -195,11 +195,11 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj">
+    <ProjectReference Include="..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj">
       <Project>{97ae86cf-6c55-43bd-b9c5-60acd13d7bc3}</Project>
       <Name>EditableLabel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Xamlly\Xamlly\Xamlly.csproj">
+    <ProjectReference Include="..\Xamlly\Xamlly\Xamlly.csproj">
       <Project>{281bbe8b-5711-405f-a4ac-dead5bcc10be}</Project>
       <Name>Xamlly</Name>
     </ProjectReference>
