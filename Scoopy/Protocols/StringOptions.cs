@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Scoopy.Protocols
@@ -131,6 +132,17 @@ namespace Scoopy.Protocols
                 if (option != null) return option;
             }
             return null;
+        }
+
+        public void AddRange(IEnumerable<StringOption> items)
+        {
+            foreach (var item in items)
+            {
+                Items.Add(item);
+            }
+            OnCollectionChanged(
+                new System.Collections.Specialized.NotifyCollectionChangedEventArgs(
+                    System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
         }
 
         #region Implement ICollection<IOption>

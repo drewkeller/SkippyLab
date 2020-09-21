@@ -1,6 +1,8 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Scoopy.Extensions;
 using Scoopy.Protocols;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive.Disposables;
@@ -36,6 +38,8 @@ namespace Scoopy.ViewModels
         public ScopeCommand<string> SingleTrigger { get; set; }
         public ScopeCommand<string> ForceTrigger { get; set; }
 
+        public ScopeCommand<string> Status { get; set; }
+
         public ScopeCommand<string> Mode { get; set; }
 
         #region Edge mode properties
@@ -61,7 +65,9 @@ namespace Scoopy.ViewModels
             SingleTrigger = new ScopeCommand<string>(this, RootProtocol.Single);
             ForceTrigger = new ScopeCommand<string>(this, RootProtocol.Force);
 
-            Mode = new ScopeCommand<string>(this, Protocol.Mode, "EDGE");
+            Status = new ScopeCommand<string>(this, Protocol.Status, "AUTO");
+
+            Mode = new ScopeCommand<string>(this, Protocol.Mode, nameof(ModeStringOptions.Edge));
             EdgeSource = new ScopeCommand<string>(this, Protocol.Edge.Source, "CHAN1");
             EdgeSlope = new ScopeCommand<string>(this, Protocol.Edge.Slope, "POS");
             EdgeLevel = new ScopeCommand<double>(this, Protocol.Edge.Level, "0");
@@ -107,7 +113,12 @@ namespace Scoopy.ViewModels
                     scopeCommand.WhenActivated(disposables);
                 }
 
-                this.WhenAnyValue(x => x.Mode.Value, (x) => x == "Edge")
+                var statusTimer = Observable.Interval(TimeSpan.FromMilliseconds(1000))
+                    .ToSignal()
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .InvokeCommand(Status.GetCommand);
+
+                this.WhenAnyValue(x => x.Mode.Value, (x) => x == nameof(ModeStringOptions.Edge))
                     .ToPropertyEx(this, x => x.IsEdgeMode);
             });
 

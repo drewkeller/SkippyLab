@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
 using Scoopy.Converters;
+using Scoopy.Extensions;
 using Scoopy.Protocols;
 using Scoopy.ViewModels;
 using System;
@@ -56,8 +57,8 @@ namespace Scoopy.Views
                     vm => vm.Mode.Value, 
                     vm => vm.Mode.GetSucceeded,
                     v => v.Mode.SelectedItems, 
-                    v => v.Mode.IsEnabled, 
-                    vmValToViewConverterOverride: new StringOptionsToStringConverter(),
+                    v => v.Mode.IsEnabled,
+                    vmToViewConverterOverride: new StringOptionsToStringConverter(),
                     disposable);
                 //this.Bind(ViewModel,
                 //    x => x.Mode.Value,
@@ -86,60 +87,6 @@ namespace Scoopy.Views
                 .InvokeCommand(ViewModel.SetAll)
                 .DisposeWith(disposable);
         }
-    }
-
-    public static class ViewExtensions
-    {
-
-        /// <summary>
-        /// IReactiveBinding<TView, TViewModel, (object? view, bool isViewModel)> 
-        /// Bind<TViewModel, TView, TVMProp, TVProp>(
-        ///   this TView                            view, 
-        ///   TViewModel?                           viewModel, 
-        ///   Expression<Func<TViewModel, TVMProp>> vmProperty, 
-        ///   Expression<Func<TView, TVProp>>       viewProperty, 
-        ///   object?                               conversionHint = null, 
-        ///   IBindingTypeConverter?                vmToViewConverterOverride = null, 
-        ///   IBindingTypeConverter?                viewToVMConverterOverride = null)
-        /// where TViewModel : class
-        /// where TView : class, IViewFor;
-        /// </summary>
-        //public static IReactiveBinding<TView, TViewModel, (object view, bool isViewModel)>
-        public static void
-            BindToProperty<TViewModel, TView, TVMValue, TVMCanExecute, TVProp, TVEnabledProp>(
-                this TView view,
-                TViewModel ViewModel, 
-                Expression<Func<TViewModel, TVMValue>> vmCommand,
-                Expression<Func<TViewModel, TVMCanExecute>> vmCanExecute,
-                Expression<Func<TView, TVProp>> vProperty,
-                Expression<Func<TView, TVEnabledProp>> vEnabled,
-                CompositeDisposable disposables)
-            where TViewModel : class
-            where TView : class, IViewFor
-        {
-            //var command = ((MemberExpression)vmCommand.Body) as IScopeCommand<TValue>; // 
-            view.Bind(ViewModel, vmCommand, vProperty).DisposeWith(disposables);
-            view.Bind(ViewModel, vmCanExecute, vEnabled).DisposeWith(disposables);
-        }
-
-        public static void
-            BindToProperty<TViewModel, TView, TVMValue, TVMCanExecute, TVProp, TVEnabledProp>(
-                this TView view,
-                TViewModel ViewModel, 
-                Expression<Func<TViewModel, TVMValue>> vmCommand,
-                Expression<Func<TViewModel, TVMCanExecute>> vmCanExecute,
-                Expression<Func<TView, TVProp>> vProperty,
-                Expression<Func<TView, TVEnabledProp>> vEnabled,
-                IBindingTypeConverter vmValToViewConverterOverride,
-                CompositeDisposable disposables)
-            where TViewModel : class
-            where TView : class, IViewFor
-        {
-            view.Bind(ViewModel, vmCommand, vProperty, vmToViewConverterOverride: vmValToViewConverterOverride)
-                .DisposeWith(disposables);
-            view.Bind(ViewModel, vmCanExecute, vEnabled).DisposeWith(disposables);
-        }
-
     }
 
 }

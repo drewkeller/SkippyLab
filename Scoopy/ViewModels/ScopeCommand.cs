@@ -163,7 +163,10 @@ namespace Scoopy.ViewModels
                 }
             }
             GetSucceeded = true;
-            System.Diagnostics.Debug.WriteLine($"{ProtocolCommand.Name}: {Value}");
+            if (!ProtocolCommand.Name.Contains("Status"))
+            {
+                System.Diagnostics.Debug.WriteLine($"{ProtocolCommand.Name}: {Value}");
+            }
         }
         private PropertyInfo _propInfo;
 

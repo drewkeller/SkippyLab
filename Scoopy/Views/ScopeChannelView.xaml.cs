@@ -41,8 +41,8 @@ namespace Scoopy.Views
 
             // initialize some stuff
             //txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            uiCoupling.ItemsSource = StringOptions.Coupling; //.Select(x => x.Value);
-            uiUnits.ItemsSource = StringOptions.Units; //.Select(x => x.Value);
+            uiCoupling.ItemsSource = StringOptions.Coupling.ToValueStrings();
+            uiUnits.ItemsSource = StringOptions.Units.ToValueStrings();
             uiProbeRatio.ItemsSource = StringOptions.ProbeRatio;
 
             this.WhenActivated(disposable =>

@@ -35,7 +35,7 @@
                 </StackLayout>
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="uiCoupling" DisplayMemberPath="Name" />
+                    <controls:TogglesBar x:Name="uiCoupling" />
                 </ufg:UniformGrid>
 
                 <ufg:UniformGrid Rows="1">
@@ -49,6 +49,7 @@
                 <ufg:UniformGrid Rows="1">
                     <Label Text="Range" />
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <!--<Entry x:Name="uiRange" HorizontalOptions="CenterAndExpand" BackgroundColor="DarkGreen" />-->
                         <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand"/>
                         <Label x:Name="uiRangeUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                     </StackLayout>
@@ -94,7 +95,7 @@
                 -->
 
                 <ufg:UniformGrid Rows="1">
-                    <controls:TogglesBar x:Name="uiUnits" DisplayMemberPath="Name" />
+                    <controls:TogglesBar x:Name="uiUnits" />
                 </ufg:UniformGrid>
 
 

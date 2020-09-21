@@ -12,13 +12,18 @@
     x:Class="Scoopy.Views.TriggerView" x:TypeArguments="vm:TriggerVM"
     >
     <ContentView.Content>
-        <Frame BorderColor="White">
-            <ScrollView VerticalScrollBarVisibility="Default">
+        <StackLayout Orientation="Vertical">
+            
+            <Frame BorderColor="White">
                 <StackLayout Orientation="Vertical">
-                    <Label Text="Trigger" FontAttributes="Bold"/>
-
                     <ufg:UniformGrid Rows="1">
-                        <Button x:Name="ClearButton" Text="Clear" HorizontalOptions="FillAndExpand"/>
+                        <Label Text="Status" FontAttributes="Bold"/>
+                        <Label x:Name="Status" HorizontalOptions="CenterAndExpand"/>
+                    </ufg:UniformGrid>
+                    
+                    <Button x:Name="ClearButton" Text="Clear" HorizontalOptions="FillAndExpand"/>
+                    
+                    <ufg:UniformGrid Rows="1">
                         <Button x:Name="RunButton" Text="Run" HorizontalOptions="FillAndExpand"/>
                         <Button x:Name="StopButton" Text="Stop" HorizontalOptions="FillAndExpand"/>
                     </ufg:UniformGrid>
@@ -27,39 +32,44 @@
                         <Button x:Name="ForceTriggerButton" Text="Force" HorizontalOptions="FillAndExpand"/>
                     </ufg:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
-                        <Button x:Name="GetAllButton" Text="Get"/>
-                        <Button x:Name="SetAll" Text="Set"/>
-                    </ufg:UniformGrid>
-
-                    <ufg:UniformGrid Rows="1">
-                        <Label Text="Status"/>
-                        <Label x:Name="Status"/>
-                    </ufg:UniformGrid>
-
-                    <ufg:UniformGrid Rows="1">
-                        <Label Text="Mode" VerticalOptions="Center"/>
-                        <Picker x:Name="Mode" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                    </ufg:UniformGrid>
-
-                    <StackLayout x:Name="EdgeModePanel">
-                        <ufg:UniformGrid Rows="1">
-                            <Label Text="Source" VerticalOptions="Center"/>
-                            <Picker x:Name="EdgeSource" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                        </ufg:UniformGrid>
-                        <ufg:UniformGrid Rows="1">
-                            <controls:TogglesBar x:Name="EdgeSlope" HorizontalOptions="CenterAndExpand"/>
-                        </ufg:UniformGrid>
-                        <ufg:UniformGrid Rows="1">
-                            <Label Text="Level"/>
-                            <edit:EditableLabel x:Name="EdgeLevel" HorizontalOptions="CenterAndExpand"/>
-                        </ufg:UniformGrid>
-                    </StackLayout>
-
-
-
                 </StackLayout>
-            </ScrollView>
-        </Frame>
+            </Frame>
+
+
+            <Frame BorderColor="White">
+                <ScrollView VerticalScrollBarVisibility="Default">
+                    <StackLayout Orientation="Vertical">
+                        
+                        <Label Text="Trigger" FontAttributes="Bold"/>
+
+                        <ufg:UniformGrid Rows="1">
+                            <Button x:Name="GetAllButton" Text="Get"/>
+                            <Button x:Name="SetAll" Text="Set"/>
+                        </ufg:UniformGrid>
+
+                        <ufg:UniformGrid Rows="1">
+                            <Label Text="Mode" VerticalOptions="Center"/>
+                            <Picker x:Name="Mode" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                        </ufg:UniformGrid>
+
+                        <StackLayout x:Name="EdgeModePanel">
+                            <ufg:UniformGrid Rows="1">
+                                <Label Text="Source" VerticalOptions="Center"/>
+                                <Picker x:Name="EdgeSource" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                            </ufg:UniformGrid>
+                            <ufg:UniformGrid Rows="1">
+                                <controls:TogglesBar x:Name="EdgeSlope" HorizontalOptions="CenterAndExpand"/>
+                            </ufg:UniformGrid>
+                            <ufg:UniformGrid Rows="1">
+                                <Label Text="Level"/>
+                                <edit:EditableLabel x:Name="EdgeLevel" HorizontalOptions="CenterAndExpand"/>
+                            </ufg:UniformGrid>
+                        </StackLayout>
+
+                    </StackLayout>
+                </ScrollView>
+            </Frame>
+            
+        </StackLayout>
     </ContentView.Content>
 </rxui:ReactiveContentView>

@@ -74,8 +74,9 @@ namespace Scoopy.Services
                 {
                     if (await client.Connect())
                     {
-                        await client.WriteLineAsync(":*IDN?");
-                        var s = await client.ReadStringAsync();
+                        var suppressDebug = false;
+                        await client.WriteLineAsync(":*IDN?", suppressDebug);
+                        var s = await client.ReadStringAsync(suppressDebug);
                         Connected = true;
                         return s;
                     }
@@ -104,11 +105,12 @@ namespace Scoopy.Services
                     {
                         return null;
                     }
-                    await client.WriteLineAsync(command);
+                    var suppressDebug = command == ":TRIG:STAT?";
+                    await client.WriteLineAsync(command, suppressDebug);
                     IsBusy = false;
                     if (getResponse)
                     {
-                        return await client.ReadStringAsync();
+                        return await client.ReadStringAsync(suppressDebug);
                     } else
                     {
                         return "";
@@ -125,10 +127,10 @@ namespace Scoopy.Services
             return null;
 #else
             // skip if busy
-            if (IsBusy)
-            {
-                return null;
-            }
+            //if (IsBusy)
+            //{
+            //    return null;
+            //}
 
             using (await BusyObject.LockAsync())
             using (var client = new TelnetClient(Hostname, Port, Timeout))
@@ -139,7 +141,8 @@ namespace Scoopy.Services
                 {
                     return null;
                 }
-                await client.WriteLineAsync(":DISP:DATA? ON,OFF,PNG");
+                var suppressDebug = true;
+                await client.WriteLineAsync(":DISP:DATA? ON,OFF,PNG", suppressDebug);
 
                 // read header start character '#'
                 var char1 = await client.ReadCharAsync();

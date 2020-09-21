@@ -28,15 +28,18 @@
 
             <StackLayout Grid.Column="1" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" MinimumWidthRequest="200">
                 <StackLayout Orientation="Vertical">
+                    
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Label Text="Auto refresh screen" VerticalOptions="Center"/>
                         <Switch x:Name="uiAutorefresh" VerticalOptions="Center"/>
+                        <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" HorizontalOptions="EndAndExpand"
+                                     IsEnabled="{Binding Source={x:Reference uiAutorefresh}, Path=IsToggled}">
+                            <Label Text="rate" HorizontalOptions="End" VerticalOptions="Center"/>
+                            <Entry x:Name="uiScreenRefreshRate" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+                            <Label Text="ms" HorizontalOptions="End" VerticalOptions="Center"/>
+                        </StackLayout>
                     </StackLayout>
-                    <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" IsEnabled="{Binding Source={x:Reference uiAutorefresh}, Path=IsToggled}">
-                        <Label Text="Auto refresh rate" HorizontalOptions="Start" VerticalOptions="Center"/>
-                        <Entry x:Name="uiScreenRefreshRate" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
-                        <Label Text="ms" HorizontalOptions="End" VerticalOptions="Center"/>
-                    </StackLayout>
+                    
                     <Button x:Name="RefreshScreenButton" Text="Refresh Now" HorizontalOptions="FillAndExpand" WidthRequest="200" />
                     <Label Text="Screenshot folder" Margin="0,10,0,0" />
                     <Label x:Name="ScreenshotFolder"/>

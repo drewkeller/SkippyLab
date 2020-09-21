@@ -75,30 +75,13 @@ namespace Scoopy.Protocols
 
         #endregion // subcommand properties
 
-        public TriggerProtocol(IProtocolCommand parent) : base(null)
+        public TriggerProtocol(IProtocolCommand parent) : base(parent)
         {
             Mode = new ProtocolCommand(this)
             {
                 Name = "Mode",
                 Term = "MODE",
-                Options = new StringOptions()
-                {
-                    ModeStringOptions.Edge,
-                    ModeStringOptions.Pulse,
-                    new StringOption("Runt", "RUNT"),
-                    new StringOption("Window", "WIND"),
-                    new StringOption("Nth Edge", "NEDG"),
-                    new StringOption("Slope", "SLOP"),
-                    new StringOption("Video", "VID"),
-                    new StringOption("Pattern", "PATT"),
-                    new StringOption("Delay", "DEL"),
-                    new StringOption("Timeout", "TIM"),
-                    new StringOption("Duration", "DUR"),
-                    new StringOption("Setup/Hold", "SHOL"),
-                    new StringOption("RS232", "RS232"),
-                    new StringOption("I2C", "IIC"),     // I2C ??
-                    new StringOption("SPI", "SPI"),
-                }
+                Options = new ModeStringOptions(),
             };
 
             Coupling = new ProtocolCommand(this)
@@ -208,12 +191,32 @@ namespace Scoopy.Protocols
 
         }
 
-        public class ModeStringOptions : StringOptions
-        {
-            public static readonly StringOption Edge = new StringOption("Edge", "EDGE");
-            public static readonly StringOption Pulse = new StringOption("Pulse", "PULS");
-        }
+    }
 
+    public class ModeStringOptions : StringOptions
+    {
+        public static readonly StringOption Edge = new StringOption(nameof(Edge), "EDGE");
+        public static readonly StringOption Pulse = new StringOption(nameof(Pulse), "PULS");
+        public static readonly StringOption Runt = new StringOption(nameof(Runt), "RUNT");
+        public static readonly StringOption Window = new StringOption(nameof(Window), "WIND");
+        public static readonly StringOption Nth_Edge = new StringOption(nameof(Nth_Edge), "NEDG");
+        public static readonly StringOption Slope = new StringOption(nameof(Slope), "SLOP");
+        public static readonly StringOption Video = new StringOption(nameof(Video), "VID");
+        public static readonly StringOption Pattern = new StringOption(nameof(Pattern), "PATT");
+        public static readonly StringOption Delay = new StringOption(nameof(Delay), "DEL");
+        public static readonly StringOption Timeout = new StringOption(nameof(Timeout), "TIM");
+        public static readonly StringOption Duration = new StringOption(nameof(Duration), "DUR");
+        public static readonly StringOption Setup_Hold = new StringOption(nameof(Setup_Hold), "SHOL");
+        public static readonly StringOption RS232 = new StringOption(nameof(RS232), "RS232");
+        public static readonly StringOption I2C = new StringOption(nameof(I2C), "IIC");     // I2C ??
+        public static readonly StringOption SPI = new StringOption(nameof(SPI), "SPI");
+        public ModeStringOptions()
+        {
+            this.AddRange(new StringOptions { 
+                Edge, Pulse, Runt, Window, Nth_Edge, Slope, Video, Pattern,
+                Delay, Timeout, Duration, Setup_Hold, RS232, I2C, SPI
+            });
+        }
     }
 
     #region Reused commands

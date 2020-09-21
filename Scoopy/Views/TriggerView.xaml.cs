@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
 using Scoopy.Converters;
+using Scoopy.Extensions;
 using Scoopy.Protocols;
 using Scoopy.ViewModels;
 using System;
@@ -39,14 +40,17 @@ namespace Scoopy.Views
             this.WhenActivated(disposable =>
             {
                 this.Bind(ViewModel,
-                    x => x.Mode.Value,
-                    x => x.Mode.SelectedItem,
-                    vmToViewConverterOverride: new StringOptionsToStringConverter())
+                    vm => vm.Status.Value,
+                    v => v.Status.Text)
                     .DisposeWith(disposable);
-                this.Bind(ViewModel,
-                    x => x.Mode.GetSucceeded,
-                    x => x.Mode.IsEnabled)
-                    .DisposeWith(disposable);
+
+                this.BindToProperty(ViewModel,
+                    vm => vm.Mode.Value,
+                    vm => vm.Mode.GetSucceeded,
+                    v => v.Mode.SelectedItem,
+                    v => v.Mode.IsEnabled,
+                    vmToViewConverterOverride: new StringOptionsToStringConverter(),
+                    disposable);
 
                 #region Edge panel
 

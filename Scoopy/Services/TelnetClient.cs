@@ -111,10 +111,10 @@ namespace Scoopy.Services
 
         #region Read
 
-        public async Task<string> ReadStringAsync()
+        public async Task<string> ReadStringAsync(bool suppressDebug)
         {
             var response = await ReadStringAsync(TcpClient.GetStream());
-            if (DebugEnabled)
+            if (DebugEnabled && !suppressDebug)
             {
                 Debug.WriteLine("Response: " + response?.TrimEnd());
             }
@@ -291,18 +291,18 @@ namespace Scoopy.Services
         //    }
         //}
 
-        public async Task WriteLineAsync(string message)
+        public async Task WriteLineAsync(string message, bool suppressDebug)
         {
-            await WriteLineAsync(TcpClient.GetStream(), message);
+            await WriteLineAsync(TcpClient.GetStream(), message, suppressDebug);
         }
 
-        private async Task WriteLineAsync(NetworkStream stream, string message)
+        private async Task WriteLineAsync(NetworkStream stream, string message, bool suppressDebug)
         {
             await WaitForNotBusy();
             using (await BusyObject.LockAsync())
             {
                 IsBusy = true;
-                if (DebugEnabled)
+                if (DebugEnabled && !suppressDebug)
                 {
                     Debug.WriteLine(message);
                 }
