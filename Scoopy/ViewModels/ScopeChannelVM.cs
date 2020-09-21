@@ -28,8 +28,6 @@ namespace Scoopy.ViewModels
 
         TelnetService Telnet => AppLocator.TelnetService;
 
-        Settings Settings => AppLocator.Settings;
-
         #region Scope Properties
 
         // is there a way to read this from the scope?

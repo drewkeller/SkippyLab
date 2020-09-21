@@ -19,8 +19,6 @@ namespace Scoopy.ViewModels
     {
         public ViewModelActivator Activator { get; }
 
-        Settings Settings => AppLocator.Settings;
-
         public Scope Scope { get; set; }
 
         public string Hostname { get => _hostname; set => this.RaiseAndSetIfChanged(ref _hostname, value); }
@@ -51,7 +49,7 @@ namespace Scoopy.ViewModels
             Observable.Return(AppLocator.TelnetService.Connected && !CopyingScreenshot);
         public ReactiveCommand<Unit, Unit> SaveScreenshotCommand { get; }
         [Reactive] private bool CopyingScreenshot { get; set; }
-        [Reactive] private bool SavingScreenshot { get; set; }
+        //[Reactive] private bool SavingScreenshot { get; set; }
 
         public ScopeVM()
         {
@@ -119,7 +117,7 @@ namespace Scoopy.ViewModels
         {
             try
             {
-                SavingScreenshot = true;
+                //SavingScreenshot = true;
                 CopyingScreenshot = true;
                 var data = ScreenData;
                 CopyingScreenshot = false;
@@ -135,7 +133,7 @@ namespace Scoopy.ViewModels
             }
             finally
             {
-                SavingScreenshot = false;
+                //SavingScreenshot = false;
             }
         }
 

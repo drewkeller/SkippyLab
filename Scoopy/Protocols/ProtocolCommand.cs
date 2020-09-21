@@ -175,6 +175,6 @@ namespace Scoopy.Protocols
         public override bool IsSettable => false;
 
         public ProtocolSimpleCommand(IProtocolCommand parent, string name, string term)
-            : base(null, name, term) { }
+            : base(parent, name, term) { }
     }
 }

@@ -36,17 +36,19 @@ namespace Scoopy.ViewModels
     /// <typeparam name="T"></typeparam>
     public class ScopeCommand<T> : ReactiveObject, IScopeCommand<T>
     {
-        IProtocolVM ViewModel { get; set; }
+        //IProtocolVM ViewModel { get; set; }
         IProtocolCommand ProtocolCommand { get; set; }
         [Reactive] public T Value { get; set; }
         public ReactiveCommand<Unit, Unit> GetCommand { get; }
         public ReactiveCommand<Unit, Unit> SetCommand { get; }
         [Reactive] public bool GetSucceeded { get; set; }
+#if MOCK        
         private string DefaultResponse { get; set; }
+#endif
 
         public ScopeCommand(IProtocolVM viewModel, IProtocolCommand protocolCommand, string defaultResponse)
         {
-            ViewModel = viewModel;
+            //ViewModel = viewModel;
             ProtocolCommand = protocolCommand;
 
             if (protocolCommand.IsSettable)
@@ -62,11 +64,15 @@ namespace Scoopy.ViewModels
 
             if (protocolCommand.IsQueryable)
             {
+#if MOCK
                 DefaultResponse = defaultResponse;
+#endif
                 GetCommand = ReactiveCommand.CreateFromTask(SendQueryAsync);
             } else
             {
+#if MOCK
                 DefaultResponse = null;
+#endif
                 GetSucceeded = true;
             }
         }
@@ -128,7 +134,7 @@ namespace Scoopy.ViewModels
             // remove line terminator
             var result = response?.TrimEnd();
 #endif
-            if (result == "") return;
+            if (result.Length == 0) return;
 
             var propInfo = _propInfo ?? this.GetType().GetProperty(nameof(Value));
             if (_propInfo == null) _propInfo = propInfo;
