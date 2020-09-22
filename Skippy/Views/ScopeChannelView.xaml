@@ -79,7 +79,8 @@
                     <Switch x:Name="uiIsBandwidthLimited" HorizontalOptions="Center" />
                 </ufg:UniformGrid>
 
-                <ufg:UniformGrid Rows="1">
+                <!-- this is kind of pointless when we can enter a value directly -->
+                <ufg:UniformGrid Rows="1" IsVisible="False">
                     <Label Text="Fine Adjust"/>
                     <Switch x:Name="uiIsVernier" HorizontalOptions="Center" />
                 </ufg:UniformGrid>

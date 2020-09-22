@@ -14,6 +14,9 @@
     <ContentPage.Content>
 
         <Grid Margin="1"> <!-- some margin for better drawing of frames -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -21,37 +24,41 @@
 
             <StackLayout Grid.Column="0" WidthRequest="800">
                 <Image x:Name="imgScreen" BackgroundColor="Pink"
-                       HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" 
-                       Aspect="AspectFit" HeightRequest="480" />
-                <StackLayout x:Name="pnlChannels" Orientation="Horizontal" HeightRequest="430"/>
+                       HorizontalOptions="StartAndExpand" VerticalOptions="Start" 
+                       Aspect="AspectFit" HeightRequest="480" WidthRequest="800" />
+                <ScrollView Orientation="Horizontal">
+                    <StackLayout x:Name="pnlChannels" Orientation="Horizontal" HeightRequest="430"/>
+                </ScrollView>
             </StackLayout>
 
-            <StackLayout Grid.Column="1" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" MinimumWidthRequest="200">
-                <StackLayout Orientation="Vertical">
-                    
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <Label Text="Auto refresh screen" VerticalOptions="Center"/>
-                        <Switch x:Name="uiAutorefresh" VerticalOptions="Center"/>
-                        <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" HorizontalOptions="EndAndExpand"
-                                     IsEnabled="{Binding Source={x:Reference uiAutorefresh}, Path=IsToggled}">
-                            <Label Text="rate" HorizontalOptions="End" VerticalOptions="Center"/>
-                            <Entry x:Name="uiScreenRefreshRate" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
-                            <Label Text="ms" HorizontalOptions="End" VerticalOptions="Center"/>
-                        </StackLayout>
-                    </StackLayout>
-                    
-                    <Button x:Name="RefreshScreenButton" Text="Refresh Now" HorizontalOptions="FillAndExpand" WidthRequest="200" />
-                    <Label Text="Screenshot folder" Margin="0,10,0,0" />
-                    <Label x:Name="ScreenshotFolder"/>
-                    <Button x:Name="CopyFolderButton" Text="Copy" />
-                    <Label x:Name="uiScreenshotFolderError" Text="Screenshot folder not found" IsVisible="False" TextColor="Red"/>
-                    <Button x:Name="SaveScreenshotButton" Text="Save Screenshot" HorizontalOptions="FillAndExpand" WidthRequest="200" />
+            <StackLayout Grid.Column="1" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" WidthRequest="200">
+                <ScrollView Orientation="Vertical">
+                    <StackLayout Orientation="Vertical">
 
-                    <view:TriggerView/>
-                    
-                    <view:TimebaseView/>
-                    
-                </StackLayout>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                            <Label Text="Auto refresh screen" VerticalOptions="Center"/>
+                            <Switch x:Name="uiAutorefresh" VerticalOptions="Center"/>
+                            <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" HorizontalOptions="EndAndExpand"
+                                     IsEnabled="{Binding Source={x:Reference uiAutorefresh}, Path=IsToggled}">
+                                <Label Text="rate" HorizontalOptions="End" VerticalOptions="Center"/>
+                                <Entry x:Name="uiScreenRefreshRate" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+                                <Label Text="ms" HorizontalOptions="End" VerticalOptions="Center"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                        <Button x:Name="RefreshScreenButton" Text="Refresh Now" HorizontalOptions="FillAndExpand" WidthRequest="200" />
+                        <Label Text="Screenshot folder" Margin="0,10,0,0" />
+                        <Label x:Name="ScreenshotFolder"/>
+                        <Button x:Name="CopyFolderButton" Text="Copy" />
+                        <Label x:Name="uiScreenshotFolderError" Text="Screenshot folder not found" IsVisible="False" TextColor="Red"/>
+                        <Button x:Name="SaveScreenshotButton" Text="Save Screenshot" HorizontalOptions="FillAndExpand" WidthRequest="200" />
+
+                        <view:TriggerView/>
+
+                        <view:TimebaseView/>
+                        
+                    </StackLayout>
+                </ScrollView>
             </StackLayout>
 
         </Grid>

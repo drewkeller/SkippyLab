@@ -57,12 +57,15 @@ namespace Skippy.ViewModels
 
             ScreenRefreshRate = 5000;
             var storage = Locator.Current.GetService<IScreenshotStorage>();
+            //Assert.IsNotNull(storage, "Platform must implement IScreenshotStorage");
             ScreenshotFolder = Path.GetFullPath(storage.ScreenshotFolder);
 
             RefreshScreenCommand = ReactiveCommand
                 .CreateFromTask(ExecuteRefreshScreen, CanExecuteRefreshScreen);
 
-            RefreshScreenCommand.ThrownExceptions.Subscribe(ex =>
+            RefreshScreenCommand.ThrownExceptions
+                .SubscribeOn(RxApp.MainThreadScheduler)
+                .Subscribe(ex =>
             {
                 UserDialogs.Instance.Alert(ex.Message);
             });
