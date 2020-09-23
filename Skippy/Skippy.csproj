@@ -11,6 +11,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\arrowDown.png" />
+    <None Remove="Resources\arrowRight.png" />
+    <None Remove="Resources\blank.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\arrowDown.png" />
+    <EmbeddedResource Include="Resources\arrowRight.png" />
+    <EmbeddedResource Include="Resources\blank.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.1.0.452" />
     <PackageReference Include="Fody" Version="6.2.5">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\DottorPagliaccius\Xamarin-Custom-Controls\src\Xamarin.CustomControls.Accordion\Xamarin.CustomControls.AccordionView.csproj" />
     <ProjectReference Include="..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj" />
     <ProjectReference Include="..\Xamlly\Xamlly\Xamlly.csproj" />
   </ItemGroup>

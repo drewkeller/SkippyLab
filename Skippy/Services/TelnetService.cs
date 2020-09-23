@@ -1,4 +1,4 @@
-﻿//#define MOCK
+﻿#define MOCK
 
 using Nito.AsyncEx;
 using ReactiveUI;

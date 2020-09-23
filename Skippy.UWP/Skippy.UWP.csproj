@@ -196,6 +196,10 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DottorPagliaccius\Xamarin-Custom-Controls\src\Xamarin.CustomControls.Accordion\Xamarin.CustomControls.AccordionView.csproj">
+      <Project>{94ea13e7-5e42-4b3e-8714-fb571e236c7d}</Project>
+      <Name>Xamarin.CustomControls.AccordionView</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj">
       <Project>{97ae86cf-6c55-43bd-b9c5-60acd13d7bc3}</Project>
       <Name>EditableLabel</Name>

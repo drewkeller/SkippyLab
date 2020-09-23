@@ -1,16 +1,23 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<rxui:ReactiveContentView
+<accordion:AccordionItemView
     x:Class="Skippy.Views.ScopeChannelView"
-    x:TypeArguments="vm:ScopeChannelVM"
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
     xmlns:ufg="clr-namespace:UniformGrid;assembly=Skippy"
     xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
+    xmlns:accordion="clr-namespace:Xamarin.CustomControls;assembly=Xamarin.CustomControls.AccordionView"
     xmlns:enums="clr-namespace:Skippy.Protocols;assembly=Skippy"
     xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
     xmlns:controls="clr-namespace:Skippy.Controls;assembly=Skippy"
     xmlns:vm="clr-namespace:Skippy.ViewModels;assembly=Skippy"
+    
+    Text="CHANNEL"
+    TextColor="White" ActiveTextColor="Blue" 
+    ButtonBackgroundColor="#0067B7" ButtonActiveBackgroundColor="#0067B7"
+    RotateImages="True" 
+    HorizontalOptions="Start"
+    WidthRequest="200"
     >
 
     <ContentView.Resources>
@@ -18,14 +25,14 @@
         </ResourceDictionary>
     </ContentView.Resources>
     
-    <ContentView.Content>
+    <accordion:AccordionItemView.ItemContent>
 
         <Frame x:Name="Frame">
             <StackLayout Orientation="Vertical" MinimumHeightRequest="300">
 
-                <StackLayout Orientation="Horizontal">
+                <!--<StackLayout Orientation="Horizontal">
                     <edit:EditableLabel x:Name="txtLabel" HorizontalOptions="FillAndExpand" />
-                </StackLayout>
+                </StackLayout>-->
 
                 <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand" OnColor="{Binding BorderColor,Source={x:Reference Frame}}"/>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
@@ -105,5 +112,5 @@
             </StackLayout>
         </Frame>
 
-    </ContentView.Content>
-</rxui:ReactiveContentView>
+    </accordion:AccordionItemView.ItemContent>
+</accordion:AccordionItemView>

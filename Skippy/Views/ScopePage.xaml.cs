@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Xamarin.CustomControls;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -23,12 +24,19 @@ namespace Skippy.Views
             ViewModel = new ScopeVM();
             this.BindingContext = ViewModel;
 
+            // overlay with our blank image until the scope screen is loaded
+            this.BlankScreenImage.Source = ImageSource.FromResource("Skippy.Resources.blank.png");
+            this.ScopeScreenImage.IsVisible = false;
+
             this.WhenActivated(disposable =>
             {
                 this.Bind(ViewModel,
                     x => x.Screen,
-                    x => x.imgScreen.Source)
+                    x => x.ScopeScreenImage.Source)
                     .DisposeWith(disposable);
+                this.WhenAnyValue(x => x.ScopeScreenImage.Source)
+                    .Where(x => x != null)
+                    .Subscribe(x => this.ScopeScreenImage.IsVisible = true);
 
                 this.Bind(ViewModel,
                     x => x.AutorefreshEnabled,

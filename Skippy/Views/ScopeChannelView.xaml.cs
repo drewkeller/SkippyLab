@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
 using Skippy.Converters;
+using Skippy.Extensions;
 using Skippy.Protocols;
 using Skippy.ViewModels;
 using System;
@@ -9,13 +10,14 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Xamarin.CustomControls;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Skippy.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ScopeChannelView : ReactiveContentView<ScopeChannelVM>
+    public partial class ScopeChannelView : AccordionItemView, IViewFor<ScopeChannelVM> // ReactiveContentView<ScopeChannelVM>
     {
         public class NameValue
         {
@@ -33,11 +35,17 @@ namespace Skippy.Views
 
         public StringOptions CouplingOptions => Protocols.StringOptions.Coupling;
 
+        public ScopeChannelVM ViewModel { get; set; }
+        object IViewFor.ViewModel { get => ViewModel; set => ViewModel = value as ScopeChannelVM; }
+
         public ScopeChannelView(ScopeChannelVM viewModel)
         {
             InitializeComponent();
             ViewModel = viewModel;
             this.BindingContext = viewModel;
+
+            //this.LeftImage = FileImageSource.FromResource("Skippy.Resources.arrowRight.png");
+
 
             // initialize some stuff
             //txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
@@ -47,9 +55,28 @@ namespace Skippy.Views
 
             this.WhenActivated(disposable =>
             {
+                this.WhenAnyValue(x => x.IsOpen)
+                .Where(x => x == true)
+                //.ToSignal()
+                .Subscribe(x =>
+                {
+                    { }
+                });
+
                 this.Bind(ViewModel,
                     x => x.Name,
-                    x => x.txtLabel.Text)
+                    x => x.Text)
+                    .DisposeWith(disposable);
+
+                //this.Bind(ViewModel,
+                //    x => x.Name,
+                //    x => x.txtLabel.Text)
+                //    .DisposeWith(disposable);
+
+                this.OneWayBind(ViewModel,
+                    x => x.Color,
+                    x => x.ButtonBackgroundColor,
+                    vmToViewConverterOverride: new StringToColorConverter())
                     .DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
@@ -180,6 +207,12 @@ namespace Skippy.Views
                 WireEvents(disposable);
             });
 
+            this.OnClick += ScopeChannelView_OnClick;
+        }
+
+        private void ScopeChannelView_OnClick(object sender, AccordionItemClickEventArgs e)
+        {
+            { }
         }
 
         private void WireEvents(CompositeDisposable disposable)
@@ -202,6 +235,8 @@ namespace Skippy.Views
                 .InvokeCommand(this, X => X.ViewModel.SetAll)
                 .DisposeWith(disposable);
         }
+
+        
 
     }
 }
