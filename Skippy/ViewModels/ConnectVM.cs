@@ -43,6 +43,7 @@ namespace Skippy.ViewModels
                 ConnectCommand.ThrownExceptions.Subscribe(ex =>
                 {
                     Debug.Write(ex.Message);
+                    UserDialogs.Instance.Alert(ex.Message);
                 });
 
                 var telnet = AppLocator.TelnetService;
