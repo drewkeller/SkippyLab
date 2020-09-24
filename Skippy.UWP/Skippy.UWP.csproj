@@ -107,7 +107,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\SwitchRenderer.cs" />
-    <Compile Include="Interfaces\ScreenshotStorage.cs" />
+    <Compile Include="Interfaces\ScreenService.cs" />
     <Compile Include="Utilities\DirectoryFinder.cs" />
   </ItemGroup>
   <ItemGroup>

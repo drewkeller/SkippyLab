@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using Skippy.Interfaces;
+using System.IO;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Skippy.UWP
 {
-    public class ScreenshotStorage : IScreenshotStorage
+    public class ScreenService : IScreenService
     {
 
         public string ScreenshotFolder

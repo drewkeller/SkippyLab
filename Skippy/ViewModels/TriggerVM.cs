@@ -17,8 +17,6 @@ namespace Skippy.ViewModels
 
         public ViewModelActivator Activator { get; }
 
-        public RootProtocol RootProtocol { get; set; }
-
         public TriggerProtocol Protocol { get; set; }
         IProtocolCommand IProtocolVM.Protocol => Protocol as IProtocolCommand;
 
@@ -30,15 +28,6 @@ namespace Skippy.ViewModels
         #region Properties
 
         private List<IScopeCommand> AllScopeCommands { get; set; }
-
-        public ScopeCommand<string> AutoScale { get; set; }
-        public ScopeCommand<string> Clear { get; set; }
-        public ScopeCommand<string> Run { get; set; }
-        public ScopeCommand<string> Stop { get; set; }
-        public ScopeCommand<string> SingleTrigger { get; set; }
-        public ScopeCommand<string> ForceTrigger { get; set; }
-
-        public ScopeCommand<string> Status { get; set; }
 
         public ScopeCommand<string> Mode { get; set; }
 
@@ -56,16 +45,6 @@ namespace Skippy.ViewModels
         {
             Activator = new ViewModelActivator();
             Protocol = new TriggerProtocol(null);
-            RootProtocol = new RootProtocol();
-
-            AutoScale = new ScopeCommand<string>(this, RootProtocol.AutoScale);
-            Clear = new ScopeCommand<string>(this, RootProtocol.Clear);
-            Run = new ScopeCommand<string>(this, RootProtocol.Run);
-            Stop = new ScopeCommand<string>(this, RootProtocol.Stop);
-            SingleTrigger = new ScopeCommand<string>(this, RootProtocol.Single);
-            ForceTrigger = new ScopeCommand<string>(this, RootProtocol.Force);
-
-            Status = new ScopeCommand<string>(this, Protocol.Status, "AUTO");
 
             Mode = new ScopeCommand<string>(this, Protocol.Mode, nameof(ModeStringOptions.Edge));
             EdgeSource = new ScopeCommand<string>(this, Protocol.Edge.Source, "CHAN1");
@@ -112,11 +91,6 @@ namespace Skippy.ViewModels
                 {
                     scopeCommand.WhenActivated(disposables);
                 }
-
-                var statusTimer = Observable.Interval(TimeSpan.FromMilliseconds(1000))
-                    .ToSignal()
-                    .ObserveOn(RxApp.MainThreadScheduler)
-                    .InvokeCommand(Status.GetCommand);
 
                 this.WhenAnyValue(x => x.Mode.Value, (x) => x == nameof(ModeStringOptions.Edge))
                     .ToPropertyEx(this, x => x.IsEdgeMode);

@@ -9,14 +9,18 @@ using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Xamarin.CustomControls;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Skippy.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TimebaseView : ReactiveContentView<TimebaseVM>
+    public partial class TimebaseView : AccordionItemView, IViewFor<TimebaseVM>
     {
+        public TimebaseVM ViewModel { get; set; }
+        object IViewFor.ViewModel { get => ViewModel; set => ViewModel = value as TimebaseVM; }
+
         public TimebaseView()
         {
             InitializeComponent();

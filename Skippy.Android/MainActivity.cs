@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Splat;
+using Skippy.Interfaces;
 
 namespace Skippy.Droid
 {
@@ -26,7 +27,7 @@ namespace Skippy.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             Acr.UserDialogs.UserDialogs.Init(this);
-            Locator.CurrentMutable.RegisterLazySingleton(() => new ScreenshotStorage(), typeof(IScreenshotStorage));
+            Locator.CurrentMutable.RegisterLazySingleton(() => new ScreenshotStorage(), typeof(IScreenService));
 
             LoadApplication(new App());
         }

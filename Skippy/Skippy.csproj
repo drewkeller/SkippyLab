@@ -14,12 +14,16 @@
     <None Remove="Resources\arrowDown.png" />
     <None Remove="Resources\arrowRight.png" />
     <None Remove="Resources\blank.png" />
+    <None Remove="Resources\mock.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\arrowDown.png" />
     <EmbeddedResource Include="Resources\arrowRight.png" />
     <EmbeddedResource Include="Resources\blank.png" />
+    <EmbeddedResource Include="Resources\mock.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,19 +49,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ScopePage.xaml.cs">
-      <DependentUpon>ScopePage.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Resource Include="Resources\DarkTheme.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Resource>
     <EmbeddedResource Update="Views\ConnectView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\RunView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ScopeChannelView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ScopePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ScreenControlView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\TimebaseView.xaml">

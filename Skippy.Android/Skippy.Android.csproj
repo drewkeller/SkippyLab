@@ -73,7 +73,7 @@
     <PackageReference Include="Xamarin.AndroidX.Legacy.Support.V4" Version="1.0.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\ScreenshotStorage.cs" />
+    <Compile Include="Interfaces\ScreenService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

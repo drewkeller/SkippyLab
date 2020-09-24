@@ -15,7 +15,7 @@
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    viewBox="0 0 800 480"
    sodipodi:docname="blank_800x480.svg"
-   inkscape:export-filename=".\blank_800x480.png"
+   inkscape:export-filename=".\mock.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -107,8 +107,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.75949414"
-     inkscape:cx="391.07132"
-     inkscape:cy="260.16065"
+     inkscape:cx="289.44324"
+     inkscape:cy="45.798813"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -134,7 +134,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -142,6 +142,13 @@
      id="layer1"
      inkscape:label="background"
      inkscape:groupmode="layer">
+    <rect
+       style="fill:#7f7f7f;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.523484px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3346"
+       width="799.39172"
+       height="479.39169"
+       x="0.60831475"
+       y="0.60833257" />
     <path
        id="rect871"
        style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.44149;stroke-linecap:round;stroke-miterlimit:3.86644"

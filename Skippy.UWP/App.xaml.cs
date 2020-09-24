@@ -1,4 +1,5 @@
-﻿using Skippy.UWP.Utilities;
+﻿using Skippy.Interfaces;
+using Skippy.UWP.Utilities;
 using Splat;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace Skippy.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 Xamarin.Forms.Forms.Init(e);
-                Locator.CurrentMutable.RegisterLazySingleton(() => new ScreenshotStorage(), typeof(IScreenshotStorage));
+                Locator.CurrentMutable.RegisterLazySingleton(() => new ScreenService(), typeof(IScreenService));
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

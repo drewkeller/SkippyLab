@@ -5,6 +5,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Skippy.Services
@@ -124,7 +125,15 @@ namespace Skippy.Services
         {
 #if MOCK
             await Task.Delay(1);
-            return null;
+            string resourceID = string.Format("Skippy.Resources.mock.png");
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.IO.Stream stream = assembly.GetManifestResourceStream(resourceID);
+            using (var memoryStream = new System.IO.MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                var bytes = memoryStream.ToArray();
+                return bytes;
+            }
 #else
             // skip if busy
             //if (IsBusy)

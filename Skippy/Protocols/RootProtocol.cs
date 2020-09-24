@@ -21,6 +21,8 @@ namespace Skippy.Protocols
 
         public ProtocolCommand AutoScale { get; set; }
 
+        public ProtocolCommand Status { get; set; }
+
         public ProtocolCommand Clear { get; set; }
         public ProtocolCommand Run { get; set; }
         public ProtocolCommand Stop { get; set; }
@@ -29,12 +31,29 @@ namespace Skippy.Protocols
 
         public RootProtocol() : base(null)
         {
-            AutoScale = new ProtocolSimpleCommand(this, "AutoScale", "AUT");
-            Clear = new ProtocolSimpleCommand(this, "Clear", "CLE");
-            Run = new ProtocolSimpleCommand(this, "Run", "RUN");
-            Stop = new ProtocolSimpleCommand(this, "Stop", "STOP");
-            Single = new ProtocolSimpleCommand(this, "Single", "SING");
-            Force = new ProtocolSimpleCommand(this, "Force", "TFOR");
+            /// <summary>
+            /// Query the current status (this duplicates the Trigger Status command).
+            /// </summary>
+            Status = new ProtocolCommand(this, nameof(Status), "STAT")
+            {
+                Path=":TRIG:STAT",
+                Options = new StringOptions
+                {
+                    new StringOption("TD", "TD"),
+                    new StringOption("WAIT", "WAIT"),
+                    new StringOption("RUN", "RUN"),
+                    new StringOption("AUTO", "AUTO"),
+                    new StringOption("STOP", "STOP")
+                }
+            };
+
+
+            AutoScale = new ProtocolSimpleCommand(this, nameof(AutoScale), "AUT");
+            Clear = new ProtocolSimpleCommand(this, nameof(Clear), "CLE");
+            Run = new ProtocolSimpleCommand(this, nameof(Run), "RUN");
+            Stop = new ProtocolSimpleCommand(this, nameof(Stop), "STOP");
+            Single = new ProtocolSimpleCommand(this, nameof(Single), "SING");
+            Force = new ProtocolSimpleCommand(this, nameof(Force), "TFOR");
         }
 
     }

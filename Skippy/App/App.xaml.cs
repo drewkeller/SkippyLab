@@ -1,4 +1,6 @@
 ﻿using ReactiveUI;
+using Skippy.Interfaces;
+using Skippy.ViewModels;
 using Skippy.Views;
 using Splat;
 using System.Reflection;

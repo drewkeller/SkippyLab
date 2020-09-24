@@ -1,21 +1,25 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<rxui:ReactiveContentView
+<accordion:AccordionItemView
+    x:Class="Skippy.Views.TimebaseView"
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
     xmlns:ufg="clr-namespace:UniformGrid;assembly=Skippy"
     xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
+    xmlns:accordion="clr-namespace:Xamarin.CustomControls;assembly=Xamarin.CustomControls.AccordionView"
     xmlns:enums="clr-namespace:Skippy.Protocols;assembly=Skippy"
     xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
     xmlns:controls="clr-namespace:Skippy.Controls;assembly=Skippy"
     xmlns:vm="clr-namespace:Skippy.ViewModels;assembly=Skippy"
-    x:Class="Skippy.Views.TimebaseView" x:TypeArguments="vm:TimebaseVM"
+    
+    Text="TIMEBASE"
+    FontAttributes="Bold"
+    RotateImages="True"
     >
-  <ContentView.Content>
-        <Frame BorderColor="White">
+    <accordion:AccordionItemView.ItemContent>
+        <Frame BorderColor="{DynamicResource TextPrimaryColor}" HorizontalOptions="EndAndExpand" WidthRequest="300">
             <ScrollView VerticalScrollBarVisibility="Default">
                 <StackLayout>
-                    <Label Text="Timebase" FontAttributes="Bold" />
 
                     <ufg:UniformGrid Rows="1">
                         <Button x:Name="GetAllButton" Text="Get"/>
@@ -39,5 +43,5 @@
                 </StackLayout>
             </ScrollView>
         </Frame>
-    </ContentView.Content>
-</rxui:ReactiveContentView>
+    </accordion:AccordionItemView.ItemContent>
+</accordion:AccordionItemView>

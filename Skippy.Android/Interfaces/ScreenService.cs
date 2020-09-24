@@ -1,11 +1,12 @@
-﻿using System.IO;
+﻿using Skippy.Interfaces;
+using System.IO;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Skippy.Droid
 {
-    public class ScreenshotStorage : IScreenshotStorage
+    public class ScreenshotStorage : IScreenService
     {
-
         public string ScreenshotFolder
         {
             get {

@@ -55,13 +55,9 @@ namespace Skippy.Views
 
             this.WhenActivated(disposable =>
             {
-                this.WhenAnyValue(x => x.IsOpen)
-                .Where(x => x == true)
-                //.ToSignal()
-                .Subscribe(x =>
-                {
-                    { }
-                });
+                this.Click += (s,e) => { 
+                    this.WidthRequest = IsOpen ? 300 : 100;
+                };
 
                 this.Bind(ViewModel,
                     x => x.Name,
@@ -78,10 +74,19 @@ namespace Skippy.Views
                     x => x.ButtonBackgroundColor,
                     vmToViewConverterOverride: new StringToColorConverter())
                     .DisposeWith(disposable);
-
+                this.OneWayBind(ViewModel,
+                    x => x.Color,
+                    x => x.ButtonActiveBackgroundColor,
+                    vmToViewConverterOverride: new StringToColorConverter())
+                    .DisposeWith(disposable);
                 this.OneWayBind(ViewModel,
                     x => x.Color,
                     x => x.Frame.BorderColor,
+                    vmToViewConverterOverride: new StringToColorConverter())
+                    .DisposeWith(disposable);
+                this.OneWayBind(ViewModel,
+                    x => x.Color,
+                    x => x.uiIsActive.OnColor,
                     vmToViewConverterOverride: new StringToColorConverter())
                     .DisposeWith(disposable);
 
@@ -207,7 +212,7 @@ namespace Skippy.Views
                 WireEvents(disposable);
             });
 
-            this.OnClick += ScopeChannelView_OnClick;
+            this.Click += ScopeChannelView_OnClick;
         }
 
         private void ScopeChannelView_OnClick(object sender, AccordionItemClickEventArgs e)
