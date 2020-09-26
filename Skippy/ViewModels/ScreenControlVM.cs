@@ -1,5 +1,4 @@
-﻿using Acr.UserDialogs;
-using DynamicData.Binding;
+﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Skippy.Extensions;
@@ -70,7 +69,7 @@ namespace Skippy.ViewModels
                 .SubscribeOn(RxApp.MainThreadScheduler)
                 .Subscribe(ex =>
             {
-                UserDialogs.Instance.Alert(ex.Message);
+                AppLocator.Dialogs.Alert(ex.Message);
             });
 
             var canExecuteSaveScreenshot = this.WhenAnyValue(
@@ -82,7 +81,7 @@ namespace Skippy.ViewModels
                 .Create(SaveScreenshotExecute, canExecuteSaveScreenshot);
             SaveScreenshotCommand.ThrownExceptions
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(ex => UserDialogs.Instance.Alert(ex.Message));
+                .Subscribe(ex => AppLocator.Dialogs.Alert(ex.Message));
 
             this.WhenActivated(disposables =>
             {
@@ -139,7 +138,7 @@ namespace Skippy.ViewModels
             }
             catch (Exception ex)
             {
-                UserDialogs.Instance.Alert($"Failed to save screenshot: \r\n{ex}");
+                AppLocator.Dialogs.Alert($"Failed to save screenshot: \r\n{ex}");
             }
             finally
             {

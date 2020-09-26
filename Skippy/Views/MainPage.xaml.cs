@@ -21,6 +21,7 @@ namespace Skippy.Views
             InitializeComponent();
             ViewModel = new MainPageVM();
             var connectVM = ConnectView.ViewModel;
+            this.AddProgressDisplay();
 
             // navigate to scope page when connection is achieved
             AppLocator.TelnetService.WhenValueChanged(x => x.Connected)

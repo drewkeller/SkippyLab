@@ -1,7 +1,8 @@
-﻿using Acr.UserDialogs;
-using DynamicData.Binding;
+﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Skippy.Interfaces;
+using Splat;
 using System;
 using System.Diagnostics;
 using System.Reactive;
@@ -20,6 +21,8 @@ namespace Skippy.ViewModels
         [Reactive] public int Port { get; set; }
 
         [Reactive] public bool IsConnected { get; set; }
+
+        [Reactive] public bool IsBusy { get; set; }
 
         public ReactiveCommand<Unit, Unit> ConnectCommand { get; set; }
 
@@ -43,7 +46,7 @@ namespace Skippy.ViewModels
                 ConnectCommand.ThrownExceptions.Subscribe(ex =>
                 {
                     Debug.Write(ex.Message);
-                    UserDialogs.Instance.Alert(ex.Message);
+                    //AppLocator.Dialogs.ShowMessage(ex.Message, "");
                 });
 
                 var telnet = AppLocator.TelnetService;
@@ -64,8 +67,16 @@ namespace Skippy.ViewModels
         public async Task<Unit> ExecuteConnect()
         {
             var telnet = AppLocator.TelnetService;
-            await telnet.ConnectAsync(Hostname, Port);
-            IsConnected = telnet.Connected;
+            try
+            {
+                IsBusy = true;
+                await telnet.ConnectAsync(Hostname, Port);
+            }
+            finally
+            {
+                IsBusy = false;
+                IsConnected = telnet.Connected;
+            }
             return Unit.Default;
         }
 

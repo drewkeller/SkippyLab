@@ -60,8 +60,8 @@ namespace Skippy.Views
                 //    { }
                 //}).DisposeWith(disposable);
 
-                DeviceDisplay.MainDisplayInfoChanged += (s, e) =>
-                    DisplayInfo = DeviceDisplay.MainDisplayInfo;
+                //DeviceDisplay.MainDisplayInfoChanged += (s, e) =>
+                //    DisplayInfo = DeviceDisplay.MainDisplayInfo;
 
             });
         }
