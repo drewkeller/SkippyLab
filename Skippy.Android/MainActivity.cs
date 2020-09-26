@@ -12,7 +12,7 @@ using Skippy.Interfaces;
 namespace Skippy.Droid
 {
     [Activity(Label = "Scoopy", Icon = "@mipmap/icon", Theme = "@style/MainTheme", 
-        ScreenOrientation = ScreenOrientation.Landscape,
+        //ScreenOrientation = ScreenOrientation.Landscape,
         MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize )]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
