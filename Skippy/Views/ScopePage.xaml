@@ -2,6 +2,7 @@
 <rxui:ReactiveContentPage
     x:Class="Skippy.Views.ScopePage"
     x:TypeArguments="vm:ScopeVM"
+    x:Name="this"
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
@@ -12,28 +13,39 @@
 
     <ContentPage.Content>
 
-        <StackLayout Orientation="Horizontal">
+        <RelativeLayout>
 
-            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+            <StackLayout Orientation="Vertical" 
+                         RelativeLayout.XConstraint="0" RelativeLayout.YConstraint="0"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                         >
                 <Image x:Name="BlankScreenImage" 
-                        Aspect="AspectFit" HeightRequest="480" WidthRequest="800"
-                        MinimumHeightRequest="240" MinimumWidthRequest="400"
-                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
-                        />
+                    Aspect="AspectFit" HeightRequest="480" WidthRequest="800"
+                    MinimumHeightRequest="120" MinimumWidthRequest="200"
+                    HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" 
+                    />
                 <Image x:Name="ScopeScreenImage"
-                        Aspect="AspectFit" HeightRequest="480" WidthRequest="800"
-                        MinimumHeightRequest="240" MinimumWidthRequest="400"
-                        HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
-                        />
-                <ContentView HorizontalOptions="StartAndExpand" VerticalOptions="End">
+                    Aspect="AspectFit" HeightRequest="480" WidthRequest="800"
+                    MinimumHeightRequest="120" MinimumWidthRequest="200"
+                    HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" 
+                    />
+
+                <ContentView 
+                HorizontalOptions="StartAndExpand" VerticalOptions="End">
                     <ScrollView Orientation="Horizontal" HorizontalOptions="StartAndExpand">
                         <accordion:AccordionView x:Name="pnlChannels" Orientation="Horizontal" HorizontalOptions="StartAndExpand" />
                         <!--<StackLayout x:Name="pnlChannels" Orientation="Horizontal" />-->
                     </ScrollView>
                 </ContentView>
+                
             </StackLayout>
 
-            <StackLayout VerticalOptions="Center" HorizontalOptions="EndAndExpand" MinimumHeightRequest="200">
+            <StackLayout 
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-200}" 
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0, Constant=0}"
+                WidthRequest="200"
+                >
                 <ScrollView Orientation="Vertical">
                     <accordion:AccordionView x:Name="Sidebar" Orientation="Vertical" HorizontalOptions="EndAndExpand">
 
@@ -49,7 +61,7 @@
                 </ScrollView>
             </StackLayout>
 
-        </StackLayout>
+        </RelativeLayout>
 
     </ContentPage.Content>
 </rxui:ReactiveContentPage>

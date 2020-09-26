@@ -15,13 +15,14 @@
             <ScrollView Orientation="Vertical">
                 <StackLayout Orientation="Vertical">
 
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <Label Text="Auto refresh screen" VerticalOptions="Center"/>
-                        <Switch x:Name="uiAutorefresh" VerticalOptions="Center"/>
-                        <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" HorizontalOptions="EndAndExpand"
-                        IsEnabled="{Binding Source={x:Reference uiAutorefresh}, Path=IsToggled}">
-                            <Label Text="rate" HorizontalOptions="End" VerticalOptions="Center"/>
-                            <Entry x:Name="uiScreenRefreshRate" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal" WidthRequest="150">
+                            <Label Text="Auto refresh screen" VerticalOptions="Center"/>
+                            <Switch x:Name="uiAutorefresh" VerticalOptions="Center"/>
+                        </StackLayout>
+                        <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" HorizontalOptions="EndAndExpand" WidthRequest="150"
+                            IsEnabled="{Binding Source={x:Reference uiAutorefresh}, Path=IsToggled}">
+                            <Entry x:Name="uiScreenRefreshRate" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
                             <Label Text="ms" HorizontalOptions="End" VerticalOptions="Center"/>
                         </StackLayout>
                     </StackLayout>

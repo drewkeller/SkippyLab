@@ -1,10 +1,12 @@
 ﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using ReactiveUI.XamForms;
 using Skippy.ViewModels;
 using System;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,6 +18,8 @@ namespace Skippy.Views
 
         ScreenControlVM IViewFor<ScreenControlVM>.ViewModel { get => ScreenControlVM; set => ScreenControlVM = value; }
         public ScreenControlVM ScreenControlVM { get; set; }
+
+        [Reactive] public DisplayInfo DisplayInfo { get; set; }
 
         //public ScreenControlView ScreenControlView { get; set; }
         //public TimebaseView TimebaseView { get; set; }
@@ -34,19 +38,32 @@ namespace Skippy.Views
 
             this.WhenActivated(disposable =>
             {
-                
+
                 this.WhenAnyValue(vm => vm.ScreenControlVM.Screen)
                     .Where(x => x != null)
                     .SubscribeOn(RxApp.MainThreadScheduler)
-                    .Subscribe(x => {
+                    .Subscribe(x =>
+                    {
                         this.ScopeScreenImage.Source = ScreenControlVM.Screen;
                         this.ScopeScreenImage.IsVisible = ScreenControlVM.Screen != null;
                         this.BlankScreenImage.IsVisible = ScreenControlVM.Screen == null;
                     })
                     .DisposeWith(disposable);
 
-            });
+                //this.WhenAnyValue(
+                //    v => v.Width, 
+                //    v => Height)
+                //.SubscribeOn(RxApp.MainThreadScheduler)
+                //.Subscribe(x =>
+                //{
+                //    var effectiveHeight = DisplayInfo.Width / DisplayInfo.Density;
+                //    { }
+                //}).DisposeWith(disposable);
 
+                DeviceDisplay.MainDisplayInfoChanged += (s, e) =>
+                    DisplayInfo = DeviceDisplay.MainDisplayInfo;
+
+            });
         }
 
         protected override void OnAppearing()
@@ -64,6 +81,8 @@ namespace Skippy.Views
             }
         }
         private bool _handledFirstTime;
+
+        [Reactive] bool ShowChannelsOnBottom {get;set;}
 
     }
 }
