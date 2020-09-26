@@ -22,17 +22,20 @@ namespace Skippy.Controls
 
     public class TogglesBar : ContentView
     {
-        readonly ScrollView scrollContainer;
+        //readonly ScrollView scrollContainer;
         readonly StackLayout stackContainer;
         public event EventHandler<TogglesBarSelectionChangedEventArgs> SelectedItemsChanged;
 
         public TogglesBar()
         {
+#if WPF
+#else
             scrollContainer = new ScrollView
             {
                 Orientation = ScrollOrientation.Horizontal,
-                HorizontalScrollBarVisibility = ScrollBarVisibility.Never
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Never,
             };
+#endif
 
             stackContainer = new StackLayout
             {
@@ -41,13 +44,17 @@ namespace Skippy.Controls
                 Margin = 0,
                 Padding = 0
             };
+#if WPF
+            Content = stackContainer;
+#else
             scrollContainer.Content = stackContainer;
             Content = scrollContainer;
+#endif
         }
 
         public int InitialIndex { get; set; } = -1;
 
-        #region Bindable Properties
+#region Bindable Properties
         public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable<object>), typeof(TogglesBar),
           defaultBindingMode: BindingMode.TwoWay, propertyChanged: CustomPropertyChanging);
 
@@ -141,7 +148,7 @@ namespace Skippy.Controls
             get { return GetValue(InitialValueProperty); }
             set { SetValue(InitialValueProperty, value); }
         }
-        #endregion
+#endregion
 
         private static void CustomPropertyChanging(BindableObject bindable, object oldValue, object newValue)
         {
