@@ -4,7 +4,6 @@
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
-    xmlns:ufg="clr-namespace:UniformGrid;assembly=Skippy"
     xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
     xmlns:accordion="clr-namespace:Xamarin.CustomControls;assembly=Xamarin.CustomControls.AccordionView"
     xmlns:enums="clr-namespace:Skippy.Protocols;assembly=Skippy"
@@ -21,24 +20,24 @@
             <ScrollView VerticalScrollBarVisibility="Default">
                 <StackLayout>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Button x:Name="GetAllButton" Text="Get"/>
                         <Button x:Name="SetAllButton" Text="Set"/>
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Label Text="Offset"/>
                         <edit:EditableLabel x:Name="Offset" HorizontalOptions="CenterAndExpand"/>
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Label Text="Scale"/>
                         <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <controls:TogglesBar x:Name="Mode" HorizontalOptions="CenterAndExpand"/>
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
                 </StackLayout>
             </ScrollView>

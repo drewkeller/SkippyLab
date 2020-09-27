@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pop:PopupPage 
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pop="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+    xmlns:controls="clr-namespace:Skippy.Controls"
+    x:Class="Skippy.Views.PopSliderView"
+    >
+
+    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" >
+        <StackLayout Margin="12" Padding="24" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="#000000" Opacity="1">
+            <controls:UniformGrid Rows="1" HorizontalOptions="Center" Margin="0,0,0,12" >
+                <Label x:Name="nameLabel" HorizontalOptions="End" />
+                <Label x:Name="valueLabel" HorizontalOptions="Start" FontAttributes="Bold" />
+            </controls:UniformGrid>
+            <controls:UniformGrid x:Name="labelGrid" Rows="1" Padding="2" HorizontalOptions="CenterAndExpand"/>
+            <Grid x:Name="sliderGrid" Padding="0" HorizontalOptions="Center">
+                <!-- stacklayout appears behind the slider to provide the ticks -->
+                <!--<controls:UniformGrid x:Name="ticksGrid" Rows="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />-->
+                <Slider x:Name="slider" MaximumTrackColor="{DynamicResource TextSecondaryColor}" MinimumTrackColor="{DynamicResource TextPrimaryColor}" />
+            </Grid>
+            <Button x:Name="OKButton" Text="OK" HorizontalOptions="Center" WidthRequest="100" />
+
+        </StackLayout>
+    </StackLayout>
+
+</pop:PopupPage>

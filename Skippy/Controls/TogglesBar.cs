@@ -22,7 +22,10 @@ namespace Skippy.Controls
 
     public class TogglesBar : ContentView
     {
-        //readonly ScrollView scrollContainer;
+#if WPF
+#else
+        readonly ScrollView scrollContainer;
+#endif
         readonly StackLayout stackContainer;
         public event EventHandler<TogglesBarSelectionChangedEventArgs> SelectedItemsChanged;
 

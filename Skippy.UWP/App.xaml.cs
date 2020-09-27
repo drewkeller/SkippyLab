@@ -61,6 +61,7 @@ namespace Skippy.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
+                Rg.Plugins.Popup.Popup.Init();
                 Xamarin.Forms.Forms.Init(e);
                 Locator.CurrentMutable.RegisterLazySingleton(() => new ScreenService(), typeof(IScreenService));
 

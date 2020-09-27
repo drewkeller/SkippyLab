@@ -13,6 +13,7 @@ using System.Reactive.Linq;
 using Xamarin.CustomControls;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.RangeSlider.Forms;
 
 namespace Skippy.Views
 {
@@ -116,7 +117,9 @@ namespace Skippy.Views
 
                 this.Bind(ViewModel,
                     x => x.Range,
-                    x => x.uiRange.Text)
+                    x => x.uiRange.MaximumValue,
+                    vmToViewConverterOverride: new DoubleToSingleConverter(),
+                    viewToVMConverterOverride: new DoubleToSingleConverter())
                     .DisposeWith(disposable);
                 this.Bind(ViewModel,
                     x => x.RangeUnits,

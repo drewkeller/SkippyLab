@@ -23,28 +23,28 @@
                 <ScrollView VerticalScrollBarVisibility="Default">
                     <StackLayout Orientation="Vertical">
 
-                        <ufg:UniformGrid Rows="1">
+                        <controls:UniformGrid Rows="1">
                             <Button x:Name="GetAllButton" Text="Get"/>
                             <Button x:Name="SetAll" Text="Set"/>
-                        </ufg:UniformGrid>
+                        </controls:UniformGrid>
 
-                        <ufg:UniformGrid Rows="1">
+                        <controls:UniformGrid Rows="1">
                             <Label Text="Mode" VerticalOptions="Center"/>
                             <Picker x:Name="Mode" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                        </ufg:UniformGrid>
+                        </controls:UniformGrid>
 
                         <StackLayout x:Name="EdgeModePanel">
-                            <ufg:UniformGrid Rows="1">
+                            <controls:UniformGrid Rows="1">
                                 <Label Text="Source" VerticalOptions="Center"/>
                                 <Picker x:Name="EdgeSource" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                            </ufg:UniformGrid>
-                            <ufg:UniformGrid Rows="1">
+                            </controls:UniformGrid>
+                            <controls:UniformGrid Rows="1">
                                 <controls:TogglesBar x:Name="EdgeSlope" HorizontalOptions="CenterAndExpand"/>
-                            </ufg:UniformGrid>
-                            <ufg:UniformGrid Rows="1">
+                            </controls:UniformGrid>
+                            <controls:UniformGrid Rows="1">
                                 <Label Text="Level"/>
                                 <edit:EditableLabel x:Name="EdgeLevel" HorizontalOptions="CenterAndExpand"/>
-                            </ufg:UniformGrid>
+                            </controls:UniformGrid>
                         </StackLayout>
 
                     </StackLayout>

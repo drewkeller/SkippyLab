@@ -23,7 +23,7 @@
         <Style TargetType="Picker">
             <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>
             <Setter Property="TitleColor" Value="{DynamicResource TextPrimaryColor}"/>
-            <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
+            <!--<Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>-->
         </Style>
         <Style TargetType="Entry">
             <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>

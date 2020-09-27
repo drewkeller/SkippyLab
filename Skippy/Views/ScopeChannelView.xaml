@@ -4,11 +4,11 @@
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
-    xmlns:ufg="clr-namespace:UniformGrid;assembly=Skippy"
     xmlns:edit="clr-namespace:EditableLabel;assembly=EditableLabel"
     xmlns:accordion="clr-namespace:Xamarin.CustomControls;assembly=Xamarin.CustomControls.AccordionView"
     xmlns:enums="clr-namespace:Skippy.Protocols;assembly=Skippy"
     xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
+    xmlns:slider="clr-namespace:Xamarin.RangeSlider.Forms;assembly=Xamarin.RangeSlider.Forms"
     xmlns:controls="clr-namespace:Skippy.Controls;assembly=Skippy"
     xmlns:vm="clr-namespace:Skippy.ViewModels;assembly=Skippy"
     
@@ -40,56 +40,56 @@
                         <Button x:Name="SetAllButton" Text="Set" HorizontalOptions="FillAndExpand"/>
                     </StackLayout>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <controls:TogglesBar x:Name="uiCoupling" />
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Label Text="Offset"/>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                             <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" FontFamily="Consolas"/>
                             <Label x:Name="uiOffsetUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                         </StackLayout>
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Label Text="Range" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                             <!--<Entry x:Name="uiRange" HorizontalOptions="CenterAndExpand" BackgroundColor="DarkGreen" />-->
-                            <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand"/>
+                            <slider:RangeSlider x:Name="uiRange" HorizontalOptions="CenterAndExpand" MinimumValue="0" MaximumValue="100" StepValueContinuously="False" StepValue="5"/>
                             <Label x:Name="uiRangeUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                         </StackLayout>
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Label Text="Scale"/>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                             <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
                             <Label x:Name="uiScaleUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                         </StackLayout>
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <!-- wrapping the picker prevents it from expanding the space used each time it is opened -->
                         <Label Text="Ratio"/>
                         <Picker x:Name="uiProbeRatio" HorizontalOptions="CenterAndExpand" />
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Label Text="Inverted"/>
                         <Switch x:Name="uiIsInverted" HorizontalOptions="Center" />
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <Label Text="BW Limit"/>
                         <Switch x:Name="uiIsBandwidthLimited" HorizontalOptions="Center" />
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
                     <!-- this is kind of pointless when we can enter a value directly -->
-                    <ufg:UniformGrid Rows="1" IsVisible="False">
+                    <controls:UniformGrid Rows="1" IsVisible="False">
                         <Label Text="Fine Adjust"/>
                         <Switch x:Name="uiIsVernier" HorizontalOptions="Center" />
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
                     <!-- disable for now 
                 <ufg:UniformGrid Rows="1">
@@ -101,9 +101,9 @@
                 </ufg:UniformGrid>
                 -->
 
-                    <ufg:UniformGrid Rows="1">
+                    <controls:UniformGrid Rows="1">
                         <controls:TogglesBar x:Name="uiUnits" />
-                    </ufg:UniformGrid>
+                    </controls:UniformGrid>
 
 
 

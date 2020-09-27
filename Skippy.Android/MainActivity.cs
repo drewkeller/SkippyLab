@@ -23,10 +23,10 @@ namespace Skippy.Droid
 
             base.OnCreate(savedInstanceState);
 
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
-            Acr.UserDialogs.UserDialogs.Init(this);
             Locator.CurrentMutable.RegisterLazySingleton(() => new ScreenshotStorage(), typeof(IScreenService));
 
             LoadApplication(new App());

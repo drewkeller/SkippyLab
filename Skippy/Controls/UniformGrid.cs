@@ -24,9 +24,6 @@ namespace Skippy.Controls
         }
     }
 
-}
-namespace UniformGrid
-{
 
     public class UniformGrid : Grid
     {

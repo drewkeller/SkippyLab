@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -191,6 +191,9 @@
     <PackageReference Include="ReactiveUI.XamForms">
       <Version>11.5.35</Version>
     </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>2.0.0.5</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.10" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
@@ -203,6 +206,18 @@
     <ProjectReference Include="..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj">
       <Project>{97ae86cf-6c55-43bd-b9c5-60acd13d7bc3}</Project>
       <Name>EditableLabel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RangeSlider\Xamarin.RangeSlider.Common\Xamarin.RangeSlider.Common.csproj">
+      <Project>{1dd05789-02c6-4658-8697-ccffa38ce8f2}</Project>
+      <Name>Xamarin.RangeSlider.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RangeSlider\Xamarin.RangeSlider.Forms.UWP\Xamarin.RangeSlider.Forms.UWP.csproj">
+      <Project>{e676f5e4-4d56-4081-a04c-1025f99774b3}</Project>
+      <Name>Xamarin.RangeSlider.Forms.UWP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RangeSlider\Xamarin.RangeSlider.Forms\Xamarin.RangeSlider.Forms.csproj">
+      <Project>{d14df1fd-46bf-4c9f-9445-ac76f3c91b40}</Project>
+      <Name>Xamarin.RangeSlider.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Xamlly\Xamlly\Xamlly.csproj">
       <Project>{281bbe8b-5711-405f-a4ac-dead5bcc10be}</Project>

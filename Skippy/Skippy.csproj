@@ -43,6 +43,7 @@
     <PackageReference Include="ReactiveUI.Events.XamForms" Version="11.5.35" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.5.35" />
     <PackageReference Include="ReactiveUI.XamForms" Version="11.5.35" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.5" />
     <PackageReference Include="Splat" Version="9.5.49" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
@@ -51,6 +52,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DottorPagliaccius\Xamarin-Custom-Controls\src\Xamarin.CustomControls.Accordion\Xamarin.CustomControls.AccordionView.csproj" />
     <ProjectReference Include="..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj" />
+    <ProjectReference Include="..\RangeSlider\Xamarin.RangeSlider.Forms\Xamarin.RangeSlider.Forms.csproj" />
     <ProjectReference Include="..\Xamlly\Xamlly\Xamlly.csproj" />
   </ItemGroup>
 
@@ -58,7 +60,16 @@
     <Resource Include="Resources\DarkTheme.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Resource>
+    <Compile Update="Controls\SliderBar.xaml.cs">
+      <DependentUpon>SliderBar.xaml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Controls\SliderBar.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\ConnectView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PopSliderView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\RunView.xaml">
