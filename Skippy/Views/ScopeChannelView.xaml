@@ -8,7 +8,6 @@
     xmlns:accordion="clr-namespace:Xamarin.CustomControls;assembly=Xamarin.CustomControls.AccordionView"
     xmlns:enums="clr-namespace:Skippy.Protocols;assembly=Skippy"
     xmlns:xamlly="clr-namespace:Xamlly.XamllyControls;assembly=Xamlly"
-    xmlns:slider="clr-namespace:Xamarin.RangeSlider.Forms;assembly=Xamarin.RangeSlider.Forms"
     xmlns:controls="clr-namespace:Skippy.Controls;assembly=Skippy"
     xmlns:vm="clr-namespace:Skippy.ViewModels;assembly=Skippy"
     
@@ -56,7 +55,7 @@
                         <Label Text="Range" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                             <!--<Entry x:Name="uiRange" HorizontalOptions="CenterAndExpand" BackgroundColor="DarkGreen" />-->
-                            <slider:RangeSlider x:Name="uiRange" HorizontalOptions="CenterAndExpand" MinimumValue="0" MaximumValue="100" StepValueContinuously="False" StepValue="5"/>
+                            <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand" />
                             <Label x:Name="uiRangeUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                         </StackLayout>
                     </controls:UniformGrid>

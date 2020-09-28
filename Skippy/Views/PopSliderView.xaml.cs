@@ -17,6 +17,7 @@ using Skippy.Converters;
 using System.Net;
 using System.Diagnostics;
 using Skippy.Interfaces;
+using Skippy.Extensions;
 
 namespace Skippy.Views
 {
@@ -42,7 +43,7 @@ namespace Skippy.Views
                     v => v.nameLabel.Text);
 
                 // maximum always needs to be higher than the minimum
-                ViewModel.WhenAnyValue(x => x.Values.Count, y => y.Value)
+                ViewModel.WhenAnyValue(x => x.Values, y => y.Value)
                 .SubscribeOn(RxApp.MainThreadScheduler)
                 .Subscribe( _ =>
                 {
@@ -81,10 +82,10 @@ namespace Skippy.Views
                 });
 
             slider.Events().SizeChanged
+                .SubscribeOnUI()
                 .Subscribe(x => {
                     if (slider.Width > 0) DrawTicks();
                 });
-
         }
 
         private bool drawing;
@@ -94,12 +95,20 @@ namespace Skippy.Views
             drawing = true;
 
             var values = ViewModel.Values;
+            var padding = 2;
+            labelGrid.Padding = padding;
+
+            var tickWidth = 2.0;
+            var tickHeight = 10.0;
 
             // calculate total width available for each label
             // use margin at each end of the slider to make the ends appear
             // at the middle of the first and last labels
             var targetWidth = labelGrid.Width / (values.Count-1);
-            sliderGrid.Margin = new Thickness(targetWidth / 2, 0, targetWidth / 2, 0);
+            //targetWidth -= 2 * padding;
+            //slider.Margin = new Thickness(targetWidth / 2, 0, targetWidth / 2, 0);
+            var rotation = GetRotation(targetWidth);
+            var alignment = rotation == 0 ? TextAlignment.Center : TextAlignment.Start;
 
             labelGrid.Children.Clear();
 
@@ -108,14 +117,60 @@ namespace Skippy.Views
                 // add a label
                 var label = new Label {
                     Text = values[index],
-                    HorizontalTextAlignment = TextAlignment.Center,
+                    HorizontalTextAlignment = alignment,
+                    VerticalTextAlignment = alignment,
+                    RotationX = measurementLabel.Height / 2,
+                    RotationY = 0.0,
+                    Rotation = rotation,
                     LineBreakMode = LineBreakMode.NoWrap,
+                    //TextColor = (Color)Application.Current.Resources["TextPrimaryColor"],
+                    TextColor = Color.White,
                     //BackgroundColor = Color.DarkGray,
                 };
-                labelGrid.Children.Add(label);
+                var tick = new BoxView
+                {
+                    //TextColor = (Color)Application.Current.Resources["TextPrimaryColor"],
+                    Color = Color.White,
+                };
+                var positionX = index * targetWidth;
+                labelGrid.Children.Add(label, new Point(positionX - measurementLabel.Height/2, labelGrid.Height - measurementLabel.Height - tickHeight - 10));
+                labelGrid.Children.Add(tick, new Rectangle(positionX - tickWidth/2, labelGrid.Height - tickHeight, tickWidth, tickHeight));
+                // labeGrid apparently doesn't calculate its height correctly for rotated labels
             }
 
             drawing = false;
+        }
+
+        // see if we need to rotate the labels based on
+        // the size of first and last items
+        private double GetRotation(double targetWidth)
+        {
+            var values = ViewModel.Values;
+            var first = MeasureString(values[0]);
+            var last = MeasureString(values[values.Count - 1]);
+            var larger = Math.Max(first, last);
+            if (larger > targetWidth)
+                return -90.0;
+            else
+                return 0.0;
+        }
+
+        private double MeasureString(string text)
+        {
+            measurementLabel.Text = text;
+            return MeasureString(measurementLabel);
+        }
+
+        private double MeasureString(Label label)
+        {
+            var measurement = label.Measure(int.MaxValue, int.MaxValue);
+            var width = measurement.Request.Width;
+            //var height = measurement.Request.Height;
+            //if (width > labelGrid.Height)
+            //{
+            //    labelGrid.HeightRequest = width;
+            //}
+            return width;
         }
 
     }

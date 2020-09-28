@@ -52,7 +52,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DottorPagliaccius\Xamarin-Custom-Controls\src\Xamarin.CustomControls.Accordion\Xamarin.CustomControls.AccordionView.csproj" />
     <ProjectReference Include="..\EditLabel\EditableLabel\EditableLabel\EditableLabel.csproj" />
-    <ProjectReference Include="..\RangeSlider\Xamarin.RangeSlider.Forms\Xamarin.RangeSlider.Forms.csproj" />
     <ProjectReference Include="..\Xamlly\Xamlly\Xamlly.csproj" />
   </ItemGroup>
 
