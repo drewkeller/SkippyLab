@@ -18,6 +18,7 @@ using System.Net;
 using System.Diagnostics;
 using Skippy.Interfaces;
 using Skippy.Extensions;
+using Xamarin.Essentials;
 
 namespace Skippy.Views
 {
@@ -53,7 +54,7 @@ namespace Skippy.Views
                     if (values.Count < 1)
                         throw new InvalidOperationException("The slider requires a set of values");
                     if (!values.Contains(value))
-                        throw new InvalidOperationException($"The slider doesn't recognize value '{value}'");
+                        throw new InvalidOperationException($"The slider values doesn't contain the set value '{value}'");
                     this.slider.Maximum = values.Count - 1;
                     this.slider.Minimum = 0;
                     this.slider.Value = values.IndexOf(value);
@@ -61,8 +62,8 @@ namespace Skippy.Views
                 })
                 .DisposeWith(disposables);
 
-                WireEvents();
             });
+            WireEvents();
         }
 
         private void WireEvents()
@@ -77,11 +78,33 @@ namespace Skippy.Views
                     var index = (int)Math.Round(slider.Value);
                     slider.Value = index;
                     var val = ViewModel.Values[index];
-                    Debug.WriteLine($"slider: {slider.Value}, index: {index}, val: {val}");
+                    //Debug.WriteLine($"slider: {slider.Value}, index: {index}, val: {val}");
+
+                    var label = valueLabel;
                     valueLabel.Text = $"{val}";
+
+                    // padding is set to 15 on custom renderer
+                    var halfWidth = label.Width / 2.0;
+                    var padding = 15.0 / DeviceDisplay.MainDisplayInfo.Density;
+                    labelGrid.Margin = new Thickness(padding, 0, padding, 0); // padding doesn't affect things drawn inside?
+                    var positionX = index / slider.Maximum * (slider.Width - 2 * padding);
+                    positionX = positionX + padding - halfWidth;
+                    if (positionX < padding) positionX = padding;
+                    Debug.WriteLine($"slider: {slider.Value}, index: {index}, labelWidth: {label.Width} positionX: {positionX}");
+                    if (positionX + halfWidth >= (slider.Width - padding))
+                    {
+                        positionX = slider.Width - padding - halfWidth;
+                    }
+                    if (index == ViewModel.Values.Count - 1)
+                    {
+                        positionX = Math.Min(positionX, slider.Width - padding - label.Width);
+                    }
+                    label.TranslateTo(positionX, 0, 10);
                 });
 
-            slider.Events().SizeChanged
+            //slider.Events().SizeChanged
+            this.Events().LayoutChanged
+            //this.Events().Appearing
                 .SubscribeOnUI()
                 .Subscribe(x => {
                     if (slider.Width > 0) DrawTicks();
@@ -95,47 +118,54 @@ namespace Skippy.Views
             drawing = true;
 
             var values = ViewModel.Values;
-            var padding = 2;
-            labelGrid.Padding = padding;
 
-            var tickWidth = 2.0;
+            var tickWidth = 1.0;
             var tickHeight = 10.0;
 
             // calculate total width available for each label
             // use margin at each end of the slider to make the ends appear
             // at the middle of the first and last labels
-            var targetWidth = labelGrid.Width / (values.Count-1);
+            var targetWidth = slider.Width / (values.Count - 1);
             //targetWidth -= 2 * padding;
             //slider.Margin = new Thickness(targetWidth / 2, 0, targetWidth / 2, 0);
             var rotation = GetRotation(targetWidth);
-            var alignment = rotation == 0 ? TextAlignment.Center : TextAlignment.Start;
 
             labelGrid.Children.Clear();
 
             for (int index = 0; index < values.Count; index++)
             {
+                //var rotation = index == 3 ? -90.0 : 0.0;
+                var alignment = rotation == 0 ? TextAlignment.Center : TextAlignment.Start;
+
                 // add a label
                 var label = new Label {
                     Text = values[index],
                     HorizontalTextAlignment = alignment,
                     VerticalTextAlignment = alignment,
-                    RotationX = measurementLabel.Height / 2,
-                    RotationY = 0.0,
                     Rotation = rotation,
+                    AnchorX = rotation == 0 ? 0.5 : 0.0,
+                    AnchorY = 0.5,
                     LineBreakMode = LineBreakMode.NoWrap,
                     //TextColor = (Color)Application.Current.Resources["TextPrimaryColor"],
-                    TextColor = Color.White,
+                    TextColor = Color.FromHex("#FFFFFF"),
                     //BackgroundColor = Color.DarkGray,
                 };
                 var tick = new BoxView
                 {
                     //TextColor = (Color)Application.Current.Resources["TextPrimaryColor"],
-                    Color = Color.White,
+                    Color = Color.FromHex("#FFFFFF"),
                 };
+                var labelHeight = measurementLabel.Height;
                 var positionX = index * targetWidth;
-                labelGrid.Children.Add(label, new Point(positionX - measurementLabel.Height/2, labelGrid.Height - measurementLabel.Height - tickHeight - 10));
-                labelGrid.Children.Add(tick, new Rectangle(positionX - tickWidth/2, labelGrid.Height - tickHeight, tickWidth, tickHeight));
-                // labeGrid apparently doesn't calculate its height correctly for rotated labels
+                var positionY = labelGrid.Height - tickHeight;
+
+                //positionX = rotation == 0 ? positionX : positionX - measurementLabel.Height / 2;
+
+                // add tick mark
+                labelGrid.Children.Add(tick, new Rectangle(positionX - tickWidth/2, positionY, tickWidth, tickHeight));
+
+                // add text label
+                labelGrid.Children.Add(label, new Point(positionX, positionY - labelHeight)); // offset above tick mark
             }
 
             drawing = false;

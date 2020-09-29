@@ -23,8 +23,8 @@ namespace Skippy.ViewModels
         public PopupSliderVM()
         {
             Name = "Just Testing";
-            Values = new List<string> { ".01", ".02", ".05", ".1", ".2", ".5", "1", "2", "5", "10", "20", "50", "100", "200", "500", "1000" };
-            Value = ".1";
+            Values = new List<string> { "0.01000", ".02", ".05", ".1000000", ".2000000", ".5", "1", "2", "5", "10", "20", "50", "100", "200", "500", "1000.000" };
+            Value = ".05";
 
             Activator = new ViewModelActivator();
 
