@@ -1,24 +1,15 @@
-﻿using Rg.Plugins.Popup.Pages;
+﻿using ReactiveUI;
+using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
+using Skippy.Extensions;
+using Skippy.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReactiveUI;
+using System.Diagnostics;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Reactive.Disposables;
-using Rg.Plugins.Popup.Services;
-using ReactiveUI.Fody.Helpers;
-using DynamicData.Binding;
-using System.Reactive.Linq;
-using Skippy.ViewModels;
-using Skippy.Converters;
-using System.Net;
-using System.Diagnostics;
-using Skippy.Interfaces;
-using Skippy.Extensions;
-using Xamarin.Essentials;
 
 namespace Skippy.Views
 {
@@ -73,15 +64,25 @@ namespace Skippy.Views
             OKButton.Events().Clicked
                 .Subscribe(x => PopupNavigation.Instance.PopAsync());
 
+            IncrementButton.Events().Clicked
+                .Subscribe(x =>
+                {
+                    if (slider.Value < ViewModel.Values.Count) slider.Value++;
+                });
+
+            DecrementButton.Events().Clicked
+                .Subscribe(x =>
+                {
+                    if (slider.Value > 0) slider.Value--;
+                });
+
             slider.Events().ValueChanged
                 .Subscribe(X => 
                 {
                     DrawSliderLabel();
                 });
 
-            //slider.Events().SizeChanged
             this.Events().LayoutChanged
-            //this.Events().Appearing
                 .SubscribeOnUI()
                 .Subscribe(x => {
                     if (slider.Width > 0)

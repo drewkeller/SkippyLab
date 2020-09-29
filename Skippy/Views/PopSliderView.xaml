@@ -8,14 +8,29 @@
     >
 
     <Grid HorizontalOptions="Center" VerticalOptions="Center" Margin="24" Padding="12" >
-            <Frame BackgroundColor="{DynamicResource BackgroundColor}" Opacity="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <Frame BackgroundColor="{DynamicResource BackgroundColor}" Opacity="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout Margin="12,0,12,0" >
 
-                <AbsoluteLayout x:Name="labelGrid" HeightRequest="80" 
-                                  HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" />
-
+                <Label x:Name="nameLabel" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,12" />
+                    
                 <Grid x:Name="sliderGrid" Padding="0" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
-                    <Slider x:Name="slider" HorizontalOptions="FillAndExpand" 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+
+                    <AbsoluteLayout x:Name="labelGrid" Grid.Row="0" Grid.Column="1"
+                                    HeightRequest="100"
+                                      HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" />
+
+                    <Slider x:Name="slider" Grid.Row="1" Grid.Column="1"
+                            HorizontalOptions="FillAndExpand" 
                             MaximumTrackColor="{DynamicResource TextSecondaryColor}" MinimumTrackColor="{DynamicResource TextPrimaryColor}">
                         <!-- on Android, the slider has this margin as part of the native control -->
                         <Slider.Margin>
@@ -24,18 +39,20 @@
                             </OnPlatform>
                         </Slider.Margin>
                     </Slider>
-                </Grid>
 
-                <Label x:Name="valueLabel" 
+                    <!-- same row as slider, one on each end column -->
+                    <Button x:Name="DecrementButton" Grid.Row="1" Grid.Column="0" Text="&#x2796;" TextColor="{DynamicResource TextPrimaryColor}" />
+                    <Button x:Name="IncrementButton" Grid.Row="1" Grid.Column="2" Text="&#x2795;" TextColor="{DynamicResource TextPrimaryColor}" />
+
+                    <Label x:Name="valueLabel" Grid.Row="2" Grid.Column="1"
                        HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Start"/>
 
-                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0,0,0,12" VerticalOptions="Center" >
-                    <Label x:Name="nameLabel" HorizontalOptions="End" />
-                    <!--<Label x:Name="valueLabel" HorizontalOptions="Start" FontAttributes="Bold" />-->
-                </StackLayout>
+                </Grid>
 
-                <Button x:Name="OKButton" Text="OK" HorizontalOptions="Center" WidthRequest="100" VerticalOptions="End" />
-                
+
+                <Button x:Name="OKButton" Text="OK"  Margin="0,12,0,12" WidthRequest="100" 
+                        HorizontalOptions="Center" VerticalOptions="End" />
+
                 <!-- if it's not visible it doesn't always get measured. we can make them the same color to camouflage. -->
                 <StackLayout x:Name="measurementGrid" BackgroundColor="{DynamicResource BackgroundColor}" VerticalOptions="End">
                     <Label x:Name="measurementLabel" LineBreakMode="NoWrap" TextColor="{DynamicResource BackgroundColor}"/>
