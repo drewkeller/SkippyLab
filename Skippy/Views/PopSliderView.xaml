@@ -9,9 +9,9 @@
 
     <Grid HorizontalOptions="Center" VerticalOptions="Center" Margin="24" Padding="12" >
             <Frame BackgroundColor="{DynamicResource BackgroundColor}" Opacity="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <StackLayout Margin="12,0,12,0" BackgroundColor="#553333" >
+            <StackLayout Margin="12,0,12,0" >
 
-                <AbsoluteLayout x:Name="labelGrid" HeightRequest="80" BackgroundColor="#333366"
+                <AbsoluteLayout x:Name="labelGrid" HeightRequest="80" 
                                   HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" />
 
                 <Grid x:Name="sliderGrid" Padding="0" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
@@ -26,7 +26,7 @@
                     </Slider>
                 </Grid>
 
-                <Label x:Name="valueLabel" BackgroundColor="#333366"
+                <Label x:Name="valueLabel" 
                        HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Start"/>
 
                 <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0,0,0,12" VerticalOptions="Center" >

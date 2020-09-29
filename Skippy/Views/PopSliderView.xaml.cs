@@ -25,6 +25,8 @@ namespace Skippy.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PopSliderView : PopupPage, IActivatableView, IViewFor<PopupSliderVM>
     {
+        public const double SliderMargin = 15.0;
+
         public PopupSliderVM ViewModel { get; set; }
 
         object IViewFor.ViewModel { get => ViewModel; set => ViewModel = value as PopupSliderVM; }
@@ -58,7 +60,7 @@ namespace Skippy.Views
                     this.slider.Maximum = values.Count - 1;
                     this.slider.Minimum = 0;
                     this.slider.Value = values.IndexOf(value);
-                    this.valueLabel.Text = $"{value}";
+                    DrawSliderLabel();
                 })
                 .DisposeWith(disposables);
 
@@ -72,34 +74,9 @@ namespace Skippy.Views
                 .Subscribe(x => PopupNavigation.Instance.PopAsync());
 
             slider.Events().ValueChanged
-                .Subscribe(X =>
+                .Subscribe(X => 
                 {
-                    // round to the nearest index
-                    var index = (int)Math.Round(slider.Value);
-                    slider.Value = index;
-                    var val = ViewModel.Values[index];
-                    //Debug.WriteLine($"slider: {slider.Value}, index: {index}, val: {val}");
-
-                    var label = valueLabel;
-                    valueLabel.Text = $"{val}";
-
-                    // padding is set to 15 on custom renderer
-                    var halfWidth = label.Width / 2.0;
-                    var padding = 15.0 / DeviceDisplay.MainDisplayInfo.Density;
-                    labelGrid.Margin = new Thickness(padding, 0, padding, 0); // padding doesn't affect things drawn inside?
-                    var positionX = index / slider.Maximum * (slider.Width - 2 * padding);
-                    positionX = positionX + padding - halfWidth;
-                    if (positionX < padding) positionX = padding;
-                    Debug.WriteLine($"slider: {slider.Value}, index: {index}, labelWidth: {label.Width} positionX: {positionX}");
-                    if (positionX + halfWidth >= (slider.Width - padding))
-                    {
-                        positionX = slider.Width - padding - halfWidth;
-                    }
-                    if (index == ViewModel.Values.Count - 1)
-                    {
-                        positionX = Math.Min(positionX, slider.Width - padding - label.Width);
-                    }
-                    label.TranslateTo(positionX, 0, 10);
+                    DrawSliderLabel();
                 });
 
             //slider.Events().SizeChanged
@@ -107,8 +84,53 @@ namespace Skippy.Views
             //this.Events().Appearing
                 .SubscribeOnUI()
                 .Subscribe(x => {
-                    if (slider.Width > 0) DrawTicks();
+                    if (slider.Width > 0)
+                    {
+                        DrawTicks();
+                        DrawSliderLabel();
+                    }
                 });
+        }
+
+        private void DrawSliderLabel()
+        {
+            var values = ViewModel.Values;
+
+            // round to the nearest index
+            var index = (int)Math.Round(slider.Value);
+            slider.Value = index;
+            var val = values[index];
+            //Debug.WriteLine($"slider: {slider.Value}, index: {index}, val: {val}");
+
+            var label = valueLabel;
+            valueLabel.Text = $"{val}";
+
+            // calculate total width available for each label
+            var padding = SliderMargin / DeviceDisplay.MainDisplayInfo.Density;
+            var sliderWidth = slider.Width;
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                // why do we need to do this on Android and not on UWP... ?
+                sliderWidth -= 2 * SliderMargin / DeviceDisplay.MainDisplayInfo.Density;
+            }
+            var targetWidth = sliderWidth / (values.Count - 1);
+
+            // padding is set to 15 on custom renderer
+            var halfWidth = label.Width / 2.0;
+            labelGrid.Margin = new Thickness(padding, 0, padding, 0); // padding doesn't affect things drawn inside?
+            var positionX = index * targetWidth;
+            positionX = positionX + padding - halfWidth;
+            if (positionX < padding) positionX = padding;
+            Debug.WriteLine($"slider: {slider.Value}, index: {index}, labelWidth: {label.Width} positionX: {positionX}");
+            if (positionX + halfWidth >= (slider.Width - padding))
+            {
+                positionX = slider.Width - padding - halfWidth;
+            }
+            if (index == ViewModel.Values.Count - 1 && Device.RuntimePlatform == Device.Android)
+            {
+                positionX = Math.Min(positionX, slider.Width - padding - label.Width);
+            }
+            label.TranslateTo(positionX, 0, 10);
         }
 
         private bool drawing;
@@ -123,11 +145,13 @@ namespace Skippy.Views
             var tickHeight = 10.0;
 
             // calculate total width available for each label
-            // use margin at each end of the slider to make the ends appear
-            // at the middle of the first and last labels
-            var targetWidth = slider.Width / (values.Count - 1);
-            //targetWidth -= 2 * padding;
-            //slider.Margin = new Thickness(targetWidth / 2, 0, targetWidth / 2, 0);
+            var sliderWidth = slider.Width;
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                // why do we need to do this on Android and not on UWP... ?
+                sliderWidth -= 2 * SliderMargin / DeviceDisplay.MainDisplayInfo.Density;
+            }
+            var targetWidth = sliderWidth / (values.Count - 1);
             var rotation = GetRotation(targetWidth);
 
             labelGrid.Children.Clear();
