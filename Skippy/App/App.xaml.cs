@@ -10,6 +10,8 @@ namespace Skippy
 {
     public partial class App : Application
     {
+        public static bool Mock => true;
+
         public App()
         {
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
