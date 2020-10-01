@@ -10,6 +10,7 @@ namespace Skippy.Protocols
             new RootProtocol(),
             new TriggerProtocol(null),
             new TimebaseProtocol(null),
+            //new ChannelProtocol(null, -1),
         };
 
         #region Serialization/Deserialization  hmmm maybe this would be useful?

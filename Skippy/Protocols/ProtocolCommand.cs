@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Skippy.ViewModels;
 using System;
+using Xamarin.Forms;
 
 namespace Skippy.Protocols
 {
-
     public interface IProtocolCommand
     {
         IProtocolCommand Parent { get; set; }
@@ -64,6 +65,11 @@ namespace Skippy.Protocols
     /// </summary>
     public class ProtocolCommand : IProtocolCommand
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        delegate void Decrement<T>(T value);
 
         #region Properties
 
@@ -158,6 +164,12 @@ namespace Skippy.Protocols
             {
                 return string.Format($"{parentFormat}{Path}", PathParameter);
             }
+        }
+
+
+        public T GetNextValue<T>(ScopeCommand<T> scopeCommand)
+        {
+            return scopeCommand.Value;
         }
 
         #endregion Methods

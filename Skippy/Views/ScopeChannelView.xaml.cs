@@ -49,8 +49,8 @@ namespace Skippy.Views
 
             // initialize some stuff
             //txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            uiCoupling.ItemsSource = StringOptions.Coupling.ToValueStrings();
-            uiUnits.ItemsSource = StringOptions.Units.ToValueStrings();
+            uiCoupling.ItemsSource = StringOptions.Coupling.ToNames();
+            uiUnits.ItemsSource = StringOptions.Units.ToNames();
             uiProbeRatio.ItemsSource = StringOptions.ProbeRatio;
 
             this.WhenActivated(disposable =>
@@ -91,12 +91,12 @@ namespace Skippy.Views
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.IsActive,
+                    x => x.Display.Value,
                     x => x.uiIsActive.IsOn)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.Coupling,
+                    x => x.Coupling.Value,
                     x => x.uiCoupling.SelectedItems,
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
@@ -106,7 +106,7 @@ namespace Skippy.Views
                 };
 
                 this.Bind(ViewModel,
-                    x => x.Offset,
+                    x => x.Offset.Value,
                     x => x.uiOffset.Text)
                     .DisposeWith(disposable);
                 this.Bind(ViewModel,
@@ -126,7 +126,7 @@ namespace Skippy.Views
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.Scale,
+                    x => x.Scale.Value,
                     x => x.uiScale.Text)
                     .DisposeWith(disposable);
                 this.Bind(ViewModel,
@@ -135,22 +135,22 @@ namespace Skippy.Views
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.ProbeRatio,
+                    x => x.Probe.Value,
                     x => x.uiProbeRatio.SelectedItem)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.IsBandwidthLimited,
+                    x => x.BWLimit.Value,
                     x => x.uiIsBandwidthLimited.IsToggled)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.IsInverted,
+                    x => x.Invert.Value,
                     x => x.uiIsInverted.IsToggled)
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
-                    x => x.IsVernier,
+                    x => x.Vernier.Value,
                     x => x.uiIsVernier.IsToggled)
                     .DisposeWith(disposable);
 
@@ -176,22 +176,22 @@ namespace Skippy.Views
                 };
 
                 // disable setting things until we get the current value from the scope
-                this.Bind(ViewModel, x => x.GetIsActiveSucceeded, x => x.uiIsActive.IsEnabled);
-                this.Bind(ViewModel, x => x.GetOffsetSucceeded, x => x.uiOffset.IsEnabled);
-                this.Bind(ViewModel, x => x.GetCouplingSucceeded, x => x.uiCoupling.IsEnabled);
-                this.Bind(ViewModel, x => x.GetRangeSucceeded, x => x.uiRange.IsEnabled);
-                this.Bind(ViewModel, x => x.GetRangeSucceeded, x => x.uiRangeUnits.IsEnabled);
-                this.Bind(ViewModel, x => x.GetScaleSucceeded, x => x.uiScale.IsEnabled);
-                this.Bind(ViewModel, x => x.GetScaleSucceeded, x => x.uiScaleUnits.IsEnabled);
-                this.Bind(ViewModel, x => x.GetProbeSucceeded, x => x.uiProbeRatio.IsEnabled);
-                this.Bind(ViewModel, x => x.GetIsBandwidthLimitedSucceeded, x => x.uiIsBandwidthLimited.IsEnabled);
-                this.Bind(ViewModel, x => x.GetIsInvertedSucceeded, x => x.uiIsInverted.IsEnabled);
-                this.Bind(ViewModel, x => x.GetIsVernierSucceeded, x => x.uiIsVernier.IsEnabled);
+                this.Bind(ViewModel, x => x.Display.GetSucceeded, x => x.uiIsActive.IsEnabled);
+                this.Bind(ViewModel, x => x.Offset.GetSucceeded, x => x.uiOffset.IsEnabled);
+                this.Bind(ViewModel, x => x.Coupling.GetSucceeded, x => x.uiCoupling.IsEnabled);
+                this.Bind(ViewModel, x => x.Range.GetSucceeded, x => x.uiRange.IsEnabled);
+                this.Bind(ViewModel, x => x.Range.GetSucceeded, x => x.uiRangeUnits.IsEnabled);
+                this.Bind(ViewModel, x => x.Scale.GetSucceeded, x => x.uiScale.IsEnabled);
+                this.Bind(ViewModel, x => x.Scale.GetSucceeded, x => x.uiScaleUnits.IsEnabled);
+                this.Bind(ViewModel, x => x.Probe.GetSucceeded, x => x.uiProbeRatio.IsEnabled);
+                this.Bind(ViewModel, x => x.BWLimit.GetSucceeded, x => x.uiIsBandwidthLimited.IsEnabled);
+                this.Bind(ViewModel, x => x.Invert.GetSucceeded, x => x.uiIsInverted.IsEnabled);
+                this.Bind(ViewModel, x => x.Vernier.GetSucceeded, x => x.uiIsVernier.IsEnabled);
 #if TCAL
                 this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCal.IsEnabled);
                 this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCalUnits.IsEnabled);
 #endif
-                this.Bind(ViewModel, x => x.GetUnitsSucceeded, x => x.uiUnits.IsEnabled);
+                this.Bind(ViewModel, x => x.Units.GetCommand, x => x.uiUnits.IsEnabled);
 
                 // width of units columns should all be the same
                 this.WhenAnyValue(x => x.uiScaleUnits.Width)

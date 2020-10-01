@@ -1,5 +1,7 @@
-﻿using ReactiveUI;
+﻿using DynamicData.Binding;
+using ReactiveUI;
 using ReactiveUI.XamForms;
+using Rg.Plugins.Popup.Services;
 using Skippy.Converters;
 using Skippy.Extensions;
 using Skippy.Protocols;
@@ -29,7 +31,7 @@ namespace Skippy.Views
             var protocol = ViewModel.Protocol;
 
             // initialize some stuff
-            Mode.ItemsSource = StringOptions.GetStringValues(protocol.Mode.Options);
+            Mode.ItemsSource = StringOptions.ToNames(protocol.Mode.Options);
 
             this.WhenActivated(disposable =>
             {
@@ -48,14 +50,34 @@ namespace Skippy.Views
                 //    x => x.Offset.IsEnabled)
                 //    .DisposeWith(disposable);
 
-                this.Bind(ViewModel,
-                    x => x.Scale.Value,
-                    x => x.uiScale.Text)
-                    .DisposeWith(disposable);
+                #region Scale
                 this.Bind(ViewModel,
                     x => x.Scale.GetSucceeded,
                     x => x.uiScale.IsEnabled)
                     .DisposeWith(disposable);
+
+                uiScale.Events().Clicked
+                    .SubscribeOnUI()
+                    .Subscribe(async x =>
+                    {
+                        popup = new PopSliderView(
+                            protocol.Scale.Name,
+                            ViewModel.Scale.Value,
+                            TimebaseScaleOptions.YT as StringOptions,
+                            y =>
+                            {
+                                ViewModel.Scale.Value = y;
+                            });
+                        //popup.IncrementCommand = ViewModel.Scale.Increment;
+                        //popup.DecrementCommand = ViewModel.Scale.Decrement;
+                        
+                        await PopupNavigation.Instance.PushAsync(popup);
+                    });
+                DecrementScale.Events().Clicked
+                    .InvokeCommand(ViewModel.Scale.Decrement);
+                IncrementScale.Events().Clicked
+                    .InvokeCommand(ViewModel.Scale.Increment);
+                #endregion
 
                 this.BindToProperty(ViewModel,
                     vm => vm.Mode.Value, 
@@ -80,16 +102,20 @@ namespace Skippy.Views
 
         }
 
+        PopSliderView popup;
+
         private void WireEvents(CompositeDisposable disposable)
         {
             GetAllButton.Events().Clicked
                 .Select(args => Unit.Default)
                 .InvokeCommand(ViewModel.GetAll)
                 .DisposeWith(disposable);
+
             SetAllButton.Events().Clicked
                 .Select(args => Unit.Default)
                 .InvokeCommand(ViewModel.SetAll)
                 .DisposeWith(disposable);
+
         }
     }
 

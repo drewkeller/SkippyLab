@@ -16,7 +16,7 @@ namespace Skippy.ViewModels
         public ViewModelActivator Activator { get; }
 
         public TimebaseProtocol Protocol { get; set; }
-        IProtocolCommand IProtocolVM.Protocol => Protocol as IProtocolCommand;
+        IProtocolCommand IProtocolVM.Protocol => Protocol;
 
         public ICommand GetAll { get; internal set; }
 
@@ -24,10 +24,10 @@ namespace Skippy.ViewModels
 
         #region Properties
 
-        private List<IScopeCommand> AllScopeCommands { get; set; }
+        private List<IScopeCommand> AllCommands { get; set; }
 
         public ScopeCommand<double> Offset { get; set; }
-        public ScopeCommand<double> Scale { get; set; }
+        public ScopeCommand<string> Scale { get; set; }
         public ScopeCommand<string> Mode { get; set; }
 
         #endregion Properties
@@ -38,10 +38,11 @@ namespace Skippy.ViewModels
             Protocol = new TimebaseProtocol(null);
 
             Offset = new ScopeCommand<double>(this, Protocol.Offset, "0.0");
-            Scale = new ScopeCommand<double>(this, Protocol.Scale, "0.500"); // 500 mv
+            Scale = new ScopeCommand<string>(this, Protocol.Scale, "1.0000000e-06"); // 1us/div
+            Scale.Value = "1u";
             Mode = new ScopeCommand<string>(this, Protocol.Mode, "MAIN");
 
-            AllScopeCommands = new List<IScopeCommand>()
+            AllCommands = new List<IScopeCommand>()
             {
                 Offset, Scale, Mode,
             };
@@ -77,7 +78,7 @@ namespace Skippy.ViewModels
                     .Create(() => this.HandleDeactivation())
                     .DisposeWith(disposables);
 
-                foreach (var scopeCommand in AllScopeCommands)
+                foreach (var scopeCommand in AllCommands)
                 {
                     scopeCommand.WhenActivated(disposables);
                 }

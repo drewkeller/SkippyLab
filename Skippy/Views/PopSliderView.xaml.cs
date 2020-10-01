@@ -1,11 +1,12 @@
 ﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using Skippy.Extensions;
-using Skippy.ViewModels;
+using Skippy.Protocols;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -14,61 +15,46 @@ using Xamarin.Forms.Xaml;
 namespace Skippy.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PopSliderView : PopupPage, IActivatableView, IViewFor<PopupSliderVM>
+    public partial class PopSliderView : PopupPage, IActivatableView
     {
         public const double SliderMargin = 15.0;
 
-        public PopupSliderVM ViewModel { get; set; }
+        [Reactive] public string SelectedItem { get; set; }
 
-        object IViewFor.ViewModel { get => ViewModel; set => ViewModel = value as PopupSliderVM; }
+        [Reactive] public ObservableCollection<string> Items {get;set;}
 
-        public PopSliderView()
+        public PopSliderView(string name, string value, StringOptions options, Action<string> returnValue)
         {
 
             InitializeComponent();
+            this.BindingContext = options;
 
-            ViewModel = new PopupSliderVM();
-            this.BindingContext = ViewModel;
+            Items = new ObservableCollection<string>(options.ToNames());
 
-            this.WhenActivated(disposables =>
+            this.WhenActivated((Action<Action<IDisposable>>)(disposables =>
             {
-                this.Bind(ViewModel, 
-                    vm => vm.Name,
-                    v => v.nameLabel.Text);
+                this.nameLabel.Text = name;
+                var values = options.ToNames();
+                // x is the count, so we need -1 to get the index
+                if (values.Count < 1)
+                    throw new InvalidOperationException("The slider requires a set of values");
+                if (!values.Contains((string)value))
+                    throw new InvalidOperationException($"The slider values doesn't contain the set value '{value}'");
+                this.slider.Maximum = values.Count - 1;
+                this.slider.Minimum = 0;
+                this.slider.Value = values.IndexOf((string)value);
+                DrawSliderLabel();
+            }));
 
-                // maximum always needs to be higher than the minimum
-                ViewModel.WhenAnyValue(x => x.Values, y => y.Value)
-                .SubscribeOn(RxApp.MainThreadScheduler)
-                .Subscribe( _ =>
-                {
-                    var values = ViewModel.Values;
-                    var value = ViewModel.Value;
-                    // x is the count, so we need -1 to get the index
-                    if (values.Count < 1)
-                        throw new InvalidOperationException("The slider requires a set of values");
-                    if (!values.Contains(value))
-                        throw new InvalidOperationException($"The slider values doesn't contain the set value '{value}'");
-                    this.slider.Maximum = values.Count - 1;
-                    this.slider.Minimum = 0;
-                    this.slider.Value = values.IndexOf(value);
-                    DrawSliderLabel();
-                })
-                .DisposeWith(disposables);
-
-            });
-            WireEvents();
-        }
-
-        private void WireEvents()
-        {
             OKButton.Events().Clicked
                 .Subscribe(x => PopupNavigation.Instance.PopAsync());
 
             IncrementButton.Events().Clicked
                 .Subscribe(x =>
                 {
-                    if (slider.Value < ViewModel.Values.Count) slider.Value++;
+                    if (slider.Value < Items.Count) slider.Value++;
                 });
+
 
             DecrementButton.Events().Clicked
                 .Subscribe(x =>
@@ -77,9 +63,12 @@ namespace Skippy.Views
                 });
 
             slider.Events().ValueChanged
+                .SubscribeOnUI()
                 .Subscribe(X => 
                 {
+                    SetToNearestIndex();
                     DrawSliderLabel();
+                    returnValue(SelectedItem);
                 });
 
             this.Events().LayoutChanged
@@ -93,9 +82,16 @@ namespace Skippy.Views
                 });
         }
 
+        private void SetToNearestIndex()
+        {
+            var index = (int)Math.Round(slider.Value);
+            slider.Value = index;
+            SelectedItem = Items[index];
+        }
+
         private void DrawSliderLabel()
         {
-            var values = ViewModel.Values;
+            var values = Items;
 
             // round to the nearest index
             var index = (int)Math.Round(slider.Value);
@@ -127,7 +123,7 @@ namespace Skippy.Views
             {
                 positionX = slider.Width - padding - halfWidth;
             }
-            if (index == ViewModel.Values.Count - 1 && Device.RuntimePlatform == Device.Android)
+            if (index == Items.Count - 1 && Device.RuntimePlatform == Device.Android)
             {
                 positionX = Math.Min(positionX, slider.Width - padding - label.Width);
             }
@@ -140,7 +136,7 @@ namespace Skippy.Views
             if (drawing) return;
             drawing = true;
 
-            var values = ViewModel.Values;
+            var values = Items;
 
             var tickWidth = 1.0;
             var tickHeight = 10.0;
@@ -200,7 +196,7 @@ namespace Skippy.Views
         // the size of first and last items
         private double GetRotation(double targetWidth)
         {
-            var values = ViewModel.Values;
+            var values = Items;
             var first = MeasureString(values[0]);
             var last = MeasureString(values[values.Count - 1]);
             var larger = Math.Max(first, last);

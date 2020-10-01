@@ -40,6 +40,10 @@ namespace Skippy.Protocols
         }
     }
 
+    /// <summary>
+    /// Provides ways to manipulate values for a command (increment,
+    /// decrement, etc).
+    /// </summary>
     public class StringOptions : ObservableCollection<StringOption>, IOptions
     {
         public static readonly List<StringOptions> All = new List<StringOptions> {
@@ -52,6 +56,11 @@ namespace Skippy.Protocols
             new StringOption("OFF", "0")
         };
 
+        public static readonly StringOptions BWLimit = new StringOptions
+        {
+            new StringOption("20M", "20M"),
+            new StringOption("OFF", "OFF")
+        };
         public static readonly StringOptions Coupling = new StringOptions
         {
             new StringOption("AC", "AC"),
@@ -92,14 +101,24 @@ namespace Skippy.Protocols
             new StringOption("1000x", "1000"),
         };
 
-        public IEnumerable<string> ToValueStrings()
+        public List<string> ToNames()
         {
-            return this.Cast<StringOption>().Select(x => x.Name);
+            return this.Cast<StringOption>().Select(x => x.Name).ToList();
         }
-        public static List<string> GetStringValues(IOptions options)
+        public static List<string> ToNames(IOptions options)
         {
             var stringOption = options as StringOptions;
             return options.Select(x => x.Name).ToList();
+        }
+
+        public List<string> ToTerms()
+        {
+            return this.Cast<StringOption>().Select(x => x.Term).ToList();
+        }
+        public static List<string> ToTerms(IOptions options)
+        {
+            var stringOption = options as StringOptions;
+            return options.Select(x => x.Term).ToList();
         }
 
         public static StringOption GetByTerm(IOptions options, string term)
@@ -175,6 +194,32 @@ namespace Skippy.Protocols
         }
 
         #endregion Implement ICollection
+
+        #region Implement IOption
+
+        public object GetIncrementedValue(object currentValue)
+        {
+            var option = GetByValue(currentValue as string);
+            var index = IndexOf(option);
+            if (index + 1 < this.Count)
+            {
+                return this[index + 1].Name;
+            }
+            return null;
+        }
+
+        public object GetDecrementedValue(object currentValue)
+        {
+            var option = GetByValue(currentValue as string);
+            var index = IndexOf(option);
+            if (index - 1 >= 0)
+            {
+                return this[index - 1].Name;
+            }
+            return null;
+        }
+
+        #endregion
 
     }
 

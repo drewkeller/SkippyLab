@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
 using Rg.Plugins.Popup.Services;
+using Skippy.Protocols;
 using Skippy.ViewModels;
 using System;
 using System.Reactive.Disposables;
@@ -32,18 +33,25 @@ namespace Skippy.Views
                     x => int.Parse(x))
                 .DisposeWith(disposable);
 
-                //this.BindCommand(ViewModel,
-                //    x => x.ConnectCommand,
-                //    x => x.btnConnect)
-                //.DisposeWith(disposable);
+                this.BindCommand(ViewModel,
+                    x => x.ConnectCommand,
+                    x => x.btnConnect)
+                .DisposeWith(disposable);
 
-                btnConnect.Events().Clicked
-                    .SubscribeOn(RxApp.MainThreadScheduler)
-                    .Subscribe(async s =>
-                    {
-                        var popup = new Views.PopSliderView();
-                        await PopupNavigation.Instance.PushAsync(popup);
-                    });
+                //btnConnect.Events().Clicked
+                //    .SubscribeOn(RxApp.MainThreadScheduler)
+                //    .Subscribe(async s =>
+                //    {
+                //        var popup = new Views.PopSliderView(
+                //            "Testing 123",
+                //            "200m",
+                //            TimebaseScaleOptions.YT as StringOptions,
+                //            x => { 
+                //                ViewModel.Hostname = x;
+                //                { }
+                //            });
+                //        await PopupNavigation.Instance.PushAsync(popup);
+                //    });
 
             });
 

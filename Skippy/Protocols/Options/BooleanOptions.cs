@@ -7,7 +7,27 @@ namespace Skippy.Protocols
     {
         public string Name { get; set; }
         public string Term { get; set; }
+
+        public BooleanOption() { }
+
+        /// <summary>
+        /// Create a boolean option
+        /// </summary>
+        /// <param name="term"></param>
+        /// <param name="name"></param>
+        public BooleanOption(string name, string term)
+        {
+            Name = name;
+            Term = term;
+        }
+
+        public override string ToString()
+        {
+            //return $"{ID}: {Value}";
+            return $"{Name}";
+        }
     }
+
 
     public class BooleanOptions : Collection<BooleanOption>, IOptions
     {
@@ -15,6 +35,12 @@ namespace Skippy.Protocols
         {
             new BooleanOption() { Name = "ON", Term = "1" },
             new BooleanOption() { Name = "OFF", Term = "0" },
+        };
+
+        public static readonly BooleanOptions BWLimit = new BooleanOptions
+        {
+            new BooleanOption("20M", "20M"),
+            new BooleanOption("OFF", "OFF")
         };
 
         #region Implement ICollection<IOption>
@@ -47,6 +73,26 @@ namespace Skippy.Protocols
         }
 
         #endregion Implement ICollection
+
+        public object GetIncrementedValue(object currentValue)
+        {
+            var val = currentValue.ToString();
+            if (val == "OFF" || val == "0")
+            {
+                return "ON";
+            }
+            return null;
+        }
+
+        public object GetDecrementedValue(object currentValue)
+        {
+            var val = currentValue.ToString();
+            if (val == "ON" || val == "1")
+            {
+                return "OFF";
+            }
+            return null;
+        }
 
         public BooleanOptions()
         {

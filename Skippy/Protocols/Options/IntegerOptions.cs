@@ -48,6 +48,18 @@ namespace Skippy.Protocols
         }
 
         #endregion Implement ICollection
+        public object GetDecrementedValue(object currentValue)
+        {
+            var i = System.Convert.ToInt32(currentValue);
+            return i + 1;
+        }
+
+        public object GetIncrementedValue(object currentValue)
+        {
+            var i = System.Convert.ToInt32(currentValue);
+            return i - 1;
+        }
+
     }
 
 }

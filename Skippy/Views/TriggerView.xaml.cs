@@ -35,9 +35,9 @@ namespace Skippy.Views
 
             // initialize some stuff
             //txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-            Mode.ItemsSource = StringOptions.GetStringValues(protocol.Mode.Options);
-            EdgeSource.ItemsSource = StringOptions.GetStringValues(protocol.Edge.Source.Options);
-            EdgeSlope.ItemsSource = StringOptions.GetStringValues(protocol.Edge.Slope.Options);
+            Mode.ItemsSource = StringOptions.ToNames(protocol.Mode.Options);
+            EdgeSource.ItemsSource = StringOptions.ToNames(protocol.Edge.Source.Options);
+            EdgeSlope.ItemsSource = StringOptions.ToNames(protocol.Edge.Slope.Options);
 
             this.WhenActivated(disposable =>
             {

@@ -1,15 +1,15 @@
-﻿#define MOCK
-
-using DynamicData.Binding;
+﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Skippy.Extensions;
 using Skippy.Protocols;
+using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Skippy.ViewModels
 {
@@ -42,9 +42,13 @@ namespace Skippy.ViewModels
         public ReactiveCommand<Unit, Unit> GetCommand { get; }
         public ReactiveCommand<Unit, Unit> SetCommand { get; }
         [Reactive] public bool GetSucceeded { get; set; }
-#if MOCK        
+        public ICommand Increment { get; internal set; }
+        public ICommand Decrement { get; internal set; }
+
+        /// <summary>
+        /// Only needed for <see cref="App.Mock"/>
+        /// </summary>
         private string DefaultResponse { get; set; }
-#endif
 
         public ScopeCommand(IProtocolVM viewModel, IProtocolCommand protocolCommand, string defaultResponse)
         {
@@ -56,6 +60,7 @@ namespace Skippy.ViewModels
                 var canSet = this.WhenValueChanged(x => x.GetSucceeded)
                     .Where(x => x == true);
                 SetCommand = ReactiveCommand.CreateFromTask(SendCommandAsync, canSet);
+                Increment = ReactiveCommand.Create(IncrementValue);
             } else
             {
                 // set command is used to send the command without a value or response
@@ -64,17 +69,21 @@ namespace Skippy.ViewModels
 
             if (protocolCommand.IsQueryable)
             {
-#if MOCK
-                DefaultResponse = defaultResponse;
-#endif
+                if (App.Mock)
+                {
+                    DefaultResponse = defaultResponse;
+                }
                 GetCommand = ReactiveCommand.CreateFromTask(SendQueryAsync);
             } else
             {
-#if MOCK
-                DefaultResponse = null;
-#endif
+                if (App.Mock)
+                {
+                    DefaultResponse = null;
+                }
                 GetSucceeded = true;
             }
+
+
         }
 
         public ScopeCommand(IProtocolVM viewModel, IProtocolCommand protocolCommand) 
@@ -126,14 +135,19 @@ namespace Skippy.ViewModels
             GetSucceeded = false;
             var path = ProtocolCommand.FormatPath();
             var command = $"{path}?";
-#if MOCK
-   await Task.Delay(1);
-   var result = DefaultResponse;
-#else
-            var response = await AppLocator.TelnetService.SendCommandAsync(command, true);
-            // remove line terminator
-            var result = response?.TrimEnd();
-#endif
+
+            var result = "";
+            if (App.Mock)
+            {
+                await Task.Delay(1);
+                result = DefaultResponse;
+            }
+            else
+            {
+                var response = await AppLocator.TelnetService.SendCommandAsync(command, true);
+                // remove line terminator
+                result = response?.TrimEnd();
+            }
             if (result.Length == 0) return;
 
             var propInfo = _propInfo ?? this.GetType().GetProperty(nameof(Value));
@@ -169,6 +183,42 @@ namespace Skippy.ViewModels
             }
         }
         private PropertyInfo _propInfo;
+
+        public void IncrementValue()
+        {
+            var options = ProtocolCommand.Options;
+            if (options is StringOptions soptions)
+            {
+                this.Value = (T)soptions.GetIncrementedValue(this.Value as string);
+            } else if (options is RealOptions real)
+            {
+                var dbl = System.Convert.ToDouble((object)this.Value);
+                var inc = real.GetIncrementedValue(dbl);
+                this.Value = (T)System.Convert.ChangeType(inc, typeof(T));
+            }
+            else
+            {
+                throw new NotImplementedException($"Scope command doesn't know how to increment options {options}");
+            }
+        }
+
+        public void DecrementValue()
+        {
+            var options = ProtocolCommand.Options;
+            if (options is StringOptions soptions)
+            {
+                this.Value = (T)soptions.GetDecrementedValue(this.Value as string);
+            } else if (options is RealOptions real)
+            {
+                var dbl = System.Convert.ToDouble((object)this.Value);
+                var dec = real.GetDecrementedValue(dbl);
+                this.Value = (T)System.Convert.ChangeType(dec, typeof(T));
+            }
+            else
+            {
+                throw new NotImplementedException($"Scope command doesn't know how to increment options {options}");
+            }
+        }
 
     }
 

@@ -1,6 +1,4 @@
-﻿#define MOCK
-
-using Nito.AsyncEx;
+﻿using Nito.AsyncEx;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
@@ -63,11 +61,13 @@ namespace Skippy.Services
             Hostname = hostname;
             Port = port;
 
-#if MOCK
-            await Task.Delay(1);
-            Connected = true;
-            return "Forcing mock connection";
-#else
+            if (App.Mock)
+            {
+                await Task.Delay(1);
+                Connected = true;
+                return "Forcing mock connection";
+            }
+
             using (await BusyObject.LockAsync())
             {
                 IsBusy = true;
@@ -86,17 +86,19 @@ namespace Skippy.Services
                     return string.Empty;
                 }
             }
-#endif
+
         }
 
         public async Task<string> SendCommandAsync(string command, bool getResponse)
         {
-#if MOCK
-            await Task.Delay(1);
-            if (getResponse)
-                throw new Exception($"Cannot determine command response when mocking (command: '{command}'");
-            else return "";
-#else
+            if (App.Mock)
+            {
+                await Task.Delay(1);
+                if (getResponse)
+                    throw new Exception($"Cannot determine command response when mocking (command: '{command}'");
+                else return "";
+            }
+
             using (await BusyObject.LockAsync())
             {
                 IsBusy = true;
@@ -112,29 +114,33 @@ namespace Skippy.Services
                     if (getResponse)
                     {
                         return await client.ReadStringAsync(suppressDebug);
-                    } else
+                    }
+                    else
                     {
                         return "";
                     }
                 }
             }
-#endif
+            
+
         }
 
         public async Task<byte[]> GetScreenshot()
         {
-#if MOCK
-            await Task.Delay(1);
-            string resourceID = string.Format("Skippy.Resources.mock.png");
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            System.IO.Stream stream = assembly.GetManifestResourceStream(resourceID);
-            using (var memoryStream = new System.IO.MemoryStream())
+            if (App.Mock)
             {
-                stream.CopyTo(memoryStream);
-                var bytes = memoryStream.ToArray();
-                return bytes;
+                await Task.Delay(1);
+                string resourceID = string.Format("Skippy.Resources.mock.png");
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                System.IO.Stream stream = assembly.GetManifestResourceStream(resourceID);
+                using (var memoryStream = new System.IO.MemoryStream())
+                {
+                    stream.CopyTo(memoryStream);
+                    var bytes = memoryStream.ToArray();
+                    return bytes;
+                }
             }
-#else
+
             // skip if busy
             //if (IsBusy)
             //{
@@ -188,7 +194,7 @@ namespace Skippy.Services
                 IsBusy = false;
                 return null;
             }
-#endif
+        
         }
 
     }

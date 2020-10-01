@@ -42,7 +42,7 @@ namespace Skippy.Protocols
                 Path = ":MAIN:SCAL",
                 // YT mode  : 5ns/div to 50s/div in 1,2,5 steps
                 // Roll mode: 200ms/div to 50s/div in 1,2,5 steps
-                Options = new RealOptions(5 * UnitPrefix.nano, 50)
+                Options = TimebaseScaleOptions.YT,
             };
 
             Mode = new ProtocolCommand(this, "Mode", "MODE")
@@ -56,6 +56,55 @@ namespace Skippy.Protocols
             };
         }
 
+    }
+
+    public class TimebaseScaleOptions : StringOptions, IOptions
+    {
+        public static IOptions Roll = new StringOptions()
+        {
+            new StringOption("200m", ".2"),
+            new StringOption("500m", ".5"),
+            new StringOption("1", "1"),
+            new StringOption("2", "2"),
+            new StringOption("5", "5"),
+            new StringOption("10", "10"),
+            new StringOption("20", "20"),
+            new StringOption("50", "50"),
+        };
+
+        public static IOptions YT = new StringOptions() {
+            new StringOption("5n", "5.0000000e-09"),
+            new StringOption("10n", "1.0000000e-08"),
+            new StringOption("20n", "2.0000000e-08"),
+            new StringOption("50n", "5.0000000e-08"),
+            new StringOption("100n", "1.0000000e-07"),
+            new StringOption("200n", "2.0000000e-07"),
+            new StringOption("500n", "5.0000000e-07"),
+            new StringOption("1u", "1.0000000e-06"),
+            new StringOption("2u", "2.0000000e-06"),
+            new StringOption("5u", "5.0000000e-06"),
+            new StringOption("10u", "1.0000000e-05"),
+            new StringOption("20u", "2.0000000e-05"),
+            new StringOption("50u", "5.0000000e-05"),
+            new StringOption("100u", "1.0000000e-04"),
+            new StringOption("200u", "2.0000000e-04"),
+            new StringOption("500u", "5.0000000e-04"),
+            new StringOption("1m", "1.0000000e-03"),
+            new StringOption("2m", "2.0000000e-03"),
+            new StringOption("5m", "5.0000000e-03"),
+            new StringOption("10m", "1.0000000e-02"),
+            new StringOption("20m", "2.0000000e-02"),
+            new StringOption("50m", "5.0000000e-02"),
+            new StringOption("100m", "1.0000000e-01"),
+            new StringOption("200m", "2.0000000e-01"),
+            new StringOption("500m", "5.0000000e-01"),
+            new StringOption("1", "1.0000000e-00"),
+            new StringOption("2", "2.0000000e00"),
+            new StringOption("5", "5.0000000e00"),
+            new StringOption("10", "1.0000000e01"),
+            new StringOption("20", "2.0000000e01"),
+            new StringOption("50", "5.0000000e01"),
+            };
     }
 
     #region Reusable commands
