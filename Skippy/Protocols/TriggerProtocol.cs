@@ -137,7 +137,7 @@ namespace Skippy.Protocols
                 Term = "HOLDoff",
                 Options = new RealOptions
                 {
-                    new RealOption(16 * UnitPrefix.nano, 10)
+                    new RealOption(16 * SI.n, 10)
                 }
             };
 
@@ -320,7 +320,7 @@ namespace Skippy.Protocols
 
         public override IOptions Options => new RealOptions
         {
-            new RealOption(16 * UnitPrefix.nano, 10),
+            new RealOption(16 * SI.n, 10),
         };
         public TriggerTimeCommand(IProtocolCommand parent) : base(parent)
         {
@@ -535,7 +535,7 @@ namespace Skippy.Protocols
             {
                 Name = "TIMe",
                 Term = "TIM",
-                Options = new RealOptions(16 * UnitPrefix.nano, 10),
+                Options = new RealOptions(16 * SI.n, 10),
             };
 
         }
@@ -590,7 +590,7 @@ namespace Skippy.Protocols
 
             Time = new TriggerTimeCommand(this)
             {
-                Options = new RealOptions(8 * UnitPrefix.nano, 10)
+                Options = new RealOptions(8 * SI.n, 10)
             };
 
             Position = new ProtocolCommand(this)
@@ -672,7 +672,7 @@ namespace Skippy.Protocols
                 Term = "TUPP",
                 Options = new RealOptions()
                 {
-                    new RealOption(16*UnitPrefix.nano, 10)
+                    new RealOption(16*SI.n, 10)
                 }
             };
 
@@ -682,7 +682,7 @@ namespace Skippy.Protocols
                 Term = "TLOW",
                 Options = new RealOptions()
                 {
-                    new RealOption(8 * UnitPrefix.nano, 10)
+                    new RealOption(8 * SI.n, 10)
                 }
             };
 
@@ -755,14 +755,14 @@ namespace Skippy.Protocols
             {
                 Name = "SHOLd",
                 Term = "SHOL",
-                Options = new RealOptions(8 * UnitPrefix.nano, 1),
+                Options = new RealOptions(8 * SI.n, 1),
             };
 
             HoldTime = new TriggerTimeCommand(this)
             {
                 Name = "HTIMe",
                 Term = "HTIM",
-                Options = new RealOptions(8 * UnitPrefix.nano, 1),
+                Options = new RealOptions(8 * SI.n, 1),
             };
 
         }
@@ -807,7 +807,7 @@ namespace Skippy.Protocols
                 Term = "IDLE",
                 Options = new RealOptions
                 {
-                    new RealOption(16 * UnitPrefix.nano, 10)
+                    new RealOption(16 * SI.n, 10)
                 }
             };
             Edge = new ProtocolCommand(this)

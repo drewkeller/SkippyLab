@@ -158,7 +158,7 @@ namespace Skippy.Protocols
                 //    Number of analog channels set as trigger sources
                 //    Number of enabled digital channel groups (D0 to D7 is one, D8 to D15 is the other)
                 // TODO: This needs more work, I'm just guessing here
-                Options = new RealOptions(10 * UnitPrefix.nano, 50)
+                Options = new RealOptions(10 * SI.n, 50)
             };
         }
 

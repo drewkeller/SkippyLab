@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
 using Rg.Plugins.Popup.Services;
+using Skippy.Controls;
 using Skippy.Converters;
 using Skippy.Extensions;
 using Skippy.Protocols;
@@ -102,29 +103,44 @@ namespace Skippy.Views
                     var selection = uiCoupling.SelectedItems;
                 };
 
-                this.Bind(ViewModel,
-                    x => x.Offset.Value,
-                    x => x.uiOffset.Text)
-                    .DisposeWith(disposable);
+                #region Offset
+                uiOffset.Events().Clicked
+                    .SubscribeOnUI()
+                    .Subscribe(async x =>
+                    {
+                        var popup = new PopSlider(
+                            protocol.Offset.Name,
+                            ViewModel.Offset.Value,
+                            protocol.Offset.Options as RealOptions,
+                            y =>
+                            {
+                                ViewModel.Offset.Value = y;
+                            });
+                        await PopupNavigation.Instance.PushAsync(popup);
+                    });
+                DecrementOffset.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.Offset.Decrement);
+                IncrementOffset.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.Offset.Increment);
+                #endregion
 
                 #region Scale
-                //uiScale.Events().Clicked
-                //    .SubscribeOnUI()
-                //    .Subscribe(async x =>
-                //    {
-                //        var popup = new PopSliderView(
-                //            protocol.Scale.Name,
-                //            ViewModel.Scale.Value,
-                //            TimebaseScaleOptions.YT as StringOptions,
-                //            y =>
-                //            {
-                //                ViewModel.Scale.Value = y;
-                //            });
-                //        //popup.IncrementCommand = ViewModel.Scale.Increment;
-                //        //popup.DecrementCommand = ViewModel.Scale.Decrement;
-
-                //        await PopupNavigation.Instance.PushAsync(popup);
-                //    });
+                uiScale.Events().Clicked
+                    .SubscribeOnUI()
+                    .Subscribe(async x =>
+                    {
+                        var popup = new PopSlider(
+                            protocol.Scale.Name,
+                            ViewModel.Scale.Value,
+                            protocol.Scale.Options as RealOptions,
+                            y =>
+                            {
+                                ViewModel.Scale.Value = y;
+                            });
+                        await PopupNavigation.Instance.PushAsync(popup);
+                    });
                 DecrementScale.Events().Clicked
                     .Select(args => Unit.Default)
                     .InvokeCommand(ViewModel.Scale.Decrement);

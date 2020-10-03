@@ -7,6 +7,11 @@ using System.Xml;
 
 namespace Skippy.Protocols
 {
+    public enum StepMethod
+    {
+        OneTwoFive
+    }
+
     public class RealOption : IOption
     {
         public string Name { get; set; }
@@ -16,7 +21,7 @@ namespace Skippy.Protocols
         public double Step { get; set; }
         public List<double> Steps { get; set; }
 
-        public RealOption(double min, double max) : this(min, max, 1)
+        public RealOption(double min, double max) : this(min, max, 0)
         {
         }
 
@@ -25,6 +30,17 @@ namespace Skippy.Protocols
             MinValue = min; 
             MaxValue = max;
             Step = step;
+        }
+
+        public override string ToString()
+        {
+            if (Step != 0)
+                return $"{MinValue} to {MaxValue}, step {Step}";
+            if (Steps != null)
+                return $"{MinValue} to {MaxValue}, {Steps.Count} steps";
+            if (MinValue != 0 && MaxValue != 0)
+                return $"{MinValue} to {MaxValue}";
+            return $"(empty)";
         }
     }
 
@@ -72,7 +88,7 @@ namespace Skippy.Protocols
         /// </summary>
         public static RealOptions ChannelScale = new RealOptions()
         { 
-            new RealOption(.010, 100) { Steps = new List<double> { 
+            new RealOption(.001, 10) { Steps = new List<double> { 
                 .001, .002, .005,
                 .01, .02, .05,
                 .1, .2, .5,
@@ -203,57 +219,73 @@ namespace Skippy.Protocols
             this.Add(new RealOption(min, max));
         }
 
-        public RealOption GetChannelOffsetOption(double probeRatio, double scale)
+        public void SetChannelOffset(string probeRatio, double scale)
         {
-            var options = scale < .5 
-                ? ChannelOffset_ScaleLessThan500m 
+            var probe = StringOptions.ProbeRatio.GetByValue(probeRatio);
+            var probeDouble = double.Parse(probe.Term);
+            SetChannelOffset(probeDouble, scale);
+        }
+
+        public void SetChannelOffset(double probeRatio, double scale)
+        {
+            var options = scale < .5
+                ? ChannelOffset_ScaleLessThan500m
                 : ChannelOffset_ScaleGreaterThan500m;
 
+            var option = this[0];
             var source = options.Items[0];
-
-            return new RealOption(
-                source.MinValue * probeRatio, 
-                source.MaxValue * probeRatio
-                );
+            option.MinValue = source.MinValue * probeRatio;
+            option.MaxValue = source.MaxValue * probeRatio;
         }
-        
-        public RealOption GetChannelRangeOption(double probeRatio)
+
+        public void SetChannelRange(double probeRatio)
         {
+            var option = Items[0];
             var source = ChannelRange.Items[0];
-            return new RealOption(
-                source.MinValue * probeRatio, 
-                source.MaxValue * probeRatio
-                );
+            option.MinValue = source.MinValue * probeRatio;
+            option.MaxValue = source.MaxValue * probeRatio;
         }
 
-        public RealOption GetChannelScaleOption(double probeRatio)
+        /// <summary>
+        /// Sets the scale depending on the probe ratio.
+        /// </summary>
+        /// <param name="probeRatio"></param>
+        public void SetChannelScale(string probeRatio)
         {
-            var source = Items[0];
+            var probe = StringOptions.ProbeRatio.GetByValue(probeRatio);
+            var probeDouble = double.Parse(probe.Term);
+            SetChannelScale(probeDouble);
+        }
 
-            return new RealOption(
-                source.MinValue * probeRatio, 
-                source.MaxValue * probeRatio
-                );
+        /// <summary>
+        /// Sets the scale depending on the probe ratio.
+        /// </summary>
+        /// <param name="probeRatio"></param>
+        public void SetChannelScale(double probeRatio)
+        {
+            var option = Items[0];
+            var source = ChannelScale.Items[0];
+            option.MinValue = source.MinValue * probeRatio;
+            option.MaxValue = source.MaxValue * probeRatio;
         }
         
-        public RealOption GetTCalOption(double timeScale)
+        public void SetTCalSteps(double timeScale) 
         {
-            var source = ChannelTCal.Items[0];
-            var result = new RealOption(source.MinValue, source.MaxValue);
-            UpdateTCalSteps(source, timeScale);
-            return result;
+            var option = this[0] as RealOption;
+            if (timeScale == 5 * SI.n) option.Step = 100 * SI.p;
+            if (timeScale == 10 * SI.n) option.Step = 200 * SI.p;
+            if (timeScale == 20 * SI.n) option.Step = 400 * SI.p;
+            if (timeScale == 50 * SI.n) option.Step = 1 * SI.n;
+            if (timeScale == 100 * SI.n) option.Step = 2 * SI.n;
+            if (timeScale == 200 * SI.n) option.Step = 4 * SI.n;
+            if (timeScale == 500 * SI.n) option.Step = 10 * SI.n;
+            if (timeScale > 1 * SI.u) option.Step = 20 * SI.n;
         }
 
-        public void UpdateTCalSteps(RealOption option, double timeScale) 
+        public override string ToString()
         {
-            if (timeScale == 5 * UnitPrefix.nano) option.Step = 100 * UnitPrefix.pico;
-            if (timeScale == 10 * UnitPrefix.nano) option.Step = 200 * UnitPrefix.pico;
-            if (timeScale == 20 * UnitPrefix.nano) option.Step = 400 * UnitPrefix.pico;
-            if (timeScale == 50 * UnitPrefix.nano) option.Step = 1 * UnitPrefix.nano;
-            if (timeScale == 100 * UnitPrefix.nano) option.Step = 2 * UnitPrefix.nano;
-            if (timeScale == 200 * UnitPrefix.nano) option.Step = 4 * UnitPrefix.nano;
-            if (timeScale == 500 * UnitPrefix.nano) option.Step = 10 * UnitPrefix.nano;
-            if (timeScale > 1 * UnitPrefix.micro) option.Step = 20 * UnitPrefix.nano;
+            if (this.Count > 0) return this[0].ToString();
+            return "(empty)";
         }
 
     }

@@ -2,6 +2,7 @@
 using ReactiveUI;
 using ReactiveUI.XamForms;
 using Rg.Plugins.Popup.Services;
+using Skippy.Controls;
 using Skippy.Converters;
 using Skippy.Extensions;
 using Skippy.Protocols;
@@ -35,20 +36,37 @@ namespace Skippy.Views
 
             this.WhenActivated(disposable =>
             {
-                this.BindToProperty(ViewModel,
-                    vm => vm.Offset.Value, 
-                    vm => vm.Offset.GetSucceeded,
-                    v => v.Offset.Text, 
-                    v => v.Offset.IsEnabled, 
-                    disposable);
-                //this.Bind(ViewModel,
-                //    x => x.Offset.Value,
-                //    x => x.Offset.Text)
-                //    .DisposeWith(disposable);
-                //this.Bind(ViewModel,
-                //    x => x.Offset.GetSucceeded,
-                //    x => x.Offset.IsEnabled)
-                //    .DisposeWith(disposable);
+                #region Offset
+
+                //this.BindToProperty(ViewModel,
+                //    vm => vm.Offset.Value, 
+                //    vm => vm.Offset.GetSucceeded,
+                //    v => v.Offset.Text, 
+                //    v => v.Offset.IsEnabled, 
+                //    disposable);
+                this.Bind(ViewModel, x => x.Offset.GetSucceeded, x => x.Offset.IsEnabled);
+
+                Offset.Events().Clicked
+                    .SubscribeOnUI()
+                    .Subscribe(async x =>
+                    {
+                        popup = new PopSlider(
+                            protocol.Offset.Name,
+                            ViewModel.Offset.Value,
+                            protocol.Offset.Options as RealOptions,
+                            y => { ViewModel.Offset.Value = y; });
+                        await PopupNavigation.Instance.PushAsync(popup);
+                    });
+
+                DecrementOffset.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.Offset.Decrement);
+
+                IncrementOffset.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.Offset.Increment);
+
+                #endregion Offset
 
                 #region Scale
                 this.Bind(ViewModel,
@@ -60,17 +78,11 @@ namespace Skippy.Views
                     .SubscribeOnUI()
                     .Subscribe(async x =>
                     {
-                        popup = new PopSliderView(
+                        popup = new PopSlider(
                             protocol.Scale.Name,
                             ViewModel.Scale.Value,
-                            TimebaseScaleOptions.YT as StringOptions,
-                            y =>
-                            {
-                                ViewModel.Scale.Value = y;
-                            });
-                        //popup.IncrementCommand = ViewModel.Scale.Increment;
-                        //popup.DecrementCommand = ViewModel.Scale.Decrement;
-                        
+                            protocol.Scale.Options as StringOptions,
+                            y => { ViewModel.Scale.Value = y; });
                         await PopupNavigation.Instance.PushAsync(popup);
                     });
                 DecrementScale.Events().Clicked
@@ -104,7 +116,7 @@ namespace Skippy.Views
 
         }
 
-        PopSliderView popup;
+        PopSlider popup;
 
         private void WireEvents(CompositeDisposable disposable)
         {

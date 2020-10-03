@@ -48,8 +48,9 @@
                     </controls:UniformGrid>
 
                     <controls:UniformGrid Rows="1">
-                        <Label Text="Offset"/>
-                        <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" FontFamily="Consolas"/>
+                        <Button x:Name="DecrementOffset" Text="&#x2796;" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Button x:Name="uiOffset" Text="Offset" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Button x:Name="IncrementOffset" Text="&#x2795;" TextColor="{DynamicResource TextPrimaryColor}" />
                     </controls:UniformGrid>
 
                     <!--<controls:UniformGrid Rows="1">

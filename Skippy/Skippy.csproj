@@ -59,6 +59,9 @@
     <Resource Include="Resources\DarkTheme.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Resource>
+    <Compile Update="Controls\PopSlider.xaml.cs">
+      <DependentUpon>PopSlider.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Controls\SliderBar.xaml.cs">
       <DependentUpon>SliderBar.xaml</DependentUpon>
     </Compile>
@@ -68,7 +71,7 @@
     <EmbeddedResource Update="Views\ConnectView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\PopSliderView.xaml">
+    <EmbeddedResource Update="Controls\PopSlider.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\RunView.xaml">

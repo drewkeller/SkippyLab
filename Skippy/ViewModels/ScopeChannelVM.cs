@@ -95,17 +95,17 @@ namespace Skippy.ViewModels
             BWLimit = new ScopeCommand<bool>(this, Protocol.BWLimit, "OFF");
             Coupling = new ScopeCommand<string>(this, Protocol.Coupling, "AC");
             Invert = new ScopeCommand<bool>(this, Protocol.Invert, "OFF");
-            Offset = new ScopeCommand<double>(this, Protocol.Offset);
-            Range = new ScopeCommand<double>(this, Protocol.Range);
-            TCal = new ScopeCommand<double>(this, Protocol.TCal);
-            Scale = new ScopeCommand<double>(this, Protocol.Scale);
-            Probe = new ScopeCommand<string>(this, Protocol.Probe);
-            Vernier = new ScopeCommand<bool>(this, Protocol.Vernier);
-            Units = new ScopeCommand<string>(this, Protocol.Units);
+            Offset = new ScopeCommand<double>(this, Protocol.Offset, "0V".ToReal());
+            // Use Scale //Range = new ScopeCommand<double>(this, Protocol.Range, "8V".ToReal());
+            TCal = new ScopeCommand<double>(this, Protocol.TCal, "0s".ToReal());
+            Scale = new ScopeCommand<double>(this, Protocol.Scale, "1V".ToReal());
+            Probe = new ScopeCommand<string>(this, Protocol.Probe, "10".ToReal());
+            Vernier = new ScopeCommand<bool>(this, Protocol.Vernier, "OFF");
+            Units = new ScopeCommand<string>(this, Protocol.Units, "VOLT");
 
             AllCommands = new List<IScopeCommand>()
             {
-                Display, BWLimit, Coupling, Invert, Offset, Range, TCal,
+                Display, BWLimit, Coupling, Invert, Offset, TCal,
                 Scale, Probe, Units, Vernier
             };
 
@@ -172,17 +172,24 @@ namespace Skippy.ViewModels
                     scopeCommand.WhenActivated(disposables);
                 }
 
-                this.WhenPropertyChanged(vm => vm.Probe.Value)
-                .SubscribeOnUI()
-                .Subscribe((x) => {
-                    var options = Protocol.Scale.Options as RealOptions;
-                    var probeOptions = Protocol.Probe.Options as StringOptions;
-                    var value = probeOptions.GetByValue(Probe.Value);
-                    if (value != null)
+                // update Offset when probe or scale are changed
+                this.WhenAnyValue(x => x.Probe.Value, y => y.Scale.Value)
+                    .Where(x => x.Item1 != null && x.Item1.Length > 0)
+                    .SubscribeOnUI()
+                    .Subscribe(x =>
                     {
-                        options.GetChannelScaleOption(double.Parse(value.Term));
-                    }
-                });
+                        var options = this.Protocol.Offset.Options as RealOptions;
+                        options.SetChannelOffset(x.Item1, x.Item2);
+                    });
+
+                // update Scale when probe is changed
+                this.WhenAnyValue(vm => vm.Probe.Value)
+                    .Where(x => x != null && x.Length > 0)
+                    .SubscribeOnUI()
+                    .Subscribe((x) => {
+                        var options = Protocol.Scale.Options as RealOptions;
+                        options.SetChannelScale(x);
+                    });
 #if TCAL
                 this.WhenValueChanged(x => x.TCal)
                     .ToSignal()
