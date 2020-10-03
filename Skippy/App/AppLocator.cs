@@ -4,7 +4,9 @@ using Skippy.Interfaces;
 using Skippy.Models;
 using Skippy.Services;
 using Skippy.ViewModels;
+using Skippy.Views;
 using Splat;
+using Xamarin.Forms;
 
 namespace Skippy
 {
@@ -18,6 +20,11 @@ namespace Skippy
         public static DialogService Dialogs => Locator.Current.GetService<IDialogService>() as DialogService;
 
         public static Settings Settings => Locator.Current.GetService<Settings>();
+
+        /// <summary>
+        /// Provides a means for UI activities requiring a page, such as <see cref="DisplayAlert"/>.
+        /// </summary>
+        public static ContentPage CurrentPage { get; internal set; }
 
         static public void Init()
         {

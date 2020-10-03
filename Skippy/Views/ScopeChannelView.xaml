@@ -32,12 +32,16 @@
                     <edit:EditableLabel x:Name="txtLabel" HorizontalOptions="FillAndExpand" />
                 </StackLayout>-->
 
-                    <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" HorizontalOptions="FillAndExpand" OnColor="{Binding BorderColor,Source={x:Reference Frame}}"/>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" 
+                                   HorizontalOptions="FillAndExpand"
+                                   OnColor="{Binding BorderColor,Source={x:Reference Frame}}"
+                                   HeightRequest="{Binding Height,Source={x:Reference GetAllButton}}"
+                                   />
+                    <controls:UniformGrid Rows="1">
                         <Button x:Name="SelectChannelButton" Text="Select" HorizontalOptions="FillAndExpand"/>
                         <Button x:Name="GetAllButton" Text="Get" HorizontalOptions="FillAndExpand"/>
                         <Button x:Name="SetAllButton" Text="Set" HorizontalOptions="FillAndExpand"/>
-                    </StackLayout>
+                    </controls:UniformGrid>
 
                     <controls:UniformGrid Rows="1">
                         <controls:TogglesBar x:Name="uiCoupling" />
@@ -45,27 +49,22 @@
 
                     <controls:UniformGrid Rows="1">
                         <Label Text="Offset"/>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                            <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" FontFamily="Consolas"/>
-                            <Label x:Name="uiOffsetUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
-                        </StackLayout>
+                        <edit:EditableLabel x:Name="uiOffset" HorizontalOptions="CenterAndExpand" FontFamily="Consolas"/>
                     </controls:UniformGrid>
 
-                    <controls:UniformGrid Rows="1">
+                    <!--<controls:UniformGrid Rows="1">
                         <Label Text="Range" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                            <!--<Entry x:Name="uiRange" HorizontalOptions="CenterAndExpand" BackgroundColor="DarkGreen" />-->
+                            --><!--<Entry x:Name="uiRange" HorizontalOptions="CenterAndExpand" BackgroundColor="DarkGreen" />--><!--
                             <edit:EditableLabel x:Name="uiRange" HorizontalOptions="CenterAndExpand" />
                             <Label x:Name="uiRangeUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
                         </StackLayout>
-                    </controls:UniformGrid>
+                    </controls:UniformGrid>-->
 
                     <controls:UniformGrid Rows="1">
-                        <Label Text="Scale"/>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                            <edit:EditableLabel x:Name="uiScale" HorizontalOptions="CenterAndExpand"/>
-                            <Label x:Name="uiScaleUnits" HorizontalOptions="End" Style="{StaticResource Key=DisablableLabel}" />
-                        </StackLayout>
+                        <Button x:Name="DecrementScale" Text="&#x2796;" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Button x:Name="uiScale" Text="Scale" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Button x:Name="IncrementScale" Text="&#x2795;" TextColor="{DynamicResource TextPrimaryColor}" />
                     </controls:UniformGrid>
 
                     <controls:UniformGrid Rows="1">

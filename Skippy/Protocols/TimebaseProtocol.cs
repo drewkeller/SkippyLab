@@ -99,11 +99,11 @@ namespace Skippy.Protocols
             new StringOption("200m", "2.0000000e-01"),
             new StringOption("500m", "5.0000000e-01"),
             new StringOption("1", "1.0000000e-00"),
-            new StringOption("2", "2.0000000e00"),
-            new StringOption("5", "5.0000000e00"),
-            new StringOption("10", "1.0000000e01"),
-            new StringOption("20", "2.0000000e01"),
-            new StringOption("50", "5.0000000e01"),
+            new StringOption("2", "2.0000000e+00"),
+            new StringOption("5", "5.0000000e+00"),
+            new StringOption("10", "1.0000000e+01"),
+            new StringOption("20", "2.0000000e+01"),
+            new StringOption("50", "5.0000000e+01"),
             };
     }
 

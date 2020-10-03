@@ -1,6 +1,7 @@
 ﻿using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Skippy.Converters;
 using Skippy.Extensions;
 using Skippy.Models;
 using Skippy.Protocols;
@@ -14,6 +15,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Forms.Xaml;
 
 namespace Skippy.ViewModels
 {
@@ -93,8 +95,9 @@ namespace Skippy.ViewModels
             BWLimit = new ScopeCommand<bool>(this, Protocol.BWLimit, "OFF");
             Coupling = new ScopeCommand<string>(this, Protocol.Coupling, "AC");
             Invert = new ScopeCommand<bool>(this, Protocol.Invert, "OFF");
-            Range = new ScopeCommand<double>(this, Protocol.Range);
             Offset = new ScopeCommand<double>(this, Protocol.Offset);
+            Range = new ScopeCommand<double>(this, Protocol.Range);
+            TCal = new ScopeCommand<double>(this, Protocol.TCal);
             Scale = new ScopeCommand<double>(this, Protocol.Scale);
             Probe = new ScopeCommand<string>(this, Protocol.Probe);
             Vernier = new ScopeCommand<bool>(this, Protocol.Vernier);
@@ -102,7 +105,7 @@ namespace Skippy.ViewModels
 
             AllCommands = new List<IScopeCommand>()
             {
-                Display, BWLimit, Coupling, Invert,Offset, Range, TCal,
+                Display, BWLimit, Coupling, Invert, Offset, Range, TCal,
                 Scale, Probe, Units, Vernier
             };
 
@@ -115,34 +118,40 @@ namespace Skippy.ViewModels
             #region Get/Set All
             var GetAllMessage = ReactiveCommand.Create(() =>
                 Debug.WriteLine($"------- Retrieving all CHANNEL{ChannelNumber} values from device ---------"));
-            GetAll = ReactiveCommand.CreateCombined(new[] {
-                GetAllMessage,
-                Display.GetCommand,
-                BWLimit.GetCommand,
-                Coupling.GetCommand,
-                Offset.GetCommand,
-                Range.GetCommand,
-                Scale.GetCommand,
-                Probe.GetCommand,
-                Invert.GetCommand,
-                Vernier.GetCommand,
-                Units.GetCommand,
+            GetAll = ReactiveCommand.Create(async () =>
+            {
+                AppLocator.TelnetService.AutoGetScreenshotAfterCommand = false;
+                try
+                {
+                    await GetAllMessage.Execute();
+                    foreach (var command in AllCommands)
+                    {
+                        await command.GetCommand.Execute();
+                    }
+                }
+                finally
+                {
+                    AppLocator.TelnetService.AutoGetScreenshotAfterCommand = true;
+                }
             });
 
             var SetAllMessage = ReactiveCommand.Create(() =>
                 Debug.WriteLine($"------- Setting all CHANNEL{ChannelNumber} values on device ---------"));
-            SetAll = ReactiveCommand.CreateCombined(new[] {
-                SetAllMessage,
-                Display.SetCommand,
-                BWLimit.SetCommand,
-                Coupling.SetCommand,
-                Offset.SetCommand,
-                Range.SetCommand,
-                Scale.SetCommand,
-                Probe.SetCommand,
-                Invert.SetCommand,
-                Vernier.SetCommand,
-                //SetUnitsCommand,
+            SetAll = ReactiveCommand.Create(async () =>
+            {
+                AppLocator.TelnetService.AutoGetScreenshotAfterCommand = false;
+                try
+                {
+                    await GetAllMessage.Execute();
+                    foreach (var command in AllCommands)
+                    {
+                        await command.SetCommand.Execute();
+                    }
+                }
+                finally
+                {
+                    AppLocator.TelnetService.AutoGetScreenshotAfterCommand = true;
+                }
             });
             #endregion
 
@@ -163,7 +172,17 @@ namespace Skippy.ViewModels
                     scopeCommand.WhenActivated(disposables);
                 }
 
-
+                this.WhenPropertyChanged(vm => vm.Probe.Value)
+                .SubscribeOnUI()
+                .Subscribe((x) => {
+                    var options = Protocol.Scale.Options as RealOptions;
+                    var probeOptions = Protocol.Probe.Options as StringOptions;
+                    var value = probeOptions.GetByValue(Probe.Value);
+                    if (value != null)
+                    {
+                        options.GetChannelScaleOption(double.Parse(value.Term));
+                    }
+                });
 #if TCAL
                 this.WhenValueChanged(x => x.TCal)
                     .ToSignal()

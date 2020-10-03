@@ -74,8 +74,10 @@ namespace Skippy.Views
                         await PopupNavigation.Instance.PushAsync(popup);
                     });
                 DecrementScale.Events().Clicked
+                    .Select(args => Unit.Default)
                     .InvokeCommand(ViewModel.Scale.Decrement);
                 IncrementScale.Events().Clicked
+                    .Select(args => Unit.Default)
                     .InvokeCommand(ViewModel.Scale.Increment);
                 #endregion
 

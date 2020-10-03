@@ -10,7 +10,10 @@ namespace Skippy
 {
     public partial class App : Application
     {
-        public static bool Mock => true;
+        /// <summary>
+        /// Set to true to not require actual connection to equipment.
+        /// </summary>
+        public static bool Mock => false;
 
         public App()
         {

@@ -18,6 +18,8 @@ namespace Skippy.Views
             AppLocator.Init();
             Activator = new ViewModelActivator();
 
+            AppLocator.CurrentPage = this;
+
             InitializeComponent();
             ViewModel = new MainPageVM();
             var connectVM = ConnectView.ViewModel;

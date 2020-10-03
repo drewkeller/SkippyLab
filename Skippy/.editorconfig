@@ -10,7 +10,7 @@
 indent_style = space
 
 #Formatting - new line options
-end_of_line = crlf
+end_of_line = lf
 
 #place catch statements on a new line
 csharp_new_line_before_catch = true

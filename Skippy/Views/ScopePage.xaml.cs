@@ -28,6 +28,7 @@ namespace Skippy.Views
         public ScopePage()
         {
             InitializeComponent();
+            AppLocator.CurrentPage = this;
             ViewModel = new ScopeVM();
             ScreenControlVM = this.ScreenControlView.ViewModel;
             this.BindingContext = ViewModel;

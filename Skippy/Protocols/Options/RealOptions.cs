@@ -1,6 +1,9 @@
 ﻿using Skippy.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Xml;
 
 namespace Skippy.Protocols
 {
@@ -11,9 +14,12 @@ namespace Skippy.Protocols
         public double MinValue { get; set; }
         public double MaxValue { get; set; }
         public double Step { get; set; }
+        public List<double> Steps { get; set; }
+
         public RealOption(double min, double max) : this(min, max, 1)
         {
         }
+
         public RealOption(double min, double max, double step)
         {
             MinValue = min; 
@@ -64,7 +70,17 @@ namespace Skippy.Protocols
         ///   Probe is 10X 
         ///      --> resulting range is 10m to 100
         /// </summary>
-        public static RealOptions ChannelScale = new RealOptions(-.010, 100);
+        public static RealOptions ChannelScale = new RealOptions()
+        { 
+            new RealOption(.010, 100) { Steps = new List<double> { 
+                .001, .002, .005,
+                .01, .02, .05,
+                .1, .2, .5,
+                1, 2, 5,
+                10, 20, 50,
+                100
+            } } 
+        };
 
         /// <summary>
         /// Delay calibration time. 
@@ -102,21 +118,68 @@ namespace Skippy.Protocols
             return base.GetEnumerator();
         }
 
+        #endregion Implement ICollection
+
         public object GetIncrementedValue(object currentValue)
         {
-            throw new System.NotImplementedException();
+            return GetIncrementedValue((double)currentValue);
         }
         public double GetIncrementedValue(double currentValue)
         {
-            throw new System.NotImplementedException();
+            var result = currentValue;
+            var option = this.Items[0] as RealOption;
+            if (option.Steps != null)
+            {
+                var steps = option.Steps;
+                var currentClosest = GetClosestStep(option.Steps, currentValue);
+                var index = steps.IndexOf(currentClosest);
+                if (currentClosest < steps[steps.Count -1])
+                {
+                    result = steps[index + 1];
+                }
+            } 
+            else
+            {
+                result = currentValue + option.Step;
+            }
+            result = Math.Max(option.MinValue, Math.Min(result, option.MaxValue));
+            return result;
         }
 
         public object GetDecrementedValue(object currentValue)
         {
-            throw new System.NotImplementedException();
+            return GetDecrementedValue((double)currentValue);
+        }
+        private double GetClosestStep(List<double> steps, double value)
+        { 
+            var result = value;
+            if (steps.Count == 1) return steps[0];
+            var closest = steps.OrderBy(item => Math.Abs(value - item)).First();
+            return closest;
         }
 
-        #endregion Implement ICollection
+        public object GetDecrementedValue(double currentValue)
+        {
+            var result = currentValue;
+            var option = this.Items[0] as RealOption;
+            if (option.Steps != null)
+            {
+                var steps = option.Steps;
+                var currentClosest = GetClosestStep(steps, currentValue);
+                var index = steps.IndexOf(currentClosest);
+                // if greater than the first one, we can decrement to the next index
+                if (currentClosest > steps[0])
+                {
+                    result = steps[index - 1];
+                }
+            }
+            else
+            {
+                result = currentValue - option.Step;
+            }
+            result = Math.Max(option.MinValue, Math.Min(result, option.MaxValue));
+            return result;
+        }
 
         public RealOptions() { }
 
@@ -165,9 +228,7 @@ namespace Skippy.Protocols
 
         public RealOption GetChannelScaleOption(double probeRatio)
         {
-            var options = Items[0];
-
-            var source = $"options.Items[0]";
+            var source = Items[0];
 
             return new RealOption(
                 source.MinValue * probeRatio, 

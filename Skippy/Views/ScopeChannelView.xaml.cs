@@ -1,5 +1,6 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
+using Rg.Plugins.Popup.Services;
 using Skippy.Converters;
 using Skippy.Extensions;
 using Skippy.Protocols;
@@ -43,6 +44,7 @@ namespace Skippy.Views
             InitializeComponent();
             ViewModel = viewModel;
             this.BindingContext = viewModel;
+            var protocol = ViewModel.Protocol;
 
             //this.LeftImage = FileImageSource.FromResource("Skippy.Resources.arrowRight.png");
 
@@ -51,7 +53,7 @@ namespace Skippy.Views
             //txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
             uiCoupling.ItemsSource = StringOptions.Coupling.ToNames();
             uiUnits.ItemsSource = StringOptions.Units.ToNames();
-            uiProbeRatio.ItemsSource = StringOptions.ProbeRatio;
+            uiProbeRatio.ItemsSource = StringOptions.ProbeRatio.ToNames();
 
             this.WhenActivated(disposable =>
             {
@@ -63,11 +65,6 @@ namespace Skippy.Views
                     x => x.Name,
                     x => x.Text)
                     .DisposeWith(disposable);
-
-                //this.Bind(ViewModel,
-                //    x => x.Name,
-                //    x => x.txtLabel.Text)
-                //    .DisposeWith(disposable);
 
                 this.OneWayBind(ViewModel,
                     x => x.Color,
@@ -109,34 +106,37 @@ namespace Skippy.Views
                     x => x.Offset.Value,
                     x => x.uiOffset.Text)
                     .DisposeWith(disposable);
-                this.Bind(ViewModel,
-                    x => x.OffsetUnits,
-                    x => x.uiOffsetUnits.Text)
-                    .DisposeWith(disposable);
 
-                //this.Bind(ViewModel,
-                //    x => x.Range,
-                //    x => x.uiRange.MaximumValue,
-                //    vmToViewConverterOverride: new DoubleToSingleConverter(),
-                //    viewToVMConverterOverride: new DoubleToSingleConverter())
-                //    .DisposeWith(disposable);
-                this.Bind(ViewModel,
-                    x => x.RangeUnits,
-                    x => x.uiRangeUnits.Text)
-                    .DisposeWith(disposable);
+                #region Scale
+                //uiScale.Events().Clicked
+                //    .SubscribeOnUI()
+                //    .Subscribe(async x =>
+                //    {
+                //        var popup = new PopSliderView(
+                //            protocol.Scale.Name,
+                //            ViewModel.Scale.Value,
+                //            TimebaseScaleOptions.YT as StringOptions,
+                //            y =>
+                //            {
+                //                ViewModel.Scale.Value = y;
+                //            });
+                //        //popup.IncrementCommand = ViewModel.Scale.Increment;
+                //        //popup.DecrementCommand = ViewModel.Scale.Decrement;
+
+                //        await PopupNavigation.Instance.PushAsync(popup);
+                //    });
+                DecrementScale.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.Scale.Decrement);
+                IncrementScale.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.Scale.Increment);
+                #endregion
 
                 this.Bind(ViewModel,
-                    x => x.Scale.Value,
-                    x => x.uiScale.Text)
-                    .DisposeWith(disposable);
-                this.Bind(ViewModel,
-                    x => x.ScaleUnits,
-                    x => x.uiScaleUnits.Text)
-                    .DisposeWith(disposable);
-
-                this.Bind(ViewModel,
-                    x => x.Probe.Value,
-                    x => x.uiProbeRatio.SelectedItem)
+                    vm => vm.Probe.Value,
+                    view => view.uiProbeRatio.SelectedItem,
+                    vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
 
                 this.Bind(ViewModel,
@@ -166,7 +166,7 @@ namespace Skippy.Views
 #endif
 
                 this.Bind(ViewModel,
-                    x => x.Units,
+                    x => x.Units.Value,
                     x => x.uiUnits.SelectedItems,
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
@@ -179,10 +179,7 @@ namespace Skippy.Views
                 this.Bind(ViewModel, x => x.Display.GetSucceeded, x => x.uiIsActive.IsEnabled);
                 this.Bind(ViewModel, x => x.Offset.GetSucceeded, x => x.uiOffset.IsEnabled);
                 this.Bind(ViewModel, x => x.Coupling.GetSucceeded, x => x.uiCoupling.IsEnabled);
-                this.Bind(ViewModel, x => x.Range.GetSucceeded, x => x.uiRange.IsEnabled);
-                this.Bind(ViewModel, x => x.Range.GetSucceeded, x => x.uiRangeUnits.IsEnabled);
                 this.Bind(ViewModel, x => x.Scale.GetSucceeded, x => x.uiScale.IsEnabled);
-                this.Bind(ViewModel, x => x.Scale.GetSucceeded, x => x.uiScaleUnits.IsEnabled);
                 this.Bind(ViewModel, x => x.Probe.GetSucceeded, x => x.uiProbeRatio.IsEnabled);
                 this.Bind(ViewModel, x => x.BWLimit.GetSucceeded, x => x.uiIsBandwidthLimited.IsEnabled);
                 this.Bind(ViewModel, x => x.Invert.GetSucceeded, x => x.uiIsInverted.IsEnabled);
@@ -191,22 +188,8 @@ namespace Skippy.Views
                 this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCal.IsEnabled);
                 this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCalUnits.IsEnabled);
 #endif
-                this.Bind(ViewModel, x => x.Units.GetCommand, x => x.uiUnits.IsEnabled);
+                this.Bind(ViewModel, x => x.Units.GetSucceeded, x => x.uiUnits.IsEnabled);
 
-                // width of units columns should all be the same
-                this.WhenAnyValue(x => x.uiScaleUnits.Width)
-                    .Subscribe(x =>
-                    {
-                        var width = uiScaleUnits.Width;
-                        uiOffsetUnits.WidthRequest = width;
-                        uiRangeUnits.WidthRequest = width;
-                    });
-
-                //await viewModel.SendVernierQueryAsync();
-                //await viewModel.SendIsBandwidthLimitedQueryAsync();
-                //await viewModel.SendOffsetQueryAsync();
-                //await ViewModel.SendUnitsQueryAsync();
-                //await ViewModel.SendGetAllQuery();
                 ViewModel.GetAll.Execute(null);
 
                 //Debug.WriteLine($"barVernier: {barVernier.SelectedItems}");

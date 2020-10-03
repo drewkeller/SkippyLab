@@ -118,7 +118,7 @@ namespace Skippy.Views
             var positionX = index * targetWidth;
             positionX = positionX + padding - halfWidth;
             if (positionX < padding) positionX = padding;
-            Debug.WriteLine($"slider: {slider.Value}, index: {index}, labelWidth: {label.Width} positionX: {positionX}");
+            //Debug.WriteLine($"slider: {slider.Value}, index: {index}, labelWidth: {label.Width} positionX: {positionX}");
             if (positionX + halfWidth >= (slider.Width - padding))
             {
                 positionX = slider.Width - padding - halfWidth;

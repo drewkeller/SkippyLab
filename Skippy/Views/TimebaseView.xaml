@@ -32,7 +32,7 @@
 
                     <controls:UniformGrid Rows="1">
                         <Button x:Name="DecrementScale" Text="&#x2796;" TextColor="{DynamicResource TextPrimaryColor}" />
-                        <Button x:Name="uiScale" TextColor="{DynamicResource TextPrimaryColor}"  HorizontalOptions="CenterAndExpand"/>
+                        <Button x:Name="uiScale" Text="Range" TextColor="{DynamicResource TextPrimaryColor}"  HorizontalOptions="CenterAndExpand"/>
                         <Button x:Name="IncrementScale" Text="&#x2795;" TextColor="{DynamicResource TextPrimaryColor}" />
                     </controls:UniformGrid>
 

@@ -93,7 +93,7 @@ namespace Skippy.Protocols
                 Options = RealOptions.ChannelScale,
             };
 
-            Probe = new ProtocolCommand(this, "Probe", "PRB")
+            Probe = new ProtocolCommand(this, "Probe", "PROB")
             {
                 Options = StringOptions.ProbeRatio,
             };

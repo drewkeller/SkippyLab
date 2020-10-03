@@ -18,6 +18,23 @@ namespace Skippy.Services
 
         public int Port { get; set; }
 
+        /// <summary>
+        /// Get whether automatic screenshots are enabled or set a request to enable or disable them.
+        /// More than one source might reqeuest to enable/disable, so a counter tracks the number of
+        /// requests, incrementing each time disabling is requested and decrementing each time enable
+        /// is requested. When the counter is zero, autoscreenshot is enabled.
+        /// </summary>
+        public bool AutoGetScreenshotAfterCommand { 
+            get { return _autoGetScreenshotAfterCommand == 0; }
+            set {
+                if (value && _autoGetScreenshotAfterCommand > 0)
+                    _autoGetScreenshotAfterCommand--;
+                else
+                    _autoGetScreenshotAfterCommand++;
+            }
+        }
+        private int _autoGetScreenshotAfterCommand;
+
         public int Timeout
         {
             get { return (int)_timeout.TotalMilliseconds; }
@@ -89,6 +106,11 @@ namespace Skippy.Services
 
         }
 
+        private bool IsQuery(string command)
+        {
+            return command.EndsWith("?");
+        }
+
         public async Task<string> SendCommandAsync(string command, bool getResponse)
         {
             if (App.Mock)
@@ -117,6 +139,14 @@ namespace Skippy.Services
                     }
                     else
                     {
+                        if (AutoGetScreenshotAfterCommand && !IsQuery(command))
+                        {
+                            Task.Run(async () => 
+                            {
+                                await Task.Delay(100);
+                                await GetScreenshot();
+                            }).NoAwait();
+                        }
                         return "";
                     }
                 }

@@ -22,6 +22,8 @@ namespace Skippy.ViewModels
     public interface IScopeCommand
     {
         void WhenActivated(CompositeDisposable disposables);
+        ReactiveCommand<Unit, Unit> GetCommand { get; }
+        ReactiveCommand<Unit, Unit> SetCommand { get; }
     }
 
     public interface IScopeCommand<T> : IScopeCommand
@@ -42,8 +44,8 @@ namespace Skippy.ViewModels
         public ReactiveCommand<Unit, Unit> GetCommand { get; }
         public ReactiveCommand<Unit, Unit> SetCommand { get; }
         [Reactive] public bool GetSucceeded { get; set; }
-        public ICommand Increment { get; internal set; }
-        public ICommand Decrement { get; internal set; }
+        public ReactiveCommand<Unit, Unit> Increment { get; internal set; }
+        public ReactiveCommand<Unit, Unit> Decrement { get; internal set; }
 
         /// <summary>
         /// Only needed for <see cref="App.Mock"/>
@@ -60,7 +62,11 @@ namespace Skippy.ViewModels
                 var canSet = this.WhenValueChanged(x => x.GetSucceeded)
                     .Where(x => x == true);
                 SetCommand = ReactiveCommand.CreateFromTask(SendCommandAsync, canSet);
+                SetCommand.ThrownExceptions.SubscribeOnUI().Subscribe(async ex => await DisplayException(ex, "Couldn't set"));
                 Increment = ReactiveCommand.Create(IncrementValue);
+                Increment.ThrownExceptions.SubscribeOnUI().Subscribe(async ex => await DisplayException(ex, "Couldn't increment"));
+                Decrement = ReactiveCommand.Create(DecrementValue);
+                Decrement.ThrownExceptions.SubscribeOnUI().Subscribe(async ex => await DisplayException(ex, "Couldn't decrement"));
             } else
             {
                 // set command is used to send the command without a value or response
@@ -74,6 +80,7 @@ namespace Skippy.ViewModels
                     DefaultResponse = defaultResponse;
                 }
                 GetCommand = ReactiveCommand.CreateFromTask(SendQueryAsync);
+                GetCommand.ThrownExceptions.SubscribeOnUI().Subscribe(async ex => await DisplayException(ex, "Couldn't query"));
             } else
             {
                 if (App.Mock)
@@ -84,6 +91,11 @@ namespace Skippy.ViewModels
             }
 
 
+        }
+
+        private async Task DisplayException(Exception ex, string semiDetails)
+        {
+            await AppLocator.CurrentPage.DisplayAlert($"Whooops! {semiDetails}...", ex.Message, "OK");
         }
 
         public ScopeCommand(IProtocolVM viewModel, IProtocolCommand protocolCommand) 
@@ -149,6 +161,11 @@ namespace Skippy.ViewModels
                 result = response?.TrimEnd();
             }
             if (result.Length == 0) return;
+
+            if (result == "Command error")
+            {
+                throw new InvalidOperationException($"Command error: {command}");
+            }
 
             var propInfo = _propInfo ?? this.GetType().GetProperty(nameof(Value));
             if (_propInfo == null) _propInfo = propInfo;
@@ -218,6 +235,15 @@ namespace Skippy.ViewModels
             {
                 throw new NotImplementedException($"Scope command doesn't know how to increment options {options}");
             }
+        }
+
+        public override string ToString()
+        {
+            if (ProtocolCommand != null)
+            {
+                return $"{ProtocolCommand.Name}: {Value}";
+            }
+            return base.ToString();
         }
 
     }
