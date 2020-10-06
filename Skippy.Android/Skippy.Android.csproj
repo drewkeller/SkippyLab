@@ -107,6 +107,7 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Extensions\" />
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>

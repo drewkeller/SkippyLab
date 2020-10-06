@@ -171,8 +171,9 @@ namespace Skippy.Views
             var imageWidth = Math.Max(BlankScreenImage.Height, ScopeScreenImage.Width);
             if (imageWidth < 800)
             {
-                imageHeight *= imageWidth / 800;
+                imageHeight = 480 * imageWidth / 800;
                 offset = (800 - imageHeight) / 2;
+                imageHeight += offset;
             }
             if (imageHeight <= 0) imageHeight = this.height;
 

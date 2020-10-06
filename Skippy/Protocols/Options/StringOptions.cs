@@ -58,8 +58,8 @@ namespace Skippy.Protocols
 
         public static readonly StringOptions BWLimit = new StringOptions
         {
-            new StringOption("20M", "20M"),
-            new StringOption("OFF", "OFF")
+            new StringOption("True", "20M"),
+            new StringOption("False", "OFF"),
         };
         public static readonly StringOptions Coupling = new StringOptions
         {

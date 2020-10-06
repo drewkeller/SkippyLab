@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Skippy.Droid.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -15,10 +16,11 @@ namespace Skippy.Droid.Renderers
         {
             base.OnElementChanged(e);
             var color = Control.CurrentTextColor;
-            if (AppLocator.TextColor.R == -1)
+            if (!AppLocator.TextColor.HasData())
             {
                 AppLocator.TextColor = Xamarin.Forms.Color.FromUint((uint)color);
             }
         }
+
     }
 }

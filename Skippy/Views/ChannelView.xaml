@@ -70,8 +70,8 @@
 
                     <controls:UniformGrid Rows="1">
                         <!-- wrapping the picker prevents it from expanding the space used each time it is opened -->
-                        <Label Text="Ratio"/>
-                        <Picker x:Name="uiProbeRatio" HorizontalOptions="CenterAndExpand" />
+                        <Label Text="Ratio" VerticalOptions="Center" />
+                        <Picker x:Name="uiProbeRatio" HorizontalTextAlignment="Center" HorizontalOptions="Fill" Margin="0" />
                     </controls:UniformGrid>
 
                     <controls:UniformGrid Rows="1">
