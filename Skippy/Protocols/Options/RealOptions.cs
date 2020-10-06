@@ -32,6 +32,11 @@ namespace Skippy.Protocols
             Step = step;
         }
 
+        public Func<double, double> StepOneTwoFive = (current) =>
+        {
+            return 0.0;
+        };
+
         public override string ToString()
         {
             if (Step != 0)
@@ -44,8 +49,9 @@ namespace Skippy.Protocols
         }
     }
 
-    public class RealOptions : Collection<RealOption>, IOptions
+    public class RealOptions : List<RealOption>, IOptions
     {
+
         /// <summary>
         /// This range applies when the scale is less than 500mV/div.
         /// 
@@ -136,6 +142,25 @@ namespace Skippy.Protocols
 
         #endregion Implement ICollection
 
+        #region Implement List<IOption>
+
+        public int IndexOf(IOption option)
+        {
+            return base.IndexOf(option as RealOption);
+        }
+
+        public void Insert(int index, IOption option)
+        {
+            base.Insert(index, option as RealOption);
+        }
+
+        IOption IList<IOption>.this[int index] { 
+            get => base[index];
+            set => base[index] = value as RealOption; 
+        }
+
+        #endregion
+
         public object GetIncrementedValue(object currentValue)
         {
             return GetIncrementedValue((double)currentValue);
@@ -143,7 +168,7 @@ namespace Skippy.Protocols
         public double GetIncrementedValue(double currentValue)
         {
             var result = currentValue;
-            var option = this.Items[0] as RealOption;
+            var option = this[0] as RealOption;
             if (option.Steps != null)
             {
                 var steps = option.Steps;
@@ -177,7 +202,7 @@ namespace Skippy.Protocols
         public object GetDecrementedValue(double currentValue)
         {
             var result = currentValue;
-            var option = this.Items[0] as RealOption;
+            var option = this[0] as RealOption;
             if (option.Steps != null)
             {
                 var steps = option.Steps;
@@ -233,15 +258,15 @@ namespace Skippy.Protocols
                 : ChannelOffset_ScaleGreaterThan500m;
 
             var option = this[0];
-            var source = options.Items[0];
+            var source = options[0];
             option.MinValue = source.MinValue * probeRatio;
             option.MaxValue = source.MaxValue * probeRatio;
         }
 
         public void SetChannelRange(double probeRatio)
         {
-            var option = Items[0];
-            var source = ChannelRange.Items[0];
+            var option = this[0];
+            var source = ChannelRange[0];
             option.MinValue = source.MinValue * probeRatio;
             option.MaxValue = source.MaxValue * probeRatio;
         }
@@ -263,8 +288,8 @@ namespace Skippy.Protocols
         /// <param name="probeRatio"></param>
         public void SetChannelScale(double probeRatio)
         {
-            var option = Items[0];
-            var source = ChannelScale.Items[0];
+            var option = this[0];
+            var source = ChannelScale[0];
             option.MinValue = source.MinValue * probeRatio;
             option.MaxValue = source.MaxValue * probeRatio;
         }

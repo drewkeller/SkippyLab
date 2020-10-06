@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Skippy.Converters;
 using Skippy.Interfaces;
 using Skippy.Models;
@@ -12,14 +13,21 @@ namespace Skippy
 {
     public class AppLocator
     {
+        
+        public static App App { get; set; }
 
         public static ScopeVM ScopeVM => Locator.Current.GetService<ScopeVM>();
+
+        [Reactive] public static TimebaseVM Timebase { get; set; }
 
         public static TelnetService TelnetService => Locator.Current.GetService<TelnetService>();
 
         public static DialogService Dialogs => Locator.Current.GetService<IDialogService>() as DialogService;
 
         public static Settings Settings => Locator.Current.GetService<Settings>();
+
+        public static Color BackgroundColor { get; set; }
+        public static Color TextColor { get; set; }
 
         /// <summary>
         /// Provides a means for UI activities requiring a page, such as <see cref="DisplayAlert"/>.
@@ -38,6 +46,7 @@ namespace Skippy
             Locator.CurrentMutable.RegisterConstant(new Settings()); // need settings before others
             Locator.CurrentMutable.RegisterConstant(new TelnetService());
             Locator.CurrentMutable.RegisterConstant(new DialogService(), typeof(IDialogService));
+            Locator.CurrentMutable.RegisterConstant(new TimebaseVM(), typeof(TimebaseVM));
         }
 
     }

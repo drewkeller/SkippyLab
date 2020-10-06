@@ -1,5 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.XamForms;
+using Rg.Plugins.Popup.Services;
+using Skippy.Controls;
 using Skippy.Converters;
 using Skippy.Extensions;
 using Skippy.Protocols;
@@ -73,14 +75,34 @@ namespace Skippy.Views
                     x => x.EdgeSlope.IsEnabled)
                     .DisposeWith(disposable);
 
-                this.Bind(ViewModel,
-                    x => x.EdgeLevel.Value,
-                    x => x.EdgeLevel.Text)
-                    .DisposeWith(disposable);
+                #region EdgeLevel
                 this.Bind(ViewModel,
                     x => x.EdgeLevel.GetSucceeded,
                     x => x.EdgeLevel.IsEnabled)
                     .DisposeWith(disposable);
+
+                EdgeLevel.Events().Clicked
+                    .SubscribeOnUI()
+                    .Subscribe(async x =>
+                    {
+                        var popup = new PopSlider(
+                            protocol.Edge.Level.Name,
+                            ViewModel.EdgeLevel.Value,
+                            protocol.Edge.Level.Options as RealOptions,
+                            y =>
+                            {
+                                ViewModel.EdgeLevel.Value = y;
+                            });
+                        await PopupNavigation.Instance.PushAsync(popup);
+                    });
+                DecrementEdgeLevel.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.EdgeLevel.Decrement);
+                IncrementEdgeLevel.Events().Clicked
+                    .Select(args => Unit.Default)
+                    .InvokeCommand(ViewModel.EdgeLevel.Increment);
+
+                #endregion
 
                 #endregion Edge panel
 
@@ -95,7 +117,6 @@ namespace Skippy.Views
                 .Events().Clicked.Select(args => Unit.Default)
                 .InvokeCommand(ViewModel.GetAll)
                 .DisposeWith(disposable);
-
         }
 
     }

@@ -1,8 +1,10 @@
 ﻿using ReactiveUI;
+using Skippy.Controls;
 using Skippy.Interfaces;
 using Skippy.ViewModels;
 using Skippy.Views;
 using Splat;
+using System.Linq;
 using System.Reflection;
 using Xamarin.Forms;
 
@@ -13,15 +15,17 @@ namespace Skippy
         /// <summary>
         /// Set to true to not require actual connection to equipment.
         /// </summary>
-        public static bool Mock => false;
+        public static bool Mock => true;
 
         public App()
         {
+            AppLocator.App = this;
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
 
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            var mainPage = new MainPage();
+            MainPage = new NavigationPage(mainPage);
         }
 
         protected override void OnStart()
@@ -35,5 +39,18 @@ namespace Skippy
         protected override void OnResume()
         {
         }
+
+        public void AddTogglesBarStyle()
+        {
+            var togglesBarStyle = new Style(typeof(TogglesBar))
+            {
+                Setters =
+                {
+                    new Setter {Property = TogglesBar.SelectedColorProperty, Value = AppLocator.TextColor}
+                }
+            };
+            Resources.Add(togglesBarStyle);
+        }
+
     }
 }

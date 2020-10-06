@@ -8,7 +8,7 @@ namespace Skippy.Protocols
         string Name { get; set; }
         string Term { get; set; }
     }
-    public interface IOptions : ICollection<IOption> 
+    public interface IOptions : IList<IOption> 
     {
         object GetIncrementedValue(object currentValue);
         object GetDecrementedValue(object currentValue);

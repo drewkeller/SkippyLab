@@ -14,18 +14,21 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Grid.Row="0" Text="Host" />
+            <Label Grid.Column="0" Grid.Row="0" x:Name="lblHost" Text="Host" />
             <Entry Grid.Column="1" Grid.Row="0" x:Name="txtHost" />
             <Label Grid.Column="0" Grid.Row="1" Text="Port"/>
             <Entry Grid.Column="1" Grid.Row="1" x:Name="txtPort" />
 
             <Button Grid.Row="2" Grid.ColumnSpan="2" x:Name="btnConnect" Text="Connect" Margin="0,10"/>
+
+            <Label Grid.Row="3" Grid.ColumnSpan="2" x:Name="lblConnecting" Text="Connecting..."
+                   IsVisible="False" HorizontalOptions="Center"/>
 
         </Grid>
     </ContentView.Content>

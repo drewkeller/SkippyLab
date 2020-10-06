@@ -7,10 +7,10 @@
     >
 
     <Grid HorizontalOptions="Center" VerticalOptions="Center" Margin="24" Padding="12" >
-        <Frame BackgroundColor="{DynamicResource BackgroundColor}" Opacity="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <Frame x:Name="BackgroundFrame" Opacity="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout Margin="12,0,12,0" >
 
-                <Label x:Name="nameLabel" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,12" />
+                <Label x:Name="nameLabel" Style="{DynamicResource TitleStyle}" HorizontalOptions="Center" Margin="0,0,0,12" />
                     
                 <Grid x:Name="sliderGrid" Padding="0" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
                     <Grid.RowDefinitions>
@@ -53,8 +53,8 @@
                         HorizontalOptions="Center" VerticalOptions="End" />
 
                 <!-- if it's not visible it doesn't always get measured. we can make them the same color to camouflage. -->
-                <StackLayout x:Name="measurementGrid" BackgroundColor="{DynamicResource BackgroundColor}" VerticalOptions="End">
-                    <Label x:Name="measurementLabel" LineBreakMode="NoWrap" TextColor="{DynamicResource BackgroundColor}"/>
+                <StackLayout x:Name="measurementGrid" VerticalOptions="End">
+                    <Label x:Name="measurementLabel" LineBreakMode="NoWrap" />
                 </StackLayout>
 
             </StackLayout>

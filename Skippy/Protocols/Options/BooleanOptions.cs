@@ -74,6 +74,27 @@ namespace Skippy.Protocols
 
         #endregion Implement ICollection
 
+        #region Implement List<IOption>
+
+        public int IndexOf(IOption option)
+        {
+            return base.IndexOf(option as BooleanOption);
+        }
+
+        public void Insert(int index, IOption option)
+        {
+            base.Insert(index, option as BooleanOption);
+        }
+
+        IOption IList<IOption>.this[int index]
+        {
+            get => base[index];
+            set => base[index] = value as BooleanOption;
+        }
+
+        #endregion
+
+
         public object GetIncrementedValue(object currentValue)
         {
             var val = currentValue.ToString();

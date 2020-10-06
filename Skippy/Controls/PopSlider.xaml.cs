@@ -81,17 +81,26 @@ namespace Skippy.Controls
             InitializeComponent();
             this.BindingContext = options;
 
+            this.BackgroundFrame.BackgroundColor = AppLocator.BackgroundColor;
+            this.BackgroundFrame.Opacity = 0.9;
+            this.measurementLabel.TextColor = this.BackgroundColor;
+            this.measurementLabel.Opacity = .001;
+
             if (option.Steps == null)
             {
                 InitializeNotDiscrete(name, value, option.MinValue, option.MaxValue, option.Step);
             }
             else
             {
-                InitializeDiscreteSteps(name, value, option.Steps.Select(x => x.ToString()));
+                InitializeDiscreteSteps(name, value, option.Steps.Select(x => x.ToSIString()));
             }
 
             WireEvents(null, returnValue);
         }
+
+        #endregion Constructors
+
+        #region Initialization
 
         private void InitializeNotDiscrete(string name, double value, double min, double max, double step)
         {
@@ -101,17 +110,13 @@ namespace Skippy.Controls
 
             this.WhenActivated((Action<Action<IDisposable>>)(disposables =>
             {
+            }));
                 this.nameLabel.Text = name;
                 this.slider.Maximum = max;
                 this.slider.Minimum = min;
                 this.slider.Value = value;
                 DrawSliderLabel();
-            }));
         }
-
-        #endregion Constructors
-
-        #region Initialization
 
         private void InitializeDiscreteSteps(string name, object value, IEnumerable<string> items)
         {
@@ -122,8 +127,17 @@ namespace Skippy.Controls
 
             if (Items.Count < 1)
                 throw new InvalidOperationException("The slider requires a set of values");
-            if (!Items.Contains(value.ToString()))
+            if (value is double dbl)
+            {
+                if (!Items.Contains(dbl.ToSIString()))
+                {
+                    throw new InvalidOperationException($"The slider values doesn't contain the set value '{value}'");
+                }
+            }
+            else if (!Items.Contains(value.ToString()))
+            {
                 throw new InvalidOperationException($"The slider values doesn't contain the set value '{value}'");
+            }
 
             this.WhenActivated((Action<Action<IDisposable>>)(disposables =>
             {
@@ -182,6 +196,7 @@ namespace Skippy.Controls
 
             slider.Events().ValueChanged
                 .SubscribeOnUI()
+                //.Throttle(TimeSpan.FromMilliseconds(1))
                 .Subscribe(X => 
                 {
                     SetToNearestStep();
@@ -203,9 +218,23 @@ namespace Skippy.Controls
                 });
         }
 
+        #endregion Initialization
+
+        #region Step calculations
+
         private void SetToNearestStep()
         {
-            if (Step == 0 || StepMode == StepMode.None) return;
+            if (Step == 0 || StepMode == StepMode.None)
+            {
+                if (slider.Maximum - slider.Minimum > 10)
+                {
+                    slider.Value = Math.Round(slider.Value, 10);
+                    return;
+                }
+                slider.Value = (double)Math.Round((decimal)slider.Value, 13);
+                //var places = GetDecimalPlaces(slider.Value);
+                return;
+            }
 
             var steppedValue = GetNearestStep();
             slider.Value = steppedValue;
@@ -217,17 +246,44 @@ namespace Skippy.Controls
 
         private double GetNearestStep()
         {
-            if (Step == 0 || StepMode == StepMode.None) 
-                return slider.Value;
-            return Math.Round(slider.Value / Step) * Step;
+            if (Step == 0 || StepMode == StepMode.None)
+            {
+                if (slider.Maximum - slider.Minimum > 10)
+                    return Math.Round(slider.Value, 10);
+                return Math.Round(slider.Value, 13);
+            }
+            return (double)Math.Round((decimal)slider.Value / (decimal)Step) * Step;
         }
 
-        #endregion Initialization
+        /// <summary>
+        /// Gets the number of decimal places.
+        /// Sometimes the slider value (Android only?) has strange values, like
+        /// 970.999999999 or 970.000000000001
+        /// https://stackoverflow.com/questions/13477689/find-number-of-decimal-places-in-decimal-value-regardless-of-culture
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int GetDecimalPlaces(double n)
+        {
+            n = Math.Abs(n); //make sure it is positive.
+            n -= (int)n;     //remove the integer part of the number.
+            var decimalPlaces = 0;
+            while (n > 0)
+            {
+                decimalPlaces++;
+                n *= 10;
+                n -= (int)n;
+            }
+            return decimalPlaces;
+        }
+
+        #endregion Step calculations
 
         private void DrawSliderLabel()
         {
             var values = TickItems;
             var value = GetNearestStep();
+            //var places = GetDecimalPlaces(slider.Value);
 
             if (StepMode == StepMode.Discrete)
             {
@@ -308,13 +364,13 @@ namespace Skippy.Controls
                     AnchorY = 0.5,
                     LineBreakMode = LineBreakMode.NoWrap,
                     //TextColor = (Color)Application.Current.Resources["TextPrimaryColor"],
-                    TextColor = Color.FromHex("#FFFFFF"),
+                    TextColor = OKButton.TextColor,
                     //BackgroundColor = Color.DarkGray,
                 };
                 var tick = new BoxView
                 {
                     //TextColor = (Color)Application.Current.Resources["TextPrimaryColor"],
-                    Color = Color.FromHex("#FFFFFF"),
+                    Color = OKButton.TextColor,
                 };
                 var labelHeight = measurementLabel.Height;
                 var positionX = index * targetWidth;

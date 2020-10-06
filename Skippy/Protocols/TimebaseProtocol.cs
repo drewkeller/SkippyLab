@@ -1,4 +1,5 @@
 ﻿using Skippy.Models;
+using System.Collections.Generic;
 
 namespace Skippy.Protocols
 {
@@ -72,7 +73,28 @@ namespace Skippy.Protocols
             new StringOption("50", "50"),
         };
 
-        public static IOptions YT = new StringOptions() {
+        public static IOptions YT = new RealOptions()
+        {
+            new RealOption(5 * SI.nano, 50)
+            {
+                Steps = new List<double>{
+                    5 * SI.n, 
+                    10 * SI.n, 20 * SI.n, 50 * SI.n,
+                    100 * SI.n, 200 * SI.n, 500 * SI.n,
+                    1 * SI.u, 2 * SI.u, 5 * SI.u,
+                    10 * SI.u, 20 * SI.u, 50 * SI.u,
+                    100 * SI.u, 200 * SI.u, 500 * SI.u,
+                    1 * SI.m, 2 * SI.m, 5 * SI.m,
+                    10 * SI.m, 20 * SI.m, 50 * SI.m,
+                    100 * SI.m, 200 * SI.m, 500 * SI.m,
+                    1d, 2d, 5d,
+                    10d, 20d, 50d,
+                    100d, 200d, 500d,
+                }
+            }
+        };
+
+        public static IOptions YT1 = new StringOptions() {
             new StringOption("5n", "5.0000000e-09"),
             new StringOption("10n", "1.0000000e-08"),
             new StringOption("20n", "2.0000000e-08"),

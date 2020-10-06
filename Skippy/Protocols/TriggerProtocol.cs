@@ -392,6 +392,14 @@ namespace Skippy.Protocols
             Slope = new TriggerSlopeCommand(this);
             Level = new TriggerLevelCommand(this);
         }
+
+        public void SetLevelRange(double verticalScale, double offset)
+        {
+            var option = Level.Options[0] as RealOption;
+            option.MinValue = -1 * verticalScale - offset;
+            option.MaxValue = +1 * verticalScale - offset;
+        }
+
     }
 
     /// <summary>

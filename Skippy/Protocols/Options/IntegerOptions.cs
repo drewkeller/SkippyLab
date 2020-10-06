@@ -48,6 +48,28 @@ namespace Skippy.Protocols
         }
 
         #endregion Implement ICollection
+
+        #region Implement List<IOption>
+
+        public int IndexOf(IOption option)
+        {
+            return base.IndexOf(option as IntegerOption);
+        }
+
+        public void Insert(int index, IOption option)
+        {
+            base.Insert(index, option as IntegerOption);
+        }
+
+        IOption IList<IOption>.this[int index]
+        {
+            get => base[index];
+            set => base[index] = value as IntegerOption;
+        }
+
+        #endregion
+
+
         public object GetDecrementedValue(object currentValue)
         {
             var i = System.Convert.ToInt32(currentValue);

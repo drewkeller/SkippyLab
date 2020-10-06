@@ -14,6 +14,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Xamarin.CustomControls;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.Xaml;
 
 namespace Skippy.Views
@@ -59,7 +60,7 @@ namespace Skippy.Views
             this.WhenActivated(disposable =>
             {
                 this.Click += (s,e) => { 
-                    this.WidthRequest = IsOpen ? 300 : 100;
+                    this.MinimumWidthRequest = IsOpen ? 300 : 100;
                 };
 
                 this.Bind(ViewModel,
@@ -211,6 +212,7 @@ namespace Skippy.Views
                 //Debug.WriteLine($"barVernier: {barVernier.SelectedItems}");
 
                 WireEvents(disposable);
+                uiCoupling.SelectedColor = AppLocator.TextColor;
             });
 
             this.Click += ScopeChannelView_OnClick;

@@ -114,7 +114,7 @@ namespace Skippy.Controls
         }
 
         public static readonly BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(TogglesBar),
-            defaultValue: Color.Black, propertyChanged: CustomPropertyChanging);
+            defaultValue: Label.TextColorProperty.DefaultValue, propertyChanged: CustomPropertyChanging);
 
         public Color SelectedColor
         {
@@ -123,7 +123,7 @@ namespace Skippy.Controls
         }
 
         public static readonly BindableProperty UnselectedColorProperty = BindableProperty.Create(nameof(UnselectedColor), typeof(Color), typeof(TogglesBar),
-            defaultValue: Color.Gray, propertyChanged: CustomPropertyChanging);
+            defaultValue: Color.Default, propertyChanged: CustomPropertyChanging);
 
 
         public Color UnselectedColor

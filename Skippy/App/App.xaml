@@ -8,8 +8,9 @@
     x:Class="Skippy.App">
     
     <Application.Resources>
-        <ResourceDictionary x:Name="Theme"  Source="/Resources/DarkTheme.xaml"/>
+        <ResourceDictionary x:Name="Theme"  Source="/Resources/LightTheme.xaml"/>
 
+<!--
         <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
             <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
         </Style>
@@ -17,20 +18,23 @@
             <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
             <Setter Property="BorderColor" Value="{DynamicResource TextPrimaryColor}"/>
         </Style>
+        <Style TargetType="Button">
+            <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>
+            <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundSecondaryColor}"/>
+        </Style>
         <Style TargetType="Label">
             <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>
         </Style>
         <Style TargetType="Picker">
             <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>
             <Setter Property="TitleColor" Value="{DynamicResource TextPrimaryColor}"/>
-            <!--<Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>-->
+            --><!--<Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>--><!--
         </Style>
         <Style TargetType="Entry">
             <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>
             <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
             <Setter Property="PlaceholderColor" Value="{DynamicResource TextSecondaryColor}"/>
         </Style>
-
         <Style TargetType="xamlly:TogglesBar">
             <Setter Property="SelectedColor" Value="{DynamicResource TextPrimaryColor}"/>
             <Setter Property="UnselectedColor" Value="{DynamicResource GrayedColor}"/>
@@ -39,6 +43,7 @@
             <Setter Property="SelectedColor" Value="{DynamicResource TextPrimaryColor}"/>
             <Setter Property="UnselectedColor" Value="{DynamicResource GrayedColor}"/>
         </Style>
+-->
         
         <Style TargetType="xamlly:Switch">
             <Setter Property="ButtonWidth" Value="50"/>
@@ -51,20 +56,20 @@
         <Style TargetType="edit:EditableLabel">
             <Style.Triggers>
                 <Trigger TargetType="edit:EditableLabel" Property="IsEnabled" Value="True">
-                    <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>
+                    <!--<Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>-->
                 </Trigger>
                 <Trigger TargetType="edit:EditableLabel" Property="IsEnabled" Value="False">
-                    <Setter Property="TextColor" Value="{DynamicResource GrayedColor}"/>
+                    <!--<Setter Property="TextColor" Value="{DynamicResource GrayedColor}"/>-->
                 </Trigger>
             </Style.Triggers>
         </Style>
         <Style TargetType="Label" x:Key="DisablableLabel">
             <Style.Triggers>
                 <Trigger TargetType="Label" Property="IsEnabled" Value="True">
-                    <Setter Property="TextColor" Value="{DynamicResource TextPrimaryColor}"/>
+                    <Setter Property="Opacity" Value="1"/>
                 </Trigger>
                 <Trigger TargetType="Label" Property="IsEnabled" Value="False">
-                    <Setter Property="TextColor" Value="{DynamicResource GrayedColor}"/>
+                    <Setter Property="Opacity" Value=".5"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -79,6 +84,18 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        <!-- ====================================================================== -->
+        
+        <Style TargetType="Button" x:Key="DecrementButton">
+            <Setter Property="Text" Value="&#x2796;"/>
+            <Setter Property="TextColor"  Value="{DynamicResource TextPrimaryColor}"/>
+        </Style>
+        <Style TargetType="Button" x:Key="IncrementButton">
+            <Setter Property="Text" Value="&#x2795;"/>
+            <Setter Property="TextColor"  Value="{DynamicResource TextPrimaryColor}"/>
+        </Style>
+
 
     </Application.Resources>
 </Application>

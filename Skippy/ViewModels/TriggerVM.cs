@@ -1,19 +1,23 @@
-﻿using ReactiveUI;
+﻿using DynamicData.Annotations;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Skippy.Extensions;
 using Skippy.Protocols;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace Skippy.ViewModels
 {
 
     public class TriggerVM : ReactiveObject, IActivatableViewModel, IProtocolVM
     {
+        TimebaseVM Timebase => Locator.Current.GetService<TimebaseVM>();
 
         public ViewModelActivator Activator { get; }
 
@@ -92,10 +96,23 @@ namespace Skippy.ViewModels
                     scopeCommand.WhenActivated(disposables);
                 }
 
-                this.WhenAnyValue(x => x.Mode.Value, (x) => x == nameof(ModeStringOptions.Edge))
+                // Make visible the panel that corresponds to the selected trigger mode
+                this.WhenAnyValue(
+                    x => x.Mode.Value,
+                    x => x == nameof(ModeStringOptions.Edge))
                     .ToPropertyEx(this, x => x.IsEdgeMode);
-            });
 
+                // Range of edge level trigger is:
+                //   (-5x Vertical Scale - Offset) to (+5x Vertical Scale - Offset)
+                Timebase.WhenAnyValue(
+                    vm => vm.Scale.Value,
+                    vm => vm.Offset.Value,
+                    (x, y) => { 
+                        Protocol.Edge.SetLevelRange(x, y);
+                        return 0.0;
+                    });
+
+            });
         }
 
         private void HandleActivation()

@@ -72,6 +72,10 @@ namespace Skippy.ViewModels
                 IsBusy = true;
                 await telnet.ConnectAsync(Hostname, Port);
             }
+            catch (Exception ex)
+            {
+                await AppLocator.CurrentPage.DisplayAlert("Couldn't connect...", ex.Message, "OK");
+            }
             finally
             {
                 IsBusy = false;

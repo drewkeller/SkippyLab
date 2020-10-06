@@ -7,6 +7,7 @@ using Skippy.Converters;
 using Skippy.Extensions;
 using Skippy.Protocols;
 using Skippy.ViewModels;
+using Splat;
 using System;
 using System.Linq.Expressions;
 using System.Reactive;
@@ -27,7 +28,7 @@ namespace Skippy.Views
         public TimebaseView()
         {
             InitializeComponent();
-            ViewModel = new TimebaseVM();
+            ViewModel = Locator.Current.GetService<TimebaseVM>();
 
             var protocol = ViewModel.Protocol;
 
@@ -81,7 +82,7 @@ namespace Skippy.Views
                         popup = new PopSlider(
                             protocol.Scale.Name,
                             ViewModel.Scale.Value,
-                            protocol.Scale.Options as StringOptions,
+                            protocol.Scale.Options as RealOptions,
                             y => { ViewModel.Scale.Value = y; });
                         await PopupNavigation.Instance.PushAsync(popup);
                     });

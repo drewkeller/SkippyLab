@@ -14,7 +14,7 @@
     Text="CHANNEL"
     FontAttributes="Bold"
     RotateImages="True" 
-    WidthRequest="100"
+    WidthRequest="200"
     >
 
     <ContentView.Resources>
@@ -24,7 +24,7 @@
     
     <accordion:AccordionItemView.ItemContent>
 
-        <Frame x:Name="Frame" WidthRequest="200">
+        <Frame x:Name="Frame" WidthRequest="400">
             <ScrollView Orientation="Vertical">
                 <StackLayout Orientation="Vertical" MinimumHeightRequest="300" Margin="0,0,15,0">
 
@@ -34,6 +34,7 @@
 
                     <xamlly:Switch x:Name="uiIsActive" OnText="ON" OffText="OFF" 
                                    HorizontalOptions="FillAndExpand"
+                                   TextColor="#000000"
                                    OnColor="{Binding BorderColor,Source={x:Reference Frame}}"
                                    HeightRequest="{Binding Height,Source={x:Reference GetAllButton}}"
                                    />
@@ -48,9 +49,9 @@
                     </controls:UniformGrid>
 
                     <controls:UniformGrid Rows="1">
-                        <Button x:Name="DecrementOffset" Text="&#x2796;" TextColor="{DynamicResource TextPrimaryColor}" />
-                        <Button x:Name="uiOffset" Text="Offset" TextColor="{DynamicResource TextPrimaryColor}" />
-                        <Button x:Name="IncrementOffset" Text="&#x2795;" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Button x:Name="DecrementOffset"  Style="{StaticResource Key=DecrementButton}" />
+                        <Button x:Name="uiOffset" Text="Offset"  />
+                        <Button x:Name="IncrementOffset" Style="{StaticResource Key=IncrementButton}" />
                     </controls:UniformGrid>
 
                     <!--<controls:UniformGrid Rows="1">
@@ -63,9 +64,9 @@
                     </controls:UniformGrid>-->
 
                     <controls:UniformGrid Rows="1">
-                        <Button x:Name="DecrementScale" Text="&#x2796;" TextColor="{DynamicResource TextPrimaryColor}" />
-                        <Button x:Name="uiScale" Text="Scale" TextColor="{DynamicResource TextPrimaryColor}" />
-                        <Button x:Name="IncrementScale" Text="&#x2795;" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Button x:Name="DecrementScale" Style="{StaticResource Key=DecrementButton}" />
+                        <Button x:Name="uiScale" Text="Scale" />
+                        <Button x:Name="IncrementScale" Style="{StaticResource Key=IncrementButton}" />
                     </controls:UniformGrid>
 
                     <controls:UniformGrid Rows="1">

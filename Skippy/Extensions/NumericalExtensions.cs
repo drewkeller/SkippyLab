@@ -95,7 +95,9 @@ namespace Skippy.Extensions
                 value = double.Parse(@this);
             }
 
-            return value.ToString("e6").Replace("e0", "e");
+            var result = value.ToString("e6");
+            result = result.Replace("e-0", "e-").Replace("e0", "e+");
+            return result;
         }
 
         /// <summary>
@@ -126,6 +128,16 @@ namespace Skippy.Extensions
             // The "e" specifier always results in an exponent of 3 digits,
             // so we blank out the first one.
             return @this.ToString("e6").Replace("e0", "e");
+        }
+
+        public static string ToSIString(this double @this, string unit = "")
+        {
+            if (@this >= 1) return @this.ToString() + unit;
+            if (@this < 1 * SI.p) return @this.ToString() + unit;
+            if (@this < 1 * SI.n) return (@this * SI.T).ToString() + "p" + unit;
+            if (@this < 1 * SI.u) return (@this * SI.G).ToString() + "n" + unit;
+            if (@this < 1 * SI.m) return (@this * SI.M).ToString() + "u" + unit;
+            return (@this * SI.k).ToString() + "m";
         }
 
     }

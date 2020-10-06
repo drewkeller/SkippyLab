@@ -1,5 +1,6 @@
 ﻿using ReactiveUI;
 using Skippy.Extensions;
+using Skippy.Models;
 using Skippy.Protocols;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Skippy.ViewModels
         private List<IScopeCommand> AllCommands { get; set; }
 
         public ScopeCommand<double> Offset { get; set; }
-        public ScopeCommand<string> Scale { get; set; }
+        public ScopeCommand<double> Scale { get; set; }
         public ScopeCommand<string> Mode { get; set; }
 
         #endregion Properties
@@ -38,8 +39,9 @@ namespace Skippy.ViewModels
             Protocol = new TimebaseProtocol(null);
 
             Offset = new ScopeCommand<double>(this, Protocol.Offset, "0.0");
-            Scale = new ScopeCommand<string>(this, Protocol.Scale, "1.0000000e-06"); // 1us/div
-            Scale.Value = "1u";
+            Offset.Value = SI.Parse("0V");
+            Scale = new ScopeCommand<double>(this, Protocol.Scale, "1u".ToReal()); // 1us/div
+            Scale.Value = SI.Parse("1u");
             Mode = new ScopeCommand<string>(this, Protocol.Mode, "MAIN");
 
             AllCommands = new List<IScopeCommand>()

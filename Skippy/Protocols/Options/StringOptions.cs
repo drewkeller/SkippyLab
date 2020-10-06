@@ -124,13 +124,19 @@ namespace Skippy.Protocols
         public static StringOption GetByTerm(IOptions options, string term)
         {
             var stringOptions = options as StringOptions;
-            return stringOptions.Cast<StringOption>().Where(x => x.Term == term).FirstOrDefault();
+            return stringOptions
+                .Cast<StringOption>()
+                .Where(x => x.Term.ToLower() == term.ToLower())
+                .FirstOrDefault();
         }
 
         public StringOption GetByValue(string value)
         {
             //return this.Where(x => x.Value == value).First();
-            return this.Cast<StringOption>().Where(x => x.Name == value).FirstOrDefault();
+            return this
+                .Cast<StringOption>()
+                .Where(x => x.Name.ToLower() == value.ToLower())
+                .FirstOrDefault();
         }
         public string GetTermForValue(string value)
         {
@@ -194,6 +200,26 @@ namespace Skippy.Protocols
         }
 
         #endregion Implement ICollection
+
+        #region Implement List<IOption>
+
+        public int IndexOf(IOption option)
+        {
+            return base.IndexOf(option as StringOption);
+        }
+
+        public void Insert(int index, IOption option)
+        {
+            base.Insert(index, option as StringOption);
+        }
+
+        IOption IList<IOption>.this[int index]
+        {
+            get => base[index];
+            set => base[index] = value as StringOption;
+        }
+
+        #endregion
 
         #region Implement IOption
 
