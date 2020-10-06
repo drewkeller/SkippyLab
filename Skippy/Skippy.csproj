@@ -65,6 +65,9 @@
     <Compile Update="Controls\SliderBar.xaml.cs">
       <DependentUpon>SliderBar.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\ChannelView.xaml.cs">
+      <DependentUpon>ChannelView.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Update="Controls\SliderBar.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -77,7 +80,7 @@
     <EmbeddedResource Update="Views\RunView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ScopeChannelView.xaml">
+    <EmbeddedResource Update="Views\ChannelView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ScopePage.xaml">

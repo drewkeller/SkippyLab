@@ -12,7 +12,7 @@
     <accordion:AccordionItemView.ItemContent>
         <StackLayout Orientation="Vertical">
 
-            <Frame BorderColor="{DynamicResource TextPrimaryColor}" WidthRequest="300">
+            <Frame BorderColor="{DynamicResource TextPrimaryColor}">
                 <ScrollView VerticalScrollBarVisibility="Default">
                     <StackLayout Orientation="Vertical">
 

@@ -16,7 +16,7 @@
     RotateImages="True" 
     >
     <accordion:AccordionItemView.ItemContent>
-        <Frame BorderColor="{DynamicResource TextPrimaryColor}" WidthRequest="200">
+        <Frame BorderColor="{DynamicResource TextPrimaryColor}">
             <StackLayout Orientation="Vertical">
                 <controls:UniformGrid Rows="1">
                     <Label Text="Status" FontAttributes="Bold"/>

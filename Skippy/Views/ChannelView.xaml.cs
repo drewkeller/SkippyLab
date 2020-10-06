@@ -20,7 +20,7 @@ using Xamarin.Forms.Xaml;
 namespace Skippy.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ScopeChannelView : AccordionItemView, IViewFor<ScopeChannelVM> // ReactiveContentView<ScopeChannelVM>
+    public partial class ChannelView : AccordionItemView, IViewFor<ScopeChannelVM> // ReactiveContentView<ScopeChannelVM>
     {
         public class NameValue
         {
@@ -41,7 +41,7 @@ namespace Skippy.Views
         public ScopeChannelVM ViewModel { get; set; }
         object IViewFor.ViewModel { get => ViewModel; set => ViewModel = value as ScopeChannelVM; }
 
-        public ScopeChannelView(ScopeChannelVM viewModel)
+        public ChannelView(ScopeChannelVM viewModel)
         {
             InitializeComponent();
             ViewModel = viewModel;
@@ -220,7 +220,9 @@ namespace Skippy.Views
 
         private void ScopeChannelView_OnClick(object sender, AccordionItemClickEventArgs e)
         {
-            { }
+            WidthRequest = IsOpen
+                ? AppLocator.ChannelStackOpenedWidth
+                    : AppLocator.ChannelStackClosedWidth;
         }
 
         private void WireEvents(CompositeDisposable disposable)

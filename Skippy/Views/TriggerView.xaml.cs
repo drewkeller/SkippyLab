@@ -109,6 +109,7 @@ namespace Skippy.Views
                 ViewModel.GetAll.Execute(null);
                 WireEvents(disposable);
             });
+
         }
 
         private void WireEvents(CompositeDisposable disposable)

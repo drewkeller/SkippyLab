@@ -50,6 +50,18 @@ namespace Skippy
                 }
             };
             Resources.Add(togglesBarStyle);
+
+            var frameStyle = new Style(typeof(Frame))
+            {
+                Setters = {
+                    new Setter { Property = Frame.BorderColorProperty, Value = AppLocator.TextColor},
+                    new Setter { Property = Frame.BackgroundColorProperty, Value = AppLocator.BackgroundColor },
+                    new Setter { Property = Frame.OpacityProperty, Value = 0.9 },
+                }
+            };
+            Resources.Add(frameStyle);
+
+
         }
 
     }

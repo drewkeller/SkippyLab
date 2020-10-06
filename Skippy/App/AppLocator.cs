@@ -29,6 +29,9 @@ namespace Skippy
         public static Color BackgroundColor { get; set; }
         public static Color TextColor { get; set; }
 
+        public static double ChannelStackClosedWidth = 150;
+        public static double ChannelStackOpenedWidth = 300;
+
         /// <summary>
         /// Provides a means for UI activities requiring a page, such as <see cref="DisplayAlert"/>.
         /// </summary>

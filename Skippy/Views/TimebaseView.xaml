@@ -16,7 +16,7 @@
     RotateImages="True"
     >
     <accordion:AccordionItemView.ItemContent>
-        <Frame BorderColor="{DynamicResource TextPrimaryColor}" HorizontalOptions="EndAndExpand" WidthRequest="300">
+        <Frame BorderColor="{DynamicResource TextPrimaryColor}" HorizontalOptions="EndAndExpand" >
             <ScrollView VerticalScrollBarVisibility="Default">
                 <StackLayout>
 

@@ -7,6 +7,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
     xmlns:accordion="clr-namespace:Xamarin.CustomControls;assembly=Xamarin.CustomControls.AccordionView"
+    xmlns:state="clr-namespace:Xamarin.CustomControls;assembly=Xamarin.CustomControls.StateButton"
     xmlns:vm="clr-namespace:Skippy.ViewModels;assembly=Skippy"
     xmlns:view="clr-namespace:Skippy.Views;assembly=Skippy"
     >
@@ -31,31 +32,34 @@
                     HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" 
                     />
 
-                <ContentView 
-                HorizontalOptions="StartAndExpand" VerticalOptions="End">
-                    <ScrollView Orientation="Horizontal" HorizontalOptions="StartAndExpand">
-                        <accordion:AccordionView x:Name="pnlChannels" Orientation="Horizontal" HorizontalOptions="StartAndExpand" />
-                        <!--<StackLayout x:Name="pnlChannels" Orientation="Horizontal" />-->
-                    </ScrollView>
-                </ContentView>
-                
             </StackLayout>
 
-            <StackLayout 
-                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-200}" 
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0, Constant=0}"
-                WidthRequest="200"
-                >
-                <ScrollView Orientation="Vertical">
+            <StackLayout x:Name="ChannelStack" Orientation="Horizontal" 
+                         HorizontalOptions="StartAndExpand" VerticalOptions="End"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                         >
+                <ScrollView Orientation="Horizontal" >
+                    <accordion:AccordionView x:Name="pnlChannels" Orientation="Horizontal" HorizontalOptions="StartAndExpand" />
+                </ScrollView>
+            </StackLayout>
+                
+            <StackLayout x:Name="SideStack"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                         >
+                
+                <Button x:Name="SidebarButton" Text="&lt;" FontAttributes="Bold" HorizontalOptions="End"/>
+                
+                <ScrollView x:Name="SideScroll" Orientation="Vertical" VerticalScrollBarVisibility="Always">
                     <accordion:AccordionView x:Name="Sidebar" Orientation="Vertical" HorizontalOptions="EndAndExpand">
 
-                        <view:RunView/>
+                        <view:RunView x:Name="RunPanel"/>
                         
-                        <view:ScreenControlView x:Name="ScreenControlView"/>
+                        <view:ScreenControlView x:Name="ScreenPanel"/>
 
-                        <view:TriggerView/>
+                        <view:TriggerView x:Name="TriggerPanel"/>
 
-                        <view:TimebaseView/>
+                        <view:TimebaseView x:Name="TimebasePanel"/>
                         
                     </accordion:AccordionView>
                 </ScrollView>

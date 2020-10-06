@@ -11,16 +11,16 @@
     >
 
     <accordion:AccordionItemView.ItemContent>
-        <Frame x:Name="Frame" WidthRequest="300">
+        <Frame x:Name="Frame">
             <ScrollView Orientation="Vertical">
                 <StackLayout Orientation="Vertical">
 
                     <StackLayout Orientation="Vertical">
-                        <StackLayout Orientation="Horizontal" WidthRequest="150">
+                        <StackLayout Orientation="Horizontal">
                             <Label Text="Auto refresh screen" VerticalOptions="Center"/>
                             <Switch x:Name="uiAutorefresh" VerticalOptions="Center"/>
                         </StackLayout>
-                        <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" HorizontalOptions="EndAndExpand" WidthRequest="150"
+                        <StackLayout x:Name="uiScreenRefreshRatePanel" Orientation="Horizontal" HorizontalOptions="EndAndExpand"
                             IsEnabled="{Binding Source={x:Reference uiAutorefresh}, Path=IsToggled}">
                             <Entry x:Name="uiScreenRefreshRate" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
                             <Label Text="ms" HorizontalOptions="End" VerticalOptions="Center"/>
@@ -32,7 +32,7 @@
                     <Label x:Name="ScreenshotFolder"/>
                     <Button x:Name="CopyFolderButton" Text="Copy" />
                     <Label x:Name="uiScreenshotFolderError" Text="Screenshot folder not found" IsVisible="False" TextColor="Red"/>
-                    <Button x:Name="SaveScreenshotButton" Text="Save Screenshot" HorizontalOptions="FillAndExpand" WidthRequest="200" />
+                    <Button x:Name="SaveScreenshotButton" Text="Save Screenshot" HorizontalOptions="FillAndExpand" />
 
                 </StackLayout>
             </ScrollView>
