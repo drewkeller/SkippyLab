@@ -9,6 +9,8 @@ namespace Skippy.ViewModels
 {
     public class MainPageVM : ReactiveObject
     {
+        [Reactive] public string Title { get; set; } = "SkippyLab";
+
         public MainPageVM()
         {
             var telnet = AppLocator.TelnetService;

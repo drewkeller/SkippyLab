@@ -5,6 +5,7 @@ using Skippy.Extensions;
 using Skippy.ViewModels;
 using System;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace Skippy.Views
@@ -34,6 +35,12 @@ namespace Skippy.Views
             this.WhenActivated(disposables =>
             {
                 this.HandleActivation();
+
+                this.OneWayBind(ViewModel,
+                    vm => vm.Title,
+                    v => v.Title)
+                .DisposeWith(disposables);
+
             });
 
         }

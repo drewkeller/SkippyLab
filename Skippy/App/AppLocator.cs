@@ -29,7 +29,7 @@ namespace Skippy
         public static Color BackgroundColor { get; set; }
         public static Color TextColor { get; set; }
 
-        public static double ChannelStackClosedWidth = 150;
+        public static double ChannelStackClosedWidth = 100;
         public static double ChannelStackOpenedWidth = 300;
 
         /// <summary>

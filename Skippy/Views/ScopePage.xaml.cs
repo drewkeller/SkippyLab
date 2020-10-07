@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.PlatformServices;
-using System.Text.RegularExpressions;
 using Xamarin.CustomControls;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -47,8 +45,12 @@ namespace Skippy.Views
             this.BlankScreenImage.Source = ImageSource.FromResource("Skippy.Resources.blank.png");
             this.ScopeScreenImage.IsVisible = false;
 
-            this.WhenActivated(disposable =>
+            this.WhenActivated(disposables =>
             {
+                this.OneWayBind(ViewModel,
+                    vm => vm.Title,
+                    v => v.Title)
+                .DisposeWith(disposables);
 
                 this.WhenAnyValue(vm => vm.ScreenControlVM.Screen)
                     .Where(x => x != null)
@@ -59,7 +61,7 @@ namespace Skippy.Views
                         this.ScopeScreenImage.IsVisible = ScreenControlVM.Screen != null;
                         this.BlankScreenImage.IsVisible = ScreenControlVM.Screen == null;
                     })
-                    .DisposeWith(disposable);
+                    .DisposeWith(disposables);
 
                 this.WhenAnyValue(x => x.SidebarButton.Text)
                     .SubscribeOnUI()
@@ -72,6 +74,19 @@ namespace Skippy.Views
                 .Subscribe(e => {
                     if (SidebarButtonIsPressed()) ShowSidebar();
                     else HideSidebar();
+                });
+
+                this.WhenAnyValue(x => x.ChannelbarButton.Text)
+                    .SubscribeOnUI()
+                    .Subscribe(x => {
+                        ChannelScroll.IsVisible = !ChannelbarButtonIsPressed();
+                    });
+
+                ChannelbarButton.Events().Clicked
+                .SubscribeOnUI()
+                .Subscribe(e => {
+                    if (ChannelbarButtonIsPressed()) ShowChannelbar();
+                    else HideChannelbar();
                 });
 
                 //this.WhenAnyValue(
@@ -110,7 +125,9 @@ namespace Skippy.Views
                     ChannelPanels.Add(channelPanel);
                     channelPanel.WidthRequest = AppLocator.ChannelStackClosedWidth;
                     channelPanel.Click += ChannelPanel_Click;
+                    channelPanel.VerticalOptions = LayoutOptions.End;
                 }
+                UpdateChannelPanels(null);
             }
         }
 
@@ -179,13 +196,15 @@ namespace Skippy.Views
 
             var maxOpenHeight = 450;
             var minOpenHeight = 300;
-            var closedHeight = 50;
-            var closedWidth = 150;
+            var closedHeight = 150;
+            var closedWidth = AppLocator.ChannelStackClosedWidth;
             var openWidth = 300;
 
             var height = anyOpen
                 ? Math.Min(maxOpenHeight, Math.Max(minOpenHeight, this.Height - imageHeight))
                 : closedHeight;
+
+            ChannelScroll.Opacity = (this.height < 510 && !anyOpen) ? .3 : 1.0;
 
             if (sender != null)
             {
@@ -193,8 +212,7 @@ namespace Skippy.Views
             }
 
             ChannelStack.HeightRequest = height;
-            //RelativeLayout.SetHeightConstraint(ChannelStack,
-            //    Constraint.RelativeToParent(parent => parent.Height - height));
+
         }
 
         private void UpdateSidePanel() 
@@ -206,7 +224,7 @@ namespace Skippy.Views
             if (imageWidth <= 0) imageWidth = this.width;
 
             var maxOpenedWidth = 500;
-            var minOpenedWidth = 250;
+            var minOpenedWidth = 300;
             var closedWidth = 150;
 
             var width = anyOpen
@@ -214,8 +232,11 @@ namespace Skippy.Views
                 : closedWidth;
 
             SideStack.WidthRequest = width;
+
             RelativeLayout.SetXConstraint(SideStack,
                 Constraint.RelativeToParent(parent => parent.Width - width));
+
+            SideScroll.Opacity = (this.width < (800+150) && !anyOpen) ? .3 : 1.0;
         }
 
         private void UpdateLayout()
@@ -285,6 +306,21 @@ namespace Skippy.Views
         private bool SidebarButtonIsPressed()
         {
             return SidebarButton.Text == "<";
+        }
+
+        private void HideChannelbar()
+        {
+            ChannelbarButton.Text = ">";
+        }
+
+        private void ShowChannelbar()
+        {
+            ChannelbarButton.Text = "<";
+        }
+
+        private bool ChannelbarButtonIsPressed()
+        {
+            return ChannelbarButton.Text == ">";
         }
 
     }

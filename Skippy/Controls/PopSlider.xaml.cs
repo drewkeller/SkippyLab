@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Markup;
 using Xamarin.Forms.Xaml;
 
 namespace Skippy.Controls
@@ -108,6 +109,10 @@ namespace Skippy.Controls
             TickItems = new ObservableCollection<string>() { $"{min}", $"{max}" };
             Step = step;
 
+            valueEntry.IsVisible = true;
+            valueEntry.BindingContext = slider;
+            valueEntry.SetBinding(Entry.TextProperty, nameof(Slider.Value), BindingMode.TwoWay);
+
             this.WhenActivated((Action<Action<IDisposable>>)(disposables =>
             {
             }));
@@ -124,6 +129,7 @@ namespace Skippy.Controls
             Items = new ObservableCollection<string>(items);
             TickItems = Items;
             Step = 1; // step on index
+            valueEntry.IsVisible = false;
 
             if (Items.Count < 1)
                 throw new InvalidOperationException("The slider requires a set of values");
@@ -201,10 +207,21 @@ namespace Skippy.Controls
                 {
                     SetToNearestStep();
                     DrawSliderLabel();
-                    if (returnDouble != null && double.TryParse(SelectedItem, out var dbl))
-                        returnDouble(dbl);
+                    if (returnDouble != null)
+                    {
+                        if (StepMode == StepMode.Discrete && double.TryParse(SelectedItem, out var dbl))
+                        {
+                            returnDouble(dbl);
+                        }
+                        else
+                        {
+                            returnDouble(slider.Value);
+                        }
+                    }
                     else if (returnString != null)
+                    {
                         returnString((string)SelectedItem);
+                    }
                 });
 
             this.Events().LayoutChanged

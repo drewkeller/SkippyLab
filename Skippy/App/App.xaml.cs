@@ -15,7 +15,7 @@ namespace Skippy
         /// <summary>
         /// Set to true to not require actual connection to equipment.
         /// </summary>
-        public static bool Mock => true;
+        public static bool Mock => false;
 
         public App()
         {
@@ -56,7 +56,7 @@ namespace Skippy
                 Setters = {
                     new Setter { Property = Frame.BorderColorProperty, Value = AppLocator.TextColor},
                     new Setter { Property = Frame.BackgroundColorProperty, Value = AppLocator.BackgroundColor },
-                    new Setter { Property = Frame.OpacityProperty, Value = 0.9 },
+                    new Setter { Property = Frame.OpacityProperty, Value = 0.95 },
                 }
             };
             Resources.Add(frameStyle);

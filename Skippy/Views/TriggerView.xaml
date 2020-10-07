@@ -18,18 +18,22 @@
 
                         <controls:UniformGrid Rows="1">
                             <Button x:Name="GetAllButton" Text="Get"/>
-                            <Button x:Name="SetAll" Text="Set"/>
+                            <Button x:Name="SetAllButton" Text="Set"/>
                         </controls:UniformGrid>
 
                         <controls:UniformGrid Rows="1">
+                            <controls:TogglesBar x:Name="Sweep" HorizontalOptions="CenterAndExpand"/>
+                        </controls:UniformGrid>
+                        
+                        <controls:UniformGrid Rows="1">
                             <Label Text="Mode" VerticalOptions="Center"/>
-                            <Picker x:Name="Mode" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                            <Picker x:Name="Mode" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                         </controls:UniformGrid>
 
                         <StackLayout x:Name="EdgeModePanel">
                             <controls:UniformGrid Rows="1">
                                 <Label Text="Source" VerticalOptions="Center"/>
-                                <Picker x:Name="EdgeSource" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                                <Picker x:Name="EdgeSource" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                             </controls:UniformGrid>
                             <controls:UniformGrid Rows="1">
                                 <controls:TogglesBar x:Name="EdgeSlope" HorizontalOptions="CenterAndExpand"/>

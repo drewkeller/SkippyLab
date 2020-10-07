@@ -20,6 +20,8 @@ namespace Skippy.ViewModels
     {
         public ViewModelActivator Activator { get; }
 
+        [Reactive] public string Title { get; set; } = "SkippyLab Scope";
+
         public ScopeVM()
         {
             Activator = new ViewModelActivator();

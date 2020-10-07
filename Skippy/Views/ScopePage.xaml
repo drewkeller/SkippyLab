@@ -39,8 +39,12 @@
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
                          >
-                <ScrollView Orientation="Horizontal" >
-                    <accordion:AccordionView x:Name="pnlChannels" Orientation="Horizontal" HorizontalOptions="StartAndExpand" />
+                <Button x:Name="ChannelbarButton" Text="&lt;" FontAttributes="Bold" WidthRequest="30"
+                        HorizontalOptions="End" VerticalOptions="End" />
+                
+                <ScrollView x:Name="ChannelScroll"  Orientation="Horizontal" HorizontalScrollBarVisibility="Always"
+                            HorizontalOptions="StartAndExpand">
+                    <accordion:AccordionView x:Name="pnlChannels" Orientation="Horizontal" HorizontalOptions="EndAndExpand" />
                 </ScrollView>
             </StackLayout>
                 
@@ -48,7 +52,8 @@
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
                          >
                 
-                <Button x:Name="SidebarButton" Text="&lt;" FontAttributes="Bold" HorizontalOptions="End"/>
+                <Button x:Name="SidebarButton" Text="&lt;" FontAttributes="Bold" WidthRequest="30"
+                        HorizontalOptions="End"/>
                 
                 <ScrollView x:Name="SideScroll" Orientation="Vertical" VerticalScrollBarVisibility="Always">
                     <accordion:AccordionView x:Name="Sidebar" Orientation="Vertical" HorizontalOptions="EndAndExpand">

@@ -23,7 +23,7 @@
     
     <accordion:AccordionItemView.ItemContent>
 
-        <Frame x:Name="Frame" WidthRequest="400">
+        <Frame x:Name="Frame">
             <ScrollView Orientation="Vertical">
                 <StackLayout Orientation="Vertical" MinimumHeightRequest="300" Margin="0,0,15,0">
 
