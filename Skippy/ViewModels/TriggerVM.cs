@@ -1,16 +1,11 @@
-﻿using DynamicData.Annotations;
-using ReactiveUI;
+﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Skippy.Extensions;
 using Skippy.Protocols;
 using Splat;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace Skippy.ViewModels
 {
@@ -33,6 +28,8 @@ namespace Skippy.ViewModels
 
         private List<IScopeCommand> AllScopeCommands { get; set; }
 
+        public ScopeCommand<string> Sweep { get; set; }
+
         public ScopeCommand<string> Mode { get; set; }
 
         #region Edge mode properties
@@ -50,6 +47,7 @@ namespace Skippy.ViewModels
             Activator = new ViewModelActivator();
             Protocol = new TriggerProtocol(null);
 
+            Sweep = new ScopeCommand<string>(this, Protocol.Sweep, "AUTO");
             Mode = new ScopeCommand<string>(this, Protocol.Mode, nameof(ModeStringOptions.Edge));
             EdgeSource = new ScopeCommand<string>(this, Protocol.Edge.Source, "CHAN1");
             EdgeSlope = new ScopeCommand<string>(this, Protocol.Edge.Slope, "POS");
@@ -57,7 +55,7 @@ namespace Skippy.ViewModels
 
             AllScopeCommands = new List<IScopeCommand>()
             {
-                Mode, EdgeSource, EdgeSlope, EdgeLevel,
+                Sweep, Mode, EdgeSource, EdgeSlope, EdgeLevel,
             };
 
             var GetAllMessage = ReactiveCommand.Create(() =>
@@ -65,6 +63,7 @@ namespace Skippy.ViewModels
             GetAll = ReactiveCommand.CreateCombined(new[]
             {
                 GetAllMessage,
+                Sweep.GetCommand,
                 Mode.GetCommand,
                 EdgeSource.GetCommand,
                 EdgeSlope.GetCommand,
@@ -76,6 +75,7 @@ namespace Skippy.ViewModels
             SetAll = ReactiveCommand.CreateCombined(new[]
             {
                 SetAllMessage,
+                Sweep.SetCommand,
                 Mode.SetCommand,
                 EdgeSource.SetCommand,
                 EdgeSlope.SetCommand,

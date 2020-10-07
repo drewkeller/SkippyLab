@@ -193,19 +193,19 @@ namespace Skippy.Views
                 };
 
                 // disable setting things until we get the current value from the scope
-                this.Bind(ViewModel, x => x.Display.GetSucceeded, x => x.uiIsActive.IsEnabled);
-                this.Bind(ViewModel, x => x.Offset.GetSucceeded, x => x.uiOffset.IsEnabled);
-                this.Bind(ViewModel, x => x.Coupling.GetSucceeded, x => x.uiCoupling.IsEnabled);
-                this.Bind(ViewModel, x => x.Scale.GetSucceeded, x => x.uiScale.IsEnabled);
-                this.Bind(ViewModel, x => x.Probe.GetSucceeded, x => x.uiProbeRatio.IsEnabled);
-                this.Bind(ViewModel, x => x.BWLimit.GetSucceeded, x => x.uiIsBandwidthLimited.IsEnabled);
-                this.Bind(ViewModel, x => x.Invert.GetSucceeded, x => x.uiIsInverted.IsEnabled);
-                this.Bind(ViewModel, x => x.Vernier.GetSucceeded, x => x.uiIsVernier.IsEnabled);
+                this.Bind(ViewModel, x => x.Display.IsEnabled, x => x.uiIsActive.IsEnabled);
+                this.Bind(ViewModel, x => x.Offset.IsEnabled, x => x.uiOffset.IsEnabled);
+                this.Bind(ViewModel, x => x.Coupling.IsEnabled, x => x.uiCoupling.IsEnabled);
+                this.Bind(ViewModel, x => x.Scale.IsEnabled, x => x.uiScale.IsEnabled);
+                this.Bind(ViewModel, x => x.Probe.IsEnabled, x => x.uiProbeRatio.IsEnabled);
+                this.Bind(ViewModel, x => x.BWLimit.IsEnabled, x => x.uiIsBandwidthLimited.IsEnabled);
+                this.Bind(ViewModel, x => x.Invert.IsEnabled, x => x.uiIsInverted.IsEnabled);
+                this.Bind(ViewModel, x => x.Vernier.IsEnabled, x => x.uiIsVernier.IsEnabled);
 #if TCAL
                 this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCal.IsEnabled);
                 this.Bind(ViewModel, x => x.GetTCalSucceeded, x => x.uiTCalUnits.IsEnabled);
 #endif
-                this.Bind(ViewModel, x => x.Units.GetSucceeded, x => x.uiUnits.IsEnabled);
+                this.Bind(ViewModel, x => x.Units.IsEnabled, x => x.uiUnits.IsEnabled);
 
                 ViewModel.GetAll.Execute(null);
 
@@ -215,14 +215,6 @@ namespace Skippy.Views
                 uiCoupling.SelectedColor = AppLocator.TextColor;
             });
 
-            this.Click += ScopeChannelView_OnClick;
-        }
-
-        private void ScopeChannelView_OnClick(object sender, AccordionItemClickEventArgs e)
-        {
-            WidthRequest = IsOpen
-                ? AppLocator.ChannelStackOpenedWidth
-                    : AppLocator.ChannelStackClosedWidth;
         }
 
         private void WireEvents(CompositeDisposable disposable)

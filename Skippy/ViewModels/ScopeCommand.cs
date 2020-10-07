@@ -24,12 +24,12 @@ namespace Skippy.ViewModels
         void WhenActivated(CompositeDisposable disposables);
         ReactiveCommand<Unit, Unit> GetCommand { get; }
         ReactiveCommand<Unit, Unit> SetCommand { get; }
+        bool IsEnabled { get; set; }
     }
 
     public interface IScopeCommand<T> : IScopeCommand
     {
         T Value { get; }
-        bool GetSucceeded { get; }
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ namespace Skippy.ViewModels
         [Reactive] public T Value { get; set; }
         public ReactiveCommand<Unit, Unit> GetCommand { get; }
         public ReactiveCommand<Unit, Unit> SetCommand { get; }
-        [Reactive] public bool GetSucceeded { get; set; }
+        [Reactive] public bool IsEnabled { get; set; }
         public ReactiveCommand<Unit, Unit> Increment { get; internal set; }
         public ReactiveCommand<Unit, Unit> Decrement { get; internal set; }
 
@@ -59,7 +59,7 @@ namespace Skippy.ViewModels
 
             if (protocolCommand.IsSettable)
             {
-                var canSet = this.WhenValueChanged(x => x.GetSucceeded)
+                var canSet = this.WhenValueChanged(x => x.IsEnabled)
                     .Where(x => x == true);
                 SetCommand = ReactiveCommand.CreateFromTask(SendCommandAsync, canSet);
                 SetCommand.ThrownExceptions.SubscribeOnUI().Subscribe(async ex => await DisplayException(ex, "Couldn't set"));
@@ -87,7 +87,7 @@ namespace Skippy.ViewModels
                 {
                     DefaultResponse = null;
                 }
-                GetSucceeded = true;
+                IsEnabled = true;
             }
 
 
@@ -144,7 +144,7 @@ namespace Skippy.ViewModels
 
         public async Task SendQueryAsync()
         {
-            GetSucceeded = false;
+            IsEnabled = false;
             var path = ProtocolCommand.FormatPath();
             var command = $"{path}?";
 
@@ -193,7 +193,7 @@ namespace Skippy.ViewModels
                     propInfo.SetValue(this, val);
                 }
             }
-            GetSucceeded = true;
+            IsEnabled = true;
             if (!ProtocolCommand.Name.Contains("Status"))
             {
                 System.Diagnostics.Debug.WriteLine($"{ProtocolCommand.Name}: {Value}");

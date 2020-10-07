@@ -45,7 +45,7 @@ namespace Skippy.Views
                 //    v => v.Offset.Text, 
                 //    v => v.Offset.IsEnabled, 
                 //    disposable);
-                this.Bind(ViewModel, x => x.Offset.GetSucceeded, x => x.Offset.IsEnabled);
+                this.Bind(ViewModel, x => x.Offset.IsEnabled, x => x.Offset.IsEnabled);
 
                 Offset.Events().Clicked
                     .SubscribeOnUI()
@@ -71,7 +71,7 @@ namespace Skippy.Views
 
                 #region Scale
                 this.Bind(ViewModel,
-                    x => x.Scale.GetSucceeded,
+                    x => x.Scale.IsEnabled,
                     x => x.uiScale.IsEnabled)
                     .DisposeWith(disposable);
 
@@ -96,7 +96,7 @@ namespace Skippy.Views
 
                 this.BindToProperty(ViewModel,
                     vm => vm.Mode.Value, 
-                    vm => vm.Mode.GetSucceeded,
+                    vm => vm.Mode.IsEnabled,
                     v => v.Mode.SelectedItems, 
                     v => v.Mode.IsEnabled,
                     vmToViewConverterOverride: new StringOptionsToStringConverter(),

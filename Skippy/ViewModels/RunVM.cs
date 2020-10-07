@@ -16,6 +16,8 @@ namespace Skippy.ViewModels
         public RootProtocol Protocol { get; set; }
         IProtocolCommand IProtocolVM.Protocol => Protocol;
 
+        private List<IScopeCommand> AllScopeCommands { get; set; }
+
 
         #region Properties
 
@@ -43,6 +45,11 @@ namespace Skippy.ViewModels
             ForceTrigger = new ScopeCommand<string>(this, Protocol.Force);
 
             Status = new ScopeCommand<string>(this, Protocol.Status, "AUTO");
+
+            AllScopeCommands = new List<IScopeCommand>
+            {
+                AutoScale, Clear, Run, Stop, SingleTrigger, ForceTrigger,
+            };
 
             this.WhenActivated(disposables =>
             {

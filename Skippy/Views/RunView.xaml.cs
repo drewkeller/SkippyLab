@@ -38,6 +38,8 @@ namespace Skippy.Views
                     v => v.Status.Text)
                     .DisposeWith(disposable);
 
+                WireEvents(disposable);
+
             });
 
         }

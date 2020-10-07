@@ -37,6 +37,7 @@ namespace Skippy.Views
 
             // initialize some stuff
             //txtLabel.MainLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
+            Sweep.ItemsSource = StringOptions.ToNames(protocol.Sweep.Options);
             Mode.ItemsSource = StringOptions.ToNames(protocol.Mode.Options);
             EdgeSource.ItemsSource = StringOptions.ToNames(protocol.Edge.Source.Options);
             EdgeSlope.ItemsSource = StringOptions.ToNames(protocol.Edge.Slope.Options);
@@ -44,8 +45,16 @@ namespace Skippy.Views
             this.WhenActivated(disposable =>
             {
                 this.BindToProperty(ViewModel,
+                    vm => vm.Sweep.Value,
+                    vm => vm.Sweep.IsEnabled,
+                    v => v.Sweep.SelectedItems,
+                    v => v.Sweep.IsEnabled,
+                    vmToViewConverterOverride: new StringOptionsToStringConverter(),
+                    disposable);
+
+                this.BindToProperty(ViewModel,
                     vm => vm.Mode.Value,
-                    vm => vm.Mode.GetSucceeded,
+                    vm => vm.Mode.IsEnabled,
                     v => v.Mode.SelectedItem,
                     v => v.Mode.IsEnabled,
                     vmToViewConverterOverride: new StringOptionsToStringConverter(),
@@ -61,7 +70,7 @@ namespace Skippy.Views
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
                 this.Bind(ViewModel,
-                    x => x.EdgeSource.GetSucceeded,
+                    x => x.EdgeSource.IsEnabled,
                     x => x.EdgeSource.IsEnabled)
                     .DisposeWith(disposable);
 
@@ -71,13 +80,13 @@ namespace Skippy.Views
                     vmToViewConverterOverride: new StringOptionsToStringConverter())
                     .DisposeWith(disposable);
                 this.Bind(ViewModel,
-                    x => x.EdgeSlope.GetSucceeded,
+                    x => x.EdgeSlope.IsEnabled,
                     x => x.EdgeSlope.IsEnabled)
                     .DisposeWith(disposable);
 
                 #region EdgeLevel
                 this.Bind(ViewModel,
-                    x => x.EdgeLevel.GetSucceeded,
+                    x => x.EdgeLevel.IsEnabled,
                     x => x.EdgeLevel.IsEnabled)
                     .DisposeWith(disposable);
 
@@ -117,6 +126,10 @@ namespace Skippy.Views
             GetAllButton
                 .Events().Clicked.Select(args => Unit.Default)
                 .InvokeCommand(ViewModel.GetAll)
+                .DisposeWith(disposable);
+            SetAllButton
+                .Events().Clicked.Select(args => Unit.Default)
+                .InvokeCommand(ViewModel.SetAll)
                 .DisposeWith(disposable);
         }
 

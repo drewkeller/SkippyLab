@@ -114,15 +114,23 @@ namespace Skippy.Protocols
                 }
             };
 
+            /// <summary> 
+            /// Set or query the trigger mode.
+            /// Auto  : No matter whether the trigger condition is met, there is always waveform display.
+            /// Normal: Display waveform when the trigger condition is met. Otherwise, the scope 
+            ///         holds the original waveform and waits for the next trigger.
+            /// Single: The scope waits for a trigger and displays the waveform when the trigger
+            ///         condition is met and then stops.
+            /// </summary>
             Sweep = new ProtocolCommand(this)
             {
                 Name = "Sweep",
                 Term = "SWEep",
                 Options = new StringOptions
                 {
-                    new StringOption("AUTO", "AUTO"),
-                    new StringOption("NORMal", "NORM"),
-                    new StringOption("SINGle", "SING"),
+                    new StringOption("Auto", "AUTO"),
+                    new StringOption("Normal", "NORM"),
+                    new StringOption("Single", "SING"),
                 }
             };
 

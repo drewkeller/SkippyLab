@@ -17,6 +17,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40"/>
@@ -45,6 +46,9 @@
 
                     <Label x:Name="valueLabel" Grid.Row="2" Grid.Column="1"
                        HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Start"/>
+
+                    <Entry x:Name="valueEntry" Grid.Row="3" Grid.Column="1"
+                           HorizontalOptions="Center" VerticalOptions="Start"/>
 
                 </Grid>
 
