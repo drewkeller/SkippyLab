@@ -19,3 +19,7 @@ Windows Desktop
 Xamarin Forms is at work to provide multi-platform support. A project for WPF is also included, but WPF support in Xamarin itself is experimental, and some of the Nuget sources don't provide WPF support, so the WPF  project here is not fully developed.
 
 This is my first project using ReactiveUI, so I imagine there is opportunity for improvement in the code.
+
+## Privacy Policy
+
+The program has the capability to save screenshots of the scope screen. It does not access, collect, or transmit any personal information.

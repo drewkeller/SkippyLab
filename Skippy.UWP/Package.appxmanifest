@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="8b4737cd-8ff5-42ae-ac45-042ee81f04ae"
-    Publisher="CN=drewk"
+    Name="33924DrewKeller.SkippyLab"
+    Publisher="CN=0A3B4163-36CC-4CA1-8FF7-F74435748F35"
     Version="0.5.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="b7802590-2a8f-46fe-af5f-cc9078b3051d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Skippy.UWP</DisplayName>
-    <PublisherDisplayName>fa1b2863-f772-4ef2-a44c-844244bdd2d9</PublisherDisplayName>
+    <DisplayName>SkippyLab</DisplayName>
+    <PublisherDisplayName>Drew Keller</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,15 +32,16 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="Skippy.UWP.App">
       <uap:VisualElements
-        DisplayName="Skippy Lab"
+        DisplayName="SkippyLab"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="Provides an inteface to lab equipment via SCPI (currently only Rigol MSO/DS1000Z oscilloscopes are implemented)."
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" ShortName="skippy"  Square310x310Logo="Assets\LargeTile.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" ShortName="skippy"   Square310x310Logo="Assets\LargeTile.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
             <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
